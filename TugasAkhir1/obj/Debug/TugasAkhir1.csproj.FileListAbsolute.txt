@@ -1,1 +1,9 @@
 F:\College\Semester 8\TugasAkhir1\TugasAkhir1\bin\Debug\TugasAkhir1.exe.config
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\bin\Debug\TugasAkhir1.exe
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\bin\Debug\TugasAkhir1.pdb
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.csprojResolveAssemblyReference.cache
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.Form1.resources
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.Properties.Resources.resources
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.csproj.GenerateResource.Cache
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.exe
+F:\College\Semester 8\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.pdb
