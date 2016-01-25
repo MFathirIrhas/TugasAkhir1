@@ -13,10 +13,14 @@ namespace TugasAkhir1
 {
     public partial class Form1 : Form
     {
+        public Bitmap OriginalImage { get; set; }
+        public Bitmap DWTImage { get; set; }
+
         public Form1()
         {
             InitializeComponent();
             this.hostImage.SizeMode = PictureBoxSizeMode.Zoom;
+            this.transformedImage.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -29,6 +33,21 @@ namespace TugasAkhir1
                 fileLocationTxt.Text = ofd.FileName;
                 hostImage.Image = new Bitmap(ofd.FileName);
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (hostImage.Image != null)
+            {
+                DWT dwt = new DWT();
+                OriginalImage = new Bitmap(hostImage.Image);
+                //DWTImage = new Bitmap(transformImage.Image);
+                transformedImage.Image = dwt.TransformDWT(true, false, 2, OriginalImage);
+            }
+            else
+            {
+                MessageBox.Show("Load Image First", "Incomplete Procedure Detected", MessageBoxButtons.OK);
+            }    
         }
     }
 }
