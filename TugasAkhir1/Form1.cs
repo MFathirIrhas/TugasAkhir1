@@ -21,17 +21,30 @@ namespace TugasAkhir1
             InitializeComponent();
             this.hostImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.transformedImage.SizeMode = PictureBoxSizeMode.Zoom;
+            this.watermarkImage.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) //Open Original Image
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Select a Picture";
+            ofd.Title = "Select a Picture to Watermark";
             ofd.InitialDirectory = @"C:\Users\Fathir Irhas\Pictures";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                fileLocationTxt.Text = ofd.FileName;
+                HostImageLocationTxt.Text = ofd.FileName;
                 hostImage.Image = new Bitmap(ofd.FileName);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e) //Open Watermark Image
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select a Picture as Watermark";
+            ofd.InitialDirectory = @"C:\Users\Fathir Irhas\Pictures";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                WatermarkImageLocationTxt.Text = ofd.FileName;
+                watermarkImage.Image = new Bitmap(ofd.FileName);
             }
         }
 
@@ -49,5 +62,7 @@ namespace TugasAkhir1
                 MessageBox.Show("Load Image First", "Incomplete Procedure Detected", MessageBoxButtons.OK);
             }    
         }
+
+        
     }
 }
