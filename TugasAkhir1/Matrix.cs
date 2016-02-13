@@ -12,6 +12,7 @@ namespace TugasAkhir1
 {
     public class Matrix
     {
+        //Convert to 1 Dimensional Matrix fill with grayscale value
         public List<int> ConvertToVectorMatrix(Bitmap bmp)
         {
             List<int> m = new List<int>();
@@ -29,5 +30,28 @@ namespace TugasAkhir1
 
             return m;
         }
+
+        //Convert to 0 or 1 bit sequence , 1 denote to white space and 0 denote to black space
+        public List<int> ConvertToBinaryVectorMatrix(List<int> vm)
+        {
+            List<int> bvm = new List<int>();
+            foreach (int i in vm)
+            {
+                if (i >= 250)
+                {
+                    int b = 1;
+                    bvm.Add(b);
+                }
+                else if (i <= 0)
+                {
+                    int b = 0;
+                    bvm.Add(b);
+                }
+            }
+
+            return bvm;    
+        }
+
+
     }
 }

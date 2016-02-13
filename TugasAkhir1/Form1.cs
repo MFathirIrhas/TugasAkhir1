@@ -71,7 +71,10 @@ namespace TugasAkhir1
             ImageProcessing ip = new ImageProcessing();
 
             Bitmap b = ip.ConvertToBinary(bmp);
-            List<int> VectorImage = m.ConvertToVectorMatrix(b);           
+            List<int> VectorImage = m.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
+            List<int> BinaryVectorImage = m.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
+            //transformedImage.Image = b;
+            MessageBox.Show("Nilai: " + BinaryVectorImage[34], "ini adalah", MessageBoxButtons.OK);
         }
 
         private void button6_Click(object sender, EventArgs e) //Testing button

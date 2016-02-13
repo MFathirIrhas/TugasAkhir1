@@ -11,6 +11,7 @@ namespace TugasAkhir1
 {
     public class ImageProcessing
     {
+        //Convert Image to Black and White, pixel value are only 255 or 0
         public Bitmap ConvertToBinary(Bitmap bmp)
         {
             Bitmap b = new Bitmap(bmp.Width,bmp.Height);

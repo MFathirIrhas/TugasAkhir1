@@ -214,7 +214,7 @@
             this.button5.Size = new System.Drawing.Size(100, 35);
             this.button5.TabIndex = 6;
             this.button5.TabStop = false;
-            this.button5.Text = "Gen. Bit Sequence";
+            this.button5.Text = "Generate Bit Sequence";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -223,7 +223,7 @@
             this.button6.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(7, 512);
+            this.button6.Location = new System.Drawing.Point(7, 645);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 7;
