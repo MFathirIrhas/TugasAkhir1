@@ -43,6 +43,7 @@
             this.WatermarkImageLocationTxt = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -210,12 +211,26 @@
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Location = new System.Drawing.Point(93, 639);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 37);
+            this.button5.Size = new System.Drawing.Size(100, 35);
             this.button5.TabIndex = 6;
             this.button5.TabStop = false;
-            this.button5.Text = "Generate Bit Sequence";
+            this.button5.Text = "Gen. Bit Sequence";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button6
+            // 
+            this.button6.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button6.FlatAppearance.BorderSize = 0;
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button6.Location = new System.Drawing.Point(7, 512);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 7;
+            this.button6.TabStop = false;
+            this.button6.Text = "TEST";
+            this.button6.UseVisualStyleBackColor = false;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // Form1
             // 
@@ -223,6 +238,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1038, 680);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.WatermarkImageLocationTxt);
@@ -261,6 +277,7 @@
         private System.Windows.Forms.TextBox WatermarkImageLocationTxt;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace TugasAkhir1
 {
@@ -65,16 +66,17 @@ namespace TugasAkhir1
 
         private void button5_Click(object sender, EventArgs e) //Generate bit sequence
         {
-            Image img = hostImage.Image;
-            Bitmap bmp = new Bitmap(img);
+            Bitmap bmp = new Bitmap(watermarkImage.Image);
+            Matrix m = new Matrix();
+            ImageProcessing ip = new ImageProcessing();
 
-            for (int i = 0; i < bmp.Height; i++)
-            {
-                for (int j = 0; j < bmp.Width; j++)
-                {
-                    
-                }
-            }
+            Bitmap b = ip.ConvertToBinary(bmp);
+            List<int> VectorImage = m.ConvertToVectorMatrix(b);           
+        }
+
+        private void button6_Click(object sender, EventArgs e) //Testing button
+        {
+            Console.WriteLine("testing");
         }
 
         
