@@ -63,6 +63,20 @@ namespace TugasAkhir1
             }    
         }
 
+        private void button5_Click(object sender, EventArgs e) //Generate bit sequence
+        {
+            Image img = hostImage.Image;
+            Bitmap bmp = new Bitmap(img);
+
+            for (int i = 0; i < bmp.Height; i++)
+            {
+                for (int j = 0; j < bmp.Width; j++)
+                {
+                    
+                }
+            }
+        }
+
         
     }
 }
