@@ -9,6 +9,13 @@ using System.IO;
 
 namespace TugasAkhir1
 {
+    /* *
+     * This class was used to do some Image processing
+     * 1. ConvertToBinary Class
+     * 2. - 
+     * 3. -
+     * 4. -
+     * */
     public class ImageProcessing
     {
         //Convert Image to Black and White, pixel value are only 255 or 0

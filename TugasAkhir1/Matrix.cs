@@ -10,6 +10,13 @@ using System.Drawing.Imaging;
 
 namespace TugasAkhir1
 {
+    /**
+     * This class was used to do some matrix manipulation
+     * 1. ConvertToVectorMatrix Class
+     * 2. ConvertToBinaryVectorMatrix Class
+     * 3. 1/3 Convolution Code
+     * 
+     * */
     public class Matrix
     {
         //Convert to 1 Dimensional Matrix fill with grayscale value
