@@ -82,6 +82,21 @@ namespace TugasAkhir1
             Console.WriteLine("testing");
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (transformedImage.Image == null)
+            {
+                MessageBox.Show("There is no Transform image yet","Incomplete Procedure Detected",MessageBoxButtons.OK);
+            }
+            else
+            {
+                DWT dwt = new DWT();
+                Bitmap decomposedImage = new Bitmap(transformedImage.Image);
+                watermarkImage.Image = dwt.TransformDWT(false, true, 2, decomposedImage); 
+            }
+            
+        }
+
         
     }
 }
