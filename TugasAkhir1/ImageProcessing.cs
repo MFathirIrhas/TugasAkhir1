@@ -12,7 +12,7 @@ namespace TugasAkhir1
     /* *
      * This class was used to do some Image processing
      * 1. ConvertToBinary Class
-     * 2. - 
+     * 2. Human Visual System (HVS)
      * 3. -
      * 4. -
      * */
@@ -47,6 +47,7 @@ namespace TugasAkhir1
             return b;
         }
 
+        //Procedure for Human Visual System
 
     }
 }

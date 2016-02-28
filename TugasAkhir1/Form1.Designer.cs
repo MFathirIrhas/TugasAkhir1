@@ -212,10 +212,10 @@
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Location = new System.Drawing.Point(93, 639);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(100, 35);
+            this.button5.Size = new System.Drawing.Size(108, 29);
             this.button5.TabIndex = 6;
             this.button5.TabStop = false;
-            this.button5.Text = "Generate Bit Sequence";
+            this.button5.Text = "Binarize Watermark";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 

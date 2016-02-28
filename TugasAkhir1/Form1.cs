@@ -64,7 +64,7 @@ namespace TugasAkhir1
             }    
         }
 
-        private void button5_Click(object sender, EventArgs e) //Generate bit sequence
+        private void button5_Click(object sender, EventArgs e) //Generate bit sequence contain 0 and 1
         {
             Bitmap bmp = new Bitmap(watermarkImage.Image);
             Matrix m = new Matrix();
@@ -79,7 +79,35 @@ namespace TugasAkhir1
 
         private void button6_Click(object sender, EventArgs e) //Testing button
         {
-            Console.WriteLine("testing");
+            //Console.WriteLine("testing");
+            ImageProcessing ip = new ImageProcessing();
+            Matrix m = new Matrix();
+            Bitmap bmp = new Bitmap(hostImage.Image);
+            //transformedImage.Image = ip.ConvertToBinary(bmp);
+            List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
+            List<int> b = m.ConvertToBinaryVectorMatrix(a);
+            List<int> c = m.ConvolutionCode(b);
+            MessageBox.Show("Jumlah elemen setelah convolution code adalah: " + c.Count, "Success", MessageBoxButtons.OK);
+            //int x = 5;
+            //int y = x % 2;
+            //MessageBox.Show("Hasil "+x +"Mod 2 adalah: "+y,"hahha",MessageBoxButtons.OK);
+            //List<int> g0 = new List<int> { 1, 1, 1, 1, 0, 1, 1, 1 };
+            //List<int> g1 = new List<int> { 1, 1, 0, 1, 1, 0, 0, 1 };
+            //List<int> g2 = new List<int> { 1, 0, 0, 1, 0, 1, 0, 1 };
+            //int[,] g = new int[,] { { 1, 1, 1, 1, 0, 1, 1, 1 }, { 1, 1, 0, 1, 1, 0, 0, 1 }, { 1, 0, 0, 1, 0, 1, 0, 1 } };
+            //int[] t = new int[5];
+            //t[0] = 3;
+            //int a = 2;
+            //int b = 4;
+            //int c = a - b;
+            //int d = 4 + c;
+            //List<List<int>> g = new List<List<int>>();
+            //g.Add(g0);
+            //g.Add(g1);
+            //g.Add(g2);
+            //MessageBox.Show("Sekian " + g[0,4], "Adalah", MessageBoxButtons.OK);
+            //MessageBox.Show("Sekian " + d, "Adalah", MessageBoxButtons.OK);
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -92,7 +120,7 @@ namespace TugasAkhir1
             {
                 DWT dwt = new DWT();
                 Bitmap decomposedImage = new Bitmap(transformedImage.Image);
-                watermarkImage.Image = dwt.TransformDWT(false, true, 2, decomposedImage); 
+                transformedImage.Image = dwt.TransformDWT(false, true, 2, decomposedImage); 
             }
             
         }

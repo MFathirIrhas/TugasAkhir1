@@ -15,11 +15,13 @@ namespace TugasAkhir1
      * 1. ConvertToVectorMatrix Class
      * 2. ConvertToBinaryVectorMatrix Class
      * 3. 1/3 Convolution Code
+     * 4. Direct Spread Spectrum
+     * 5. Interleaving
      * 
      * */
     public class Matrix
     {
-        //Convert to 1 Dimensional Matrix fill with grayscale value
+        //Convert to 1 Dimensional Matrix fill with black and white value
         public List<int> ConvertToVectorMatrix(Bitmap bmp)
         {
             List<int> m = new List<int>();
@@ -57,6 +59,52 @@ namespace TugasAkhir1
             }
 
             return bvm;    
+        }
+
+        /**
+         * 1/3 Convolutional Code
+         * k = 1 , Number of input each time process
+         * n = 3 , number of output each time after process
+         * m = input data
+         * Generator Polynomial use:
+         *      g1 = { 1, 1, 1, 1, 0, 1, 1, 1 }
+         *      g2 = { 1, 1, 0, 1, 1, 0, 0, 1 }
+         *      g3 = { 1, 0, 0, 1, 0, 1, 0, 1 }
+         **/
+        public List<int> ConvolutionCode(List<int> m)
+        {
+            List<int> mc = new List<int>(); //Output list
+            int elm = 0;
+            int v = 3; //1/3 rate with 3 output at a time.
+            //memory register
+            int[] reg = new int[m.Count];
+            //Generator Polynomial
+            int[,] g = new int[,] { { 1, 1, 1, 1, 0, 1, 1, 1 },   //g0 
+                                    { 1, 1, 0, 1, 1, 0, 0, 1 },   //g1
+                                    { 1, 0, 0, 1, 0, 1, 0, 1 } }; //g2
+
+            for (int n = 0; n < m.Count; n++)
+            {
+                for (int i = 0; i < v/*3*/; i++)
+                {
+                    for(int j = 0; j < 8; j++)
+                    {
+                        int l = n - j;
+                        if (l < 0)
+                        {
+                            elm += g[i,j] * 0; //x[n] = 0 , if n = negative
+                        }
+                        else
+                        {
+                            elm += g[i, j] * m[l];
+                        }
+                    }
+                    int item = elm % 2;
+                    mc.Add(item);
+                }
+            }
+            
+            return mc;
         }
 
 
