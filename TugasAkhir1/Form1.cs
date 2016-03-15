@@ -87,6 +87,7 @@ namespace TugasAkhir1
             List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
             List<int> b = m.ConvertToBinaryVectorMatrix(a);
             List<int> c = m.ConvolutionCode(b);
+            List<int> d = m.DSSS(c);
             MessageBox.Show("Jumlah elemen setelah convolution code adalah: " + c.Count, "Success", MessageBoxButtons.OK);
             //int x = 5;
             //int y = x % 2;
