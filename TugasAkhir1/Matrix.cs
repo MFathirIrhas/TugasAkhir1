@@ -16,8 +16,8 @@ namespace TugasAkhir1
      * 1. ConvertToVectorMatrix Class
      * 2. ConvertToBinaryVectorMatrix Class
      * 3. 1/3 Convolution Code
-     * 4. Direct Spread Spectrum
-     * 5. Interleaving
+     * 4. Direct Sequence Spread Spectrum
+     * 5. Interleaving Sequence
      * 
      * */
     public class Matrix
@@ -25,6 +25,7 @@ namespace TugasAkhir1
         //Global Variables
         int[] pnseed = new int[4];
 
+        #region 1. ConvertToVectorMatrix
         //Convert to 1 Dimensional Matrix fill with black and white value
         public List<int> ConvertToVectorMatrix(Bitmap bmp)
         {
@@ -43,7 +44,9 @@ namespace TugasAkhir1
 
             return m;
         }
+        #endregion
 
+        #region 2. ConvertToBinaryVectorMatrix
         //Convert to 0 or 1 bit sequence , 1 denote to white space and 0 denote to black space
         public List<int> ConvertToBinaryVectorMatrix(List<int> vm)
         {
@@ -64,7 +67,9 @@ namespace TugasAkhir1
 
             return bvm;    
         }
+        #endregion
 
+        #region 3. 1/3 Convolution Code
         /**
          * 1/3 Convolutional Code
          * k = 1 , Number of input each time process
@@ -110,7 +115,9 @@ namespace TugasAkhir1
             
             return mc;
         }
+        #endregion
 
+        #region 4. Direct Sequence Spread Spectrum
         /* *
          * Direct Sequence Spread Spectrum
          * convert the input binary sequence into sequence with values 1 or 0
@@ -204,6 +211,56 @@ namespace TugasAkhir1
             
             return pn;
         }
+        #endregion
 
+        #region 5. Interleaving Sequence
+        public List<int> Interleaving(List<int> dsss)
+        {
+            List<int> il = new List<int>();
+            var ds3 = dsss;
+            List<int> ySeq = GenerateRandomBinarySeq(ds3.Count);
+            //dsss.AddRange(ySeq);
+            //var InterLength = dsss.Count * 2;
+            //int k1 = 0;
+            //int k2 = InterLength / 2;
+            while (ds3.Count > 0 && ySeq.Count > 0)
+            {
+                if (ds3.Count > 0)
+                {
+                    il.Add(ds3[0]);
+                    ds3.RemoveAt(0);
+                }
+
+                if (ySeq.Count > 0)
+                {
+                    il.Add(ySeq[0]);
+                    ySeq.RemoveAt(0);
+                }
+            }
+
+            return il;
+        }
+
+        public List<int> GenerateRandomBinarySeq(int length) //generate random binary sequence for Interleaving sequence
+        {
+            var randBin = new List<int>();
+            Random rand = new Random();
+
+            for (int i = 0; i < length; i++)
+            {
+                if (rand.Next() % 2 == 0)
+                {
+                    randBin.Add(0);
+                }
+                else
+                {
+                    randBin.Add(1);
+                }
+            }
+
+            randBin.Sort();
+            return randBin;
+        }
+        #endregion
     }
 }

@@ -88,7 +88,8 @@ namespace TugasAkhir1
             List<int> b = m.ConvertToBinaryVectorMatrix(a);
             List<int> c = m.ConvolutionCode(b);
             List<int> d = m.DSSS(c);
-            MessageBox.Show("Jumlah elemen setelah convolution code adalah: " + c.Count, "Success", MessageBoxButtons.OK);
+            List<int> ee = m.Interleaving(d);
+            MessageBox.Show("Jumlah elemen setelah convolution code adalah: " + a.Count + ", " + b.Count + ","+c.Count +","+d.Count+","+ee.Count,"Success", MessageBoxButtons.OK);
             //int x = 5;
             //int y = x % 2;
             //MessageBox.Show("Hasil "+x +"Mod 2 adalah: "+y,"hahha",MessageBoxButtons.OK);
