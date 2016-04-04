@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace TugasAkhir1
 {
@@ -29,7 +30,7 @@ namespace TugasAkhir1
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Select a Picture to Watermark";
-            ofd.InitialDirectory = @"C:\Users\Fathir Irhas\Pictures";
+            ofd.InitialDirectory = @"F:\College\Semester 8\TA2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 HostImageLocationTxt.Text = ofd.FileName;
@@ -79,7 +80,36 @@ namespace TugasAkhir1
 
         private void button6_Click(object sender, EventArgs e) //Testing button
         {
-            //Console.WriteLine("testing");
+            Bitmap hostImg =new Bitmap(hostImage.Image);
+
+            #region GUI Processing
+            StatusPanel.BackColor = Color.Gray;
+            StatusTxt.BackColor = Color.Gray;
+            StatusTxt.Text = "Processing...";
+            StatusTxt.ForeColor = Color.Red;
+            StatusTxt.BackColor = Color.Gray;
+            label4.BackColor = Color.Gray;
+            label5.BackColor = Color.Gray;
+            TimeExecTxt.BackColor = Color.Gray;
+            label7.BackColor = Color.Gray;
+            label8.BackColor = Color.Gray;
+            totalScrambledTxt.BackColor = Color.Gray;
+            totalWatermarkTxt.BackColor = Color.Gray;
+            TimeExecTxt.Text = "0";
+            totalScrambledTxt.Text = "0";
+            totalWatermarkTxt.Text = "0";
+            StatusTxt.Refresh();
+            label4.Refresh();
+            label5.Refresh();
+            label7.Refresh();
+            label8.Refresh();
+            totalWatermarkTxt.Refresh();
+            totalScrambledTxt.Refresh();
+            TimeExecTxt.Refresh();
+            #endregion
+
+
+            var time = Stopwatch.StartNew();
             ImageProcessing ip = new ImageProcessing();
             Matrix m = new Matrix();
             Bitmap bmp = new Bitmap(hostImage.Image);
@@ -89,26 +119,34 @@ namespace TugasAkhir1
             List<int> c = m.ConvolutionCode(b);
             List<int> d = m.DSSS(c);
             List<int> ee = m.Interleaving(d);
-            MessageBox.Show("Jumlah elemen setelah convolution code adalah: " + a.Count + ", " + b.Count + ","+c.Count +","+d.Count+","+ee.Count,"Success", MessageBoxButtons.OK);
-            //int x = 5;
-            //int y = x % 2;
-            //MessageBox.Show("Hasil "+x +"Mod 2 adalah: "+y,"hahha",MessageBoxButtons.OK);
-            //List<int> g0 = new List<int> { 1, 1, 1, 1, 0, 1, 1, 1 };
-            //List<int> g1 = new List<int> { 1, 1, 0, 1, 1, 0, 0, 1 };
-            //List<int> g2 = new List<int> { 1, 0, 0, 1, 0, 1, 0, 1 };
-            //int[,] g = new int[,] { { 1, 1, 1, 1, 0, 1, 1, 1 }, { 1, 1, 0, 1, 1, 0, 0, 1 }, { 1, 0, 0, 1, 0, 1, 0, 1 } };
-            //int[] t = new int[5];
-            //t[0] = 3;
-            //int a = 2;
-            //int b = 4;
-            //int c = a - b;
-            //int d = 4 + c;
-            //List<List<int>> g = new List<List<int>>();
-            //g.Add(g0);
-            //g.Add(g1);
-            //g.Add(g2);
-            //MessageBox.Show("Sekian " + g[0,4], "Adalah", MessageBoxButtons.OK);
-            //MessageBox.Show("Sekian " + d, "Adalah", MessageBoxButtons.OK);
+            time.Stop();
+            var elapsedTime = time.ElapsedMilliseconds/1000;
+
+            
+            #region End of GUI Processing
+            StatusPanel.BackColor = Color.LightSkyBlue;
+            StatusTxt.BackColor = Color.LightSkyBlue;
+            StatusTxt.Text = "Ready";
+            StatusTxt.ForeColor = Color.DarkGreen;
+            label4.BackColor = Color.LightSkyBlue;
+            label5.BackColor = Color.LightSkyBlue;
+            TimeExecTxt.BackColor = Color.LightSkyBlue;
+            TimeExecTxt.Text = " "+ elapsedTime.ToString() +" Second(s)";
+            int totalOriginalImage = hostImg.Height * hostImg.Width;
+            totalWatermarkTxt.Text = totalOriginalImage.ToString();
+            totalScrambledTxt.Text = ee.Count.ToString();
+            label7.BackColor = Color.LightSkyBlue;
+            label8.BackColor = Color.LightSkyBlue;
+            totalScrambledTxt.BackColor = Color.LightSkyBlue;
+            totalWatermarkTxt.BackColor = Color.LightSkyBlue;
+            #endregion 
+            
+            //Write Result of Scrambling to Txt.
+            TextWriter tw = new StreamWriter("Scrambled_Data.txt");
+            tw.WriteLine("Total Scrambled Data: " + ee.Count);
+            foreach (int i in ee)
+                tw.WriteLine(i);
+            tw.Close();
             
         }
 

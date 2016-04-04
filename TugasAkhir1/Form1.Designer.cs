@@ -44,12 +44,25 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.StatusPanel = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.StatusTxt = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.TimeExecTxt = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.totalWatermarkTxt = new System.Windows.Forms.Label();
+            this.totalScrambledTxt = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.transformedImage)).BeginInit();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.watermarkImage)).BeginInit();
+            this.StatusPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -89,7 +102,7 @@
             // 
             // hostImage
             // 
-            this.hostImage.Image = ((System.Drawing.Image)(resources.GetObject("hostImage.Image")));
+            this.hostImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.hostImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("hostImage.InitialImage")));
             this.hostImage.Location = new System.Drawing.Point(3, 51);
             this.hostImage.Name = "hostImage";
@@ -128,19 +141,20 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.transformedImage);
             this.panel2.Location = new System.Drawing.Point(383, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(653, 630);
+            this.panel2.Size = new System.Drawing.Size(653, 656);
             this.panel2.TabIndex = 3;
             // 
             // transformedImage
             // 
-            this.transformedImage.Image = ((System.Drawing.Image)(resources.GetObject("transformedImage.Image")));
+            this.transformedImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.transformedImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("transformedImage.InitialImage")));
-            this.transformedImage.Location = new System.Drawing.Point(3, 3);
+            this.transformedImage.Location = new System.Drawing.Point(3, 23);
             this.transformedImage.Name = "transformedImage";
-            this.transformedImage.Size = new System.Drawing.Size(645, 622);
+            this.transformedImage.Size = new System.Drawing.Size(645, 628);
             this.transformedImage.TabIndex = 0;
             this.transformedImage.TabStop = false;
             // 
@@ -151,7 +165,7 @@
             this.button3.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
             this.button3.FlatAppearance.BorderSize = 0;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(7, 415);
+            this.button3.Location = new System.Drawing.Point(7, 467);
             this.button3.Name = "button3";
             this.button3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.button3.Size = new System.Drawing.Size(80, 40);
@@ -165,14 +179,14 @@
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.watermarkImage);
-            this.panel3.Location = new System.Drawing.Point(93, 389);
+            this.panel3.Location = new System.Drawing.Point(93, 415);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(284, 244);
             this.panel3.TabIndex = 5;
             // 
             // watermarkImage
             // 
-            this.watermarkImage.Image = ((System.Drawing.Image)(resources.GetObject("watermarkImage.Image")));
+            this.watermarkImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.watermarkImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("watermarkImage.InitialImage")));
             this.watermarkImage.Location = new System.Drawing.Point(3, 3);
             this.watermarkImage.Name = "watermarkImage";
@@ -196,7 +210,7 @@
             this.button4.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.button4.FlatAppearance.BorderSize = 0;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(93, 364);
+            this.button4.Location = new System.Drawing.Point(93, 369);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 4;
@@ -210,12 +224,12 @@
             this.button5.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.button5.FlatAppearance.BorderSize = 0;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Location = new System.Drawing.Point(93, 639);
+            this.button5.Location = new System.Drawing.Point(7, 415);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(108, 29);
+            this.button5.Size = new System.Drawing.Size(80, 46);
             this.button5.TabIndex = 6;
             this.button5.TabStop = false;
-            this.button5.Text = "Binarize Watermark";
+            this.button5.Text = "Scramble Watermark";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -224,7 +238,7 @@
             this.button6.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(7, 645);
+            this.button6.Location = new System.Drawing.Point(7, 636);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 7;
@@ -233,12 +247,130 @@
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(94, 400);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(94, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Watermark Image:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(4, 4);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Result :";
+            // 
+            // StatusPanel
+            // 
+            this.StatusPanel.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.StatusPanel.Controls.Add(this.totalScrambledTxt);
+            this.StatusPanel.Controls.Add(this.totalWatermarkTxt);
+            this.StatusPanel.Controls.Add(this.label8);
+            this.StatusPanel.Controls.Add(this.label7);
+            this.StatusPanel.Controls.Add(this.TimeExecTxt);
+            this.StatusPanel.Controls.Add(this.label6);
+            this.StatusPanel.Controls.Add(this.label5);
+            this.StatusPanel.Controls.Add(this.StatusTxt);
+            this.StatusPanel.Controls.Add(this.label4);
+            this.StatusPanel.Location = new System.Drawing.Point(3, 661);
+            this.StatusPanel.Name = "StatusPanel";
+            this.StatusPanel.Size = new System.Drawing.Size(1033, 31);
+            this.StatusPanel.TabIndex = 9;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 10);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(43, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Status: ";
+            // 
+            // StatusTxt
+            // 
+            this.StatusTxt.AutoSize = true;
+            this.StatusTxt.ForeColor = System.Drawing.Color.DarkGreen;
+            this.StatusTxt.Location = new System.Drawing.Point(49, 10);
+            this.StatusTxt.Name = "StatusTxt";
+            this.StatusTxt.Size = new System.Drawing.Size(38, 13);
+            this.StatusTxt.TabIndex = 1;
+            this.StatusTxt.Text = "Ready";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(107, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(86, 13);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "Execution Time: ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(187, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(0, 13);
+            this.label6.TabIndex = 3;
+            // 
+            // TimeExecTxt
+            // 
+            this.TimeExecTxt.AutoSize = true;
+            this.TimeExecTxt.Location = new System.Drawing.Point(187, 10);
+            this.TimeExecTxt.Name = "TimeExecTxt";
+            this.TimeExecTxt.Size = new System.Drawing.Size(13, 13);
+            this.TimeExecTxt.TabIndex = 4;
+            this.TimeExecTxt.Text = "0";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(626, 10);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(92, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Total Watermark: ";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(834, 10);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(90, 13);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Total Scrambled: ";
+            // 
+            // totalWatermarkTxt
+            // 
+            this.totalWatermarkTxt.AutoSize = true;
+            this.totalWatermarkTxt.Location = new System.Drawing.Point(715, 10);
+            this.totalWatermarkTxt.Name = "totalWatermarkTxt";
+            this.totalWatermarkTxt.Size = new System.Drawing.Size(13, 13);
+            this.totalWatermarkTxt.TabIndex = 7;
+            this.totalWatermarkTxt.Text = "0";
+            // 
+            // totalScrambledTxt
+            // 
+            this.totalScrambledTxt.AutoSize = true;
+            this.totalScrambledTxt.Location = new System.Drawing.Point(918, 10);
+            this.totalScrambledTxt.Name = "totalScrambledTxt";
+            this.totalScrambledTxt.Size = new System.Drawing.Size(13, 13);
+            this.totalScrambledTxt.TabIndex = 8;
+            this.totalScrambledTxt.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(1038, 680);
+            this.ClientSize = new System.Drawing.Size(1038, 693);
+            this.Controls.Add(this.StatusPanel);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -254,9 +386,12 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).EndInit();
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.transformedImage)).EndInit();
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.watermarkImage)).EndInit();
+            this.StatusPanel.ResumeLayout(false);
+            this.StatusPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,6 +414,18 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel StatusPanel;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label StatusTxt;
+        private System.Windows.Forms.Label TimeExecTxt;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label totalScrambledTxt;
+        private System.Windows.Forms.Label totalWatermarkTxt;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
     }
 }
 

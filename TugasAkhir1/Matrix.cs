@@ -262,5 +262,13 @@ namespace TugasAkhir1
             return randBin;
         }
         #endregion
+
+        #region 6. Segmentation
+        //Group the Interleaved sequence into M-bit segments
+        //public List<int> Segment(List<int> Interleaved)
+        //{
+            
+        //}
+        #endregion
     }
 }
