@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using MathNet.Numerics.Random;
+using MathNet.Numerics.Distributions;
 
 namespace TugasAkhir1
 {
@@ -57,11 +59,11 @@ namespace TugasAkhir1
                 DWT dwt = new DWT();
                 OriginalImage = new Bitmap(hostImage.Image);
                 //DWTImage = new Bitmap(transformImage.Image);
-                transformedImage.Image = dwt.TransformDWT(true, false, 2, OriginalImage);
+                transformedImage.Image = dwt.TransformDWT(true, false, 1, OriginalImage);
             }
             else
             {
-                MessageBox.Show("Load Image First", "Incomplete Procedure Detected", MessageBoxButtons.OK);
+                MessageBox.Show("Load Image First", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
             }    
         }
 
@@ -80,7 +82,7 @@ namespace TugasAkhir1
 
         private void button6_Click(object sender, EventArgs e) //Testing button
         {
-            Bitmap hostImg =new Bitmap(hostImage.Image);
+            Bitmap hostImg = new Bitmap(hostImage.Image);
 
             #region GUI Processing
             StatusPanel.BackColor = Color.Gray;
@@ -119,10 +121,11 @@ namespace TugasAkhir1
             List<int> c = m.ConvolutionCode(b);
             List<int> d = m.DSSS(c);
             List<int> ee = m.Interleaving(d);
+            //int totaloftree = m.Segment(ee);
             time.Stop();
-            var elapsedTime = time.ElapsedMilliseconds/1000;
+            var elapsedTime = time.ElapsedMilliseconds / 1000;
 
-            
+
             #region End of GUI Processing
             StatusPanel.BackColor = Color.LightSkyBlue;
             StatusTxt.BackColor = Color.LightSkyBlue;
@@ -131,7 +134,7 @@ namespace TugasAkhir1
             label4.BackColor = Color.LightSkyBlue;
             label5.BackColor = Color.LightSkyBlue;
             TimeExecTxt.BackColor = Color.LightSkyBlue;
-            TimeExecTxt.Text = " "+ elapsedTime.ToString() +" Second(s)";
+            TimeExecTxt.Text = " " + elapsedTime.ToString() + " Second(s)";
             int totalOriginalImage = hostImg.Height * hostImg.Width;
             totalWatermarkTxt.Text = totalOriginalImage.ToString();
             totalScrambledTxt.Text = ee.Count.ToString();
@@ -139,30 +142,61 @@ namespace TugasAkhir1
             label8.BackColor = Color.LightSkyBlue;
             totalScrambledTxt.BackColor = Color.LightSkyBlue;
             totalWatermarkTxt.BackColor = Color.LightSkyBlue;
-            #endregion 
-            
+            #endregion
+
             //Write Result of Scrambling to Txt.
             TextWriter tw = new StreamWriter("Scrambled_Data.txt");
             tw.WriteLine("Total Scrambled Data: " + ee.Count);
             foreach (int i in ee)
                 tw.WriteLine(i);
             tw.Close();
-            
+
+            //Bitmap bmp = new Bitmap(transformedImage.Image);
+            //var p = bmp.GetPixel(400, 400);
+            //var cR = p.R;
+            //var cG = p.G;
+            //var cB = p.B;
+            //MessageBox.Show("Red: "+cR+" Green: "+cG+" Blue: "+cB,"Result",MessageBoxButtons.OK);            
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             if (transformedImage.Image == null)
             {
-                MessageBox.Show("There is no Transform image yet","Incomplete Procedure Detected",MessageBoxButtons.OK);
+                MessageBox.Show("There is no Transformed image yet","Incomplete Procedure Detected!",MessageBoxButtons.OK);
             }
             else
             {
                 DWT dwt = new DWT();
                 Bitmap decomposedImage = new Bitmap(transformedImage.Image);
-                transformedImage.Image = dwt.TransformDWT(false, true, 2, decomposedImage); 
+                transformedImage.Image = dwt.TransformDWT(false, true, 1, decomposedImage); 
             }
             
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            ImageProcessing ip = new ImageProcessing();
+            Matrix m = new Matrix();
+            Bitmap bmp = new Bitmap(hostImage.Image);
+            //transformedImage.Image = ip.ConvertToBinary(bmp);
+            List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
+            List<int> b = m.ConvertToBinaryVectorMatrix(a);
+            List<int> c = m.ConvolutionCode(b);
+            List<int> d = m.DSSS(c);
+            List<int> ee = m.Interleaving(d);
+            List<List<int>> ff = m.Segment(ee);
+
+            TextWriter tw = new StreamWriter("Segmented_Data.txt");
+            //tw.WriteLine(ff[0].ToString());
+            tw.WriteLine("Total First Segment: " + ff[0].Count);
+            //foreach (int i in ff[0])
+            //tw.WriteLine(ff[0][]);
+            for (int i = 0; i < ff[0].Count; i++)
+            {
+                tw.WriteLine(ff[0][i]);
+            }
+            tw.Close();
         }
 
         

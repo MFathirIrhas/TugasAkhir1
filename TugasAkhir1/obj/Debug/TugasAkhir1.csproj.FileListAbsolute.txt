@@ -16,3 +16,5 @@ F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.csprojRe
 F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.Form1.resources
 F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.Properties.Resources.resources
 F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.csproj.GenerateResource.Cache
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\MathNet.Numerics.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\MathNet.Numerics.xml

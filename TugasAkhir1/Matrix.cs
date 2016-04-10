@@ -18,7 +18,7 @@ namespace TugasAkhir1
      * 3. 1/3 Convolution Code
      * 4. Direct Sequence Spread Spectrum
      * 5. Interleaving Sequence
-     * 
+     * 6. Segment
      * */
     public class Matrix
     {
@@ -264,11 +264,23 @@ namespace TugasAkhir1
         #endregion
 
         #region 6. Segmentation
-        //Group the Interleaved sequence into M-bit segments
-        //public List<int> Segment(List<int> Interleaved)
-        //{
-            
-        //}
+        //Group the Interleaved sequence into M-bit segments. M = 15.
+        public List<List<int>> Segment(List<int> Interleaved)
+        {
+            List<List<int>> Tree = new List<List<int>>();
+            List<int> tree_th = new List<int>();
+        
+            //Get total number of trees
+            double t = Interleaved.Count / 15; //15 didapat dari jumlah node dalam 1 pohon HMM, 3 parents dan 12 anak-nya untuk setiap scale.
+            int nSize =(int)Math.Floor(t);
+
+            for (int i = 0; i < Interleaved.Count; i += nSize)
+            {
+                Tree.Add(Interleaved.GetRange(i, Math.Min(nSize, Interleaved.Count - i)));
+            }
+
+            return Tree;           
+        }
         #endregion
     }
 }

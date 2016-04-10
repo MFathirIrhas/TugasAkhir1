@@ -17,6 +17,10 @@ namespace TugasAkhir1
         private const double w1 = -0.5;
         private const double s0 = 0.5;
         private const double s1 = 0.5;
+        //private const double w0 = 1;
+        //private const double w1 = -1;
+        //private const double s0 = 1;
+        //private const double s1 = 1;
 
         public void Forward1D(double[] data)
         {
@@ -72,7 +76,7 @@ namespace TugasAkhir1
                         data[i, j] = col[i];
                 }
             }
-        }
+        }        
 
         public void Inverse1D(double[] data)
         {
@@ -82,8 +86,8 @@ namespace TugasAkhir1
             for (int i = 0; i < h; i++)
             {
                 int k = (i << 1);
-                temp[k] = (data[i] * s0 + data[i + h] * w0) / w0;
-                temp[k + 1] = (data[i] * s1 + data[i + h] * w1) / s0;
+                temp[k] = (data[i] * s0 + data[i + h] * w0)  / w0;
+                temp[k + 1] = (data[i] * s1 + data[i + h] * w1)  / s0;
             }
 
             for (int i = 0; i < data.Length; i++)
