@@ -36,6 +36,7 @@
             this.HostImageLocationTxt = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button10 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.transformedImage = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -146,12 +147,27 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.button10);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.transformedImage);
             this.panel2.Location = new System.Drawing.Point(383, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(653, 656);
             this.panel2.TabIndex = 3;
+            // 
+            // button10
+            // 
+            this.button10.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button10.FlatAppearance.BorderSize = 0;
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button10.Location = new System.Drawing.Point(573, 628);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.TabIndex = 13;
+            this.button10.TabStop = false;
+            this.button10.Text = "Save";
+            this.button10.UseVisualStyleBackColor = false;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // label3
             // 
@@ -168,7 +184,7 @@
             this.transformedImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("transformedImage.InitialImage")));
             this.transformedImage.Location = new System.Drawing.Point(3, 23);
             this.transformedImage.Name = "transformedImage";
-            this.transformedImage.Size = new System.Drawing.Size(645, 628);
+            this.transformedImage.Size = new System.Drawing.Size(645, 603);
             this.transformedImage.TabIndex = 0;
             this.transformedImage.TabStop = false;
             // 
@@ -480,6 +496,7 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
     }
 }
 

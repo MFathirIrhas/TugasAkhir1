@@ -18,3 +18,10 @@ F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.Properti
 F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\obj\Debug\TugasAkhir1.csproj.GenerateResource.Cache
 F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\MathNet.Numerics.dll
 F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\MathNet.Numerics.xml
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\Accord.Controls.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\Accord.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\Accord.MachineLearning.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\Accord.Math.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\Accord.Statistics.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\ZedGraph.dll
+F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\bin\Debug\ZedGraph.xml

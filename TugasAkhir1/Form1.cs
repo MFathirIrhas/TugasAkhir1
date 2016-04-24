@@ -10,8 +10,10 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using MathNet.Numerics.Random;
 using MathNet.Numerics.Distributions;
+
 
 namespace TugasAkhir1
 {
@@ -40,6 +42,44 @@ namespace TugasAkhir1
             }
         }
 
+        private void button10_Click(object sender, EventArgs e) //Save Transformed/Watermarked Image
+        {
+            if (transformedImage.Image != null)
+            {
+                Bitmap bmp = new Bitmap(transformedImage.Image);
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Title = "Select Save Location";
+                sfd.InitialDirectory = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Saved_Image";
+                sfd.AddExtension = true;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    switch (Path.GetExtension(sfd.FileName).ToUpper())
+                    {
+                        case ".BMP":
+                            bmp.Save(sfd.FileName, ImageFormat.Bmp);
+                            break;
+                        case ".gif":
+                            bmp.Save(sfd.FileName, ImageFormat.Gif);
+                            break;
+                        case ".JPG":
+                            bmp.Save(sfd.FileName, ImageFormat.Jpeg);
+                            break;
+                        case ".JPEG":
+                            bmp.Save(sfd.FileName,ImageFormat.Jpeg);
+                            break;
+                        case ".PNG":
+                            bmp.Save(sfd.FileName, ImageFormat.Png);
+                            break;
+                        case ".png":
+                            bmp.Save(sfd.FileName, ImageFormat.Png);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
         private void button4_Click(object sender, EventArgs e) //Open Watermark Image
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -59,7 +99,7 @@ namespace TugasAkhir1
                 DWT dwt = new DWT();
                 OriginalImage = new Bitmap(hostImage.Image);
                 //DWTImage = new Bitmap(transformImage.Image);
-                transformedImage.Image = dwt.TransformDWT(true, false, 1, OriginalImage);
+                transformedImage.Image = dwt.TransformDWT(true, false, 2, OriginalImage);
             }
             else
             {
@@ -121,7 +161,7 @@ namespace TugasAkhir1
             List<int> c = m.ConvolutionCode(b);
             List<int> d = m.DSSS(c);
             List<int> ee = m.Interleaving(d);
-            //int totaloftree = m.Segment(ee);
+            List<List<int>> totaloftree = m.Segment(ee);
             time.Stop();
             var elapsedTime = time.ElapsedMilliseconds / 1000;
 
@@ -137,7 +177,7 @@ namespace TugasAkhir1
             TimeExecTxt.Text = " " + elapsedTime.ToString() + " Second(s)";
             int totalOriginalImage = hostImg.Height * hostImg.Width;
             totalWatermarkTxt.Text = totalOriginalImage.ToString();
-            totalScrambledTxt.Text = ee.Count.ToString();
+            totalScrambledTxt.Text = totaloftree[13247].Count.ToString();
             label7.BackColor = Color.LightSkyBlue;
             label8.BackColor = Color.LightSkyBlue;
             totalScrambledTxt.BackColor = Color.LightSkyBlue;
@@ -147,7 +187,7 @@ namespace TugasAkhir1
             //Write Result of Scrambling to Txt.
             TextWriter tw = new StreamWriter("Scrambled_Data.txt");
             tw.WriteLine("Total Scrambled Data: " + ee.Count);
-            foreach (int i in ee)
+            foreach (int i in totaloftree[13247])
                 tw.WriteLine(i);
             tw.Close();
 
@@ -169,35 +209,58 @@ namespace TugasAkhir1
             {
                 DWT dwt = new DWT();
                 Bitmap decomposedImage = new Bitmap(transformedImage.Image);
-                transformedImage.Image = dwt.TransformDWT(false, true, 1, decomposedImage); 
+                transformedImage.Image = dwt.TransformDWT(false, true, 2, decomposedImage); 
             }
             
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            ImageProcessing ip = new ImageProcessing();
-            Matrix m = new Matrix();
-            Bitmap bmp = new Bitmap(hostImage.Image);
-            //transformedImage.Image = ip.ConvertToBinary(bmp);
-            List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
-            List<int> b = m.ConvertToBinaryVectorMatrix(a);
-            List<int> c = m.ConvolutionCode(b);
-            List<int> d = m.DSSS(c);
-            List<int> ee = m.Interleaving(d);
-            List<List<int>> ff = m.Segment(ee);
+            //ImageProcessing ip = new ImageProcessing();
+            //Matrix m = new Matrix();
+            //Bitmap bmp = new Bitmap(hostImage.Image);
+            ////transformedImage.Image = ip.ConvertToBinary(bmp);
+            //List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
+            //List<int> b = m.ConvertToBinaryVectorMatrix(a);
+            //List<int> c = m.ConvolutionCode(b);
+            //List<int> d = m.DSSS(c);
+            //List<int> ee = m.Interleaving(d);
+            //List<List<int>> ff = m.Segment(ee);
 
-            TextWriter tw = new StreamWriter("Segmented_Data.txt");
-            //tw.WriteLine(ff[0].ToString());
-            tw.WriteLine("Total First Segment: " + ff[0].Count);
-            //foreach (int i in ff[0])
-            //tw.WriteLine(ff[0][]);
-            for (int i = 0; i < ff[0].Count; i++)
-            {
-                tw.WriteLine(ff[0][i]);
-            }
-            tw.Close();
+            //TextWriter tw = new StreamWriter("Segmented_Data.txt");
+            ////tw.WriteLine(ff[0].ToString());
+            //tw.WriteLine("Total First Segment: " + ff[0].Count);
+            ////foreach (int i in ff[0])
+            ////tw.WriteLine(ff[0][]);
+            //for (int i = 0; i < ff[0].Count; i++)
+            //{
+            //    tw.WriteLine(ff[0][i]);
+            //}
+            //tw.Close();
+
+            Bitmap bmp = new Bitmap(hostImage.Image);
+            Color c, c2, c3;
+            int w = bmp.Width / 2;
+            int w2 = w / 2;
+            c = bmp.GetPixel(0, 0);//width=397 , height=367
+            c2 = bmp.GetPixel(1, 0);
+            c3 = bmp.GetPixel(w2 + 1, w2 + 1);
+            int R = c.R;
+            int R2 = c2.R;
+            int R3 = c3.R;
+
+            //int[] f = { 3, 2, 3, 2, 3, 1, 1, 2 };
+            //int[] g = { 2, 2, 2, 2, 2, 2 };
+            //double m = Statistic.Mean(g);
+            //double var = Statistic.Variance(g);
+            //MessageBox.Show("RGB Value:" +m+","+var, "succeed", MessageBoxButtons.OK);
+
+            MessageBox.Show("Pixel Sudut Kiri:" + R + ",Pixel tetangga:" + R2 + ",Pixel Decomposed:" +R3 +",", "succeed", MessageBoxButtons.OK);
+
+            
         }
+
+        
 
         
     }

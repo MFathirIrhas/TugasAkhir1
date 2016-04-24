@@ -131,7 +131,7 @@ namespace TugasAkhir1
             List<int> dsss = new List<int>();
             int pnlength = mc.Count * 4;
             //List<int> PNSeq = PNSeqGenerate(pnlength); //Pseudonoise sequence generated randomly using pseudorandom sequence
-            string pn_seed = "1000";
+            string pn_seed = "1000"; //Secret Key K
             string pn_mask = "1010";
             int pn_length = pnlength;
             List<int> PNSeq = PNSeqLFSR(pn_seed, pn_mask, pn_length);
@@ -154,7 +154,7 @@ namespace TugasAkhir1
                     k = k + 1;
                 }       
             }
-            
+
             return dsss;
         }
 
@@ -273,14 +273,20 @@ namespace TugasAkhir1
             //Get total number of trees
             double t = Interleaved.Count / 15; //15 didapat dari jumlah node dalam 1 pohon HMM, 3 parents dan 12 anak-nya untuk setiap scale.
             int nSize =(int)Math.Floor(t);
+            double s = Interleaved.Count / nSize;
+            int segSize = (int)s;
 
-            for (int i = 0; i < Interleaved.Count; i += nSize)
+            for (int i = 0; i < Interleaved.Count; i += segSize)
             {
-                Tree.Add(Interleaved.GetRange(i, Math.Min(nSize, Interleaved.Count - i)));
+                Tree.Add(Interleaved.GetRange(i, Math.Min(segSize, Interleaved.Count - i)));
             }
 
             return Tree;           
         }
+        #endregion
+
+        #region 7. Mapping the Scrambled Watermark
+        
         #endregion
     }
 }
