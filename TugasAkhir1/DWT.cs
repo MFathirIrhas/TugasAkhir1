@@ -17,10 +17,6 @@ namespace TugasAkhir1
         private const double w1 = -0.5;
         private const double s0 = 0.5;
         private const double s1 = 0.5;
-        //private const double w0 = 1;
-        //private const double w1 = -1;
-        //private const double s0 = 1;
-        //private const double s1 = 1;
 
         public void Forward1D(double[] data)
         {
@@ -78,7 +74,7 @@ namespace TugasAkhir1
             }
         }        
 
-        public void Inverse1D(double[] data)
+        public static void Inverse1D(double[] data)
         {
             double[] temp = new double[data.Length];
 
@@ -94,19 +90,59 @@ namespace TugasAkhir1
                 data[i] = temp[i];
         }
 
-        public void Inverse2D(double[,] data, int level)
+        //public void Inverse2D(double[,] data, int level)
+        //{
+        //    int rows = data.GetLength(0);
+        //    int cols = data.GetLength(1);
+
+        //    double[] col = new double[rows];
+        //    double[] row = new double[cols];
+
+        //    for (int l = 0; l < level; l++)
+        //    {
+        //        for (int j = 0; j < cols; j++)
+        //        {
+        //            for (int i = 0; i < row.Length; i++)
+        //                col[i] = data[i, j];
+
+        //            Inverse1D(col);
+
+        //            for (int i = 0; i < col.Length; i++)
+        //                data[i, j] = col[i];
+        //        }
+
+        //        for (int i = 0; i < rows; i++)
+        //        {
+        //            for (int j = 0; j < row.Length; j++)
+        //                row[j] = data[i, j];
+
+        //            Inverse1D(row);
+
+        //            for (int j = 0; j < row.Length; j++)
+        //                data[i, j] = row[j];
+        //        }
+        //    }
+        //}
+
+        public static void Inverse2D(double[,] data, int iterations)
         {
             int rows = data.GetLength(0);
             int cols = data.GetLength(1);
 
-            double[] col = new double[rows];
-            double[] row = new double[cols];
+            double[] col;
+            double[] row;
 
-            for (int l = 0; l < level; l++)
+            for (int k = iterations - 1; k >= 0; k--)
             {
-                for (int j = 0; j < cols; j++)
+                int lev = 1 << k;
+
+                int levCols = cols / lev;
+                int levRows = rows / lev;
+
+                col = new double[levRows];
+                for (int j = 0; j < levCols; j++)
                 {
-                    for (int i = 0; i < row.Length; i++)
+                    for (int i = 0; i < col.Length; i++)
                         col[i] = data[i, j];
 
                     Inverse1D(col);
@@ -115,7 +151,8 @@ namespace TugasAkhir1
                         data[i, j] = col[i];
                 }
 
-                for (int i = 0; i < rows; i++)
+                row = new double[levCols];
+                for (int i = 0; i < levRows; i++)
                 {
                     for (int j = 0; j < row.Length; j++)
                         row[j] = data[i, j];
