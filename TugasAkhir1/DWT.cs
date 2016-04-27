@@ -13,12 +13,15 @@ namespace TugasAkhir1
 {
     public class DWT
     {
-        private const double w0 = 0.5;
+        //For High Pass Filter
+        private const double w0 =  0.5; 
         private const double w1 = -0.5;
-        private const double s0 = 0.5;
-        private const double s1 = 0.5;
 
-        public void Forward1D(double[] data)
+        //For Low Pass Filter
+        private const double s0 =  0.5;
+        private const double s1 =  0.5;
+
+        public static void Forward1D(double[] data)
         {
             double[] temp = new double[data.Length];
             int h = data.Length >> 1;
@@ -33,7 +36,7 @@ namespace TugasAkhir1
                 data[i] = temp[i];
         }
 
-        public void Forward2D(double[,] data, int level)
+        public static void Forward2D(double[,] data, int level)
         {
             int rows = data.GetLength(0);
             int cols = data.GetLength(1);
@@ -165,7 +168,7 @@ namespace TugasAkhir1
             }
         }
 
-        public double Scale(double fromMin, double fromMax, double toMin, double toMax, double x)
+        public static double Scale(double fromMin, double fromMax, double toMin, double toMax, double x)
         {
             if (fromMax - fromMin == 0) return 0;
             double value = (toMax - toMin) * (x - fromMin) / (fromMax - fromMin) + toMin;
@@ -180,7 +183,7 @@ namespace TugasAkhir1
             return value;
         }
 
-        public Bitmap TransformDWT(bool Forward, bool Safe, int Levels, Bitmap OriginalImage/*, Bitmap TransformedImage*/)
+        public static Bitmap TransformDWT(bool Forward, bool Safe, int Levels, Bitmap OriginalImage/*, Bitmap TransformedImage*/)
         {
 
             //Bitmap bmp = Forward ? OriginalImage : TransformedImage;

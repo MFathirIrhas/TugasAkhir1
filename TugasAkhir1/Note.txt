@@ -14,3 +14,18 @@
 ------------------------------------------------------------------------------------------------
 
 Wavelet coefficients adalah nilai-nilai pixel setelah gambar di decompose kedalam domain DWT.
+
+127 adalah nilai pixel/wavelet coefficients yang paling banyak muncul, threshold untuk state HMM adalah 1 => pixel>127 dan 2 => pixel<=217
+
+Struktur HMM: 
+
+> States				= {1,2} : 2 
+> Observation			= {Wi....Wn} : The Wavelet Coefficients
+> Start Probability		= {P(S=1), P(S=2)} : probability of each states
+> Transition Probability= {
+							1 -> 1 , 1 -> 2
+							2 -> 1 , 2 -> 2
+						  }
+
+
+*Based on Wikipedia: https://en.wikipedia.org/wiki/Hidden_Markov_model

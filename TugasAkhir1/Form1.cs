@@ -96,10 +96,9 @@ namespace TugasAkhir1
         {
             if (hostImage.Image != null)
             {
-                DWT dwt = new DWT();
                 OriginalImage = new Bitmap(hostImage.Image);
                 //DWTImage = new Bitmap(transformImage.Image);
-                transformedImage.Image = dwt.TransformDWT(true, false, 2, OriginalImage);
+                transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
             }
             else
             {
@@ -207,9 +206,8 @@ namespace TugasAkhir1
             }
             else
             {
-                DWT dwt = new DWT();
                 Bitmap decomposedImage = new Bitmap(transformedImage.Image);
-                transformedImage.Image = dwt.TransformDWT(false, true, 2, decomposedImage); 
+                transformedImage.Image = DWT.TransformDWT(false, true, 2, decomposedImage); 
             }
             
         }
@@ -238,16 +236,16 @@ namespace TugasAkhir1
             //}
             //tw.Close();
 
-            Bitmap bmp = new Bitmap(hostImage.Image);
-            Color c, c2, c3;
-            int w = bmp.Width / 2;
-            int w2 = w / 2;
-            c = bmp.GetPixel(0, 0);//width=397 , height=367
-            c2 = bmp.GetPixel(1, 0);
-            c3 = bmp.GetPixel(w2 + 1, w2 + 1);
-            int R = c.R;
-            int R2 = c2.R;
-            int R3 = c3.R;
+            //Bitmap bmp = new Bitmap(hostImage.Image);
+            //Color c, c2, c3;
+            //int w = bmp.Width / 2;
+            //int w2 = w / 2;
+            //c = bmp.GetPixel(0, 0);//width=397 , height=367
+            //c2 = bmp.GetPixel(1, 0);
+            //c3 = bmp.GetPixel(w2 + 1, w2 + 1);
+            //int R = c.R;
+            //int R2 = c2.R;
+            //int R3 = c3.R;
 
             //int[] f = { 3, 2, 3, 2, 3, 1, 1, 2 };
             //int[] g = { 2, 2, 2, 2, 2, 2 };
@@ -255,9 +253,34 @@ namespace TugasAkhir1
             //double var = Statistic.Variance(g);
             //MessageBox.Show("RGB Value:" +m+","+var, "succeed", MessageBoxButtons.OK);
 
-            MessageBox.Show("Pixel Sudut Kiri:" + R + ",Pixel tetangga:" + R2 + ",Pixel Decomposed:" +R3 +",", "succeed", MessageBoxButtons.OK);
+            //MessageBox.Show("Pixel Sudut Kiri:" + R + ",Pixel tetangga:" + R2 + ",Pixel Decomposed:" +R3 +",", "succeed", MessageBoxButtons.OK);
 
             
+            var b = new Bitmap(hostImage.Image);
+            var coeff = HMM.GetWaveletCoeff(b,0,"ALL");
+            var hs = HMM.GetHiddenStates(coeff);
+            var hs12 = HMM.CountHS(hs);
+            int aa = hs12.Item1 + hs12.Item2;
+            double prob1 = (double)hs12.Item1 / aa;
+            double prob2 = (double)hs12.Item2 / aa;
+            double prob11 = Math.Round(prob1, 2);
+            double prob22 = Math.Round(prob2, 2);
+            totalWatermarkTxt.Text = prob11.ToString();//hs12.Item1.ToString();
+            totalScrambledTxt.Text = prob22.ToString();//hs12.Item2.ToString();
+            double prob = prob1+prob2;
+            TimeExecTxt.Text = prob.ToString();//aa.ToString();
+            //double d = HMM.Threshold(coeff);
+            //totalScrambledTxt.Text = d.ToString();
+            TextWriter tw = new StreamWriter("Wavelet_Coefficients.txt");
+            tw.WriteLine("Jumlah Wavelet-Coeff: " + coeff.Count);
+            tw.WriteLine("Total pixel: " + b.Width * b.Height);
+            tw.WriteLine("");
+            for (int i = 0; i < coeff.Count; i++)
+            {
+                tw.WriteLine(coeff[i]);
+            }
+            tw.Close();
+
         }
 
         
