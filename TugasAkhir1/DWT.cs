@@ -308,5 +308,22 @@ namespace TugasAkhir1
             Forward2D(p, level);
             return p;
         }
+
+        public static double[,] GetWaveletCoeff2(Bitmap bmp, int level)
+        {
+            double[,] p = new double[bmp.Height, bmp.Width];
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    p[y, x] = c.R;
+                }
+            }
+
+            double[,] coeffs = GetWaveletCoeff(p, level);
+            return coeffs;
+        }
+         
     }
 }
