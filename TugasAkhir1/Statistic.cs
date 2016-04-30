@@ -15,11 +15,11 @@ namespace TugasAkhir1
             return mu;
         }
 
-        public static double Variance(int[] d)
+        public static double Variance(List<int> d)
         {
             double mean = d.Average();
             double sum = d.Select(val => (val - mean) * (val - mean)).Sum();
-            double variance = sum / d.Length;
+            double variance = sum / d.Count;
             return variance;
         }
 
@@ -34,5 +34,7 @@ namespace TugasAkhir1
             var det = Accord.Math.Matrix.Determinant(d);
             return det;
         }
+
+        
     }
 }

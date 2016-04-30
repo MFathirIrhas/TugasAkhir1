@@ -19,7 +19,7 @@ Wavelet coefficients adalah nilai-nilai pixel setelah gambar di decompose kedala
 
 Struktur HMM: 
 
-> States				= {1,2} : 2 
+> Hidden States			= {1,2} : 2 
 > Observation			= {Wi....Wn} : The Wavelet Coefficients
 > Start Probability		= {P(S=1), P(S=2)} : probability of each states
 > Transition Probability= {
@@ -29,3 +29,42 @@ Struktur HMM:
 
 
 *Based on Wikipedia: https://en.wikipedia.org/wiki/Hidden_Markov_model
+
+---------
+
+Sifat-sifat wavelet coefficients:
+- Pada domain DWT, terdapat nilai-nilai wavelet coefficients yang dapat dibagi menjadi 2 kategori:
+  - "High" Wavelet Coefficient : yaitu nilai wavelet yang tinggi
+  - "Low" Wavelet Coefficient : yaitu nilai wavelet yang rendah
+- Setelah proses wavelet transform, distribusi nilai wavelet memiliki kecenderungan untuk nilai tinggi yang jarang muncul, sedangkan
+  nilai yang rendah sangat sering muncul pada gambar.
+
+	Untuk setiap wavelet coefficient, ada state yang berlaku terhadapnya. Pada kasus kali ini, akan ditentukan 2 states
+yaitu state 1 untuk nilai wavelet coeff. yang tinggi dan state 2 untuk nilai wavelet coeff. yang rendah.
+
+	Untuk setiap wavelet coeff. ada probabilitas zero-mean gaussian mixture model yang merupakan gabungan antara probabilitas nilai coefficeiens yang tinggi
+dikali niali gaussiannya dengan probabilitas nilai coeff yang rendah dikali dengan nilai gaussiannya juga.
+"..--the result is a two-state mixture model for each wavelet coefficient...."(Wavelet-Based Statistical Signal Processing using Hidden Markov Model)
+
+---------
+"...Wavelet Coefficients at the same subband are tied together to share the same statistic..."(WDHMM_trans)
+
+
+---------
+Bimbingan 2: pak cok
+-> Hal-hal minor boleh diganti
+-> Teknik Scramble bebas(boleh gak di scramble)
+
+---------
+Code:
+x >> y = x/(y*2)
+x << y = x*(y*2)
+
+---------
+Python pywt library for Haar Wavelet Transform used matrix transformation:
+	[ 1/sqrt(2)  1/sqrt(2) ]
+	[ 1/sqrt(2) -1/sqrt(2) ]
+
+---------
+Wavelet Coefficients FIXED HAHAHHAHHA!!!!
+

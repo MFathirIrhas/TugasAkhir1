@@ -13,13 +13,19 @@ namespace TugasAkhir1
 {
     public class DWT
     {
+        //Haar Discrete Wavelet Transform
+        //Matrix transform = 
+        /// [ 1/sqrt(2)  1/sqrt(2) ] 
+        /// [ 1/sqrt(2) -1/sqrt(2) ]
+        //1.4142135623730950488016887242097 = Math.Sqrt(2)
+        //0.70710678118654752440084436210485 = 1/Math.Sqrt(2)
         //For High Pass Filter
-        private const double w0 =  0.5; 
-        private const double w1 = -0.5;
+        private const double w0 =  0.70710678118654752440084436210485;//1/1.4142135623730950488016887242097;//  0.5; 
+        private const double w1 = -0.70710678118654752440084436210485;//-1/1.4142135623730950488016887242097;// -0.5;
 
         //For Low Pass Filter
-        private const double s0 =  0.5;
-        private const double s1 =  0.5;
+        private const double s0 =  0.70710678118654752440084436210485;//1/1.4142135623730950488016887242097;//  0.5;
+        private const double s1 =  0.70710678118654752440084436210485;//1/1.4142135623730950488016887242097;//  0.5;
 
         public static void Forward1D(double[] data)
         {
@@ -85,14 +91,15 @@ namespace TugasAkhir1
             for (int i = 0; i < h; i++)
             {
                 int k = (i << 1);
-                temp[k] = (data[i] * s0 + data[i + h] * w0)  / w0;
-                temp[k + 1] = (data[i] * s1 + data[i + h] * w1)  / s0;
+                temp[k] = (data[i] * s0 + data[i + h] * w0);// w0; //Change After Matrix Transformation Changed to 1/sqrt(2)
+                temp[k + 1] = (data[i] * s1 + data[i + h] * w1)  ;// s0; //Change After Matrix Transformation Changed to 1/sqrt(2)
             }
 
             for (int i = 0; i < data.Length; i++)
                 data[i] = temp[i];
         }
 
+        #region buggy Inverse2d
         //public void Inverse2D(double[,] data, int level)
         //{
         //    int rows = data.GetLength(0);
@@ -126,6 +133,7 @@ namespace TugasAkhir1
         //        }
         //    }
         //}
+        #endregion
 
         public static void Inverse2D(double[,] data, int iterations)
         {
@@ -291,6 +299,14 @@ namespace TugasAkhir1
 
             bmp2 = bmp;
             return bmp2;
+        }
+
+
+        public static double[,] GetWaveletCoeff(double[,] pixels, int level)
+        {
+            double[,] p = pixels;
+            Forward2D(p, level);
+            return p;
         }
     }
 }

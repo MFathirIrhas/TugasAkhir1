@@ -12,9 +12,9 @@ namespace TugasAkhir1
     /* *
      * This class was used to do some Image processing
      * 1. ConvertToBinary Class
-     * 2. Human Visual System (HVS)
-     * 3. -
-     * 4. -
+     * 2. 
+     * 3. 
+     * 4. 
      * */
     public class ImageProcessing
     {

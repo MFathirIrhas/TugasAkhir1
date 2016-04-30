@@ -92,18 +92,32 @@ namespace TugasAkhir1
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) //Forward Transform
         {
             if (hostImage.Image != null)
             {
                 OriginalImage = new Bitmap(hostImage.Image);
                 //DWTImage = new Bitmap(transformImage.Image);
-                transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
+                transformedImage.Image = DWT.TransformDWT(true, false, 1, OriginalImage);
             }
             else
             {
                 MessageBox.Show("Load Image First", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
             }    
+        }
+
+        private void button3_Click(object sender, EventArgs e) //Inverse Transform
+        {
+            if (transformedImage.Image == null)
+            {
+                MessageBox.Show("There is no Transformed image yet", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                Bitmap decomposedImage = new Bitmap(transformedImage.Image);
+                transformedImage.Image = DWT.TransformDWT(false, false, 1, decomposedImage);
+            }
+
         }
 
         private void button5_Click(object sender, EventArgs e) //Generate bit sequence contain 0 and 1
@@ -198,19 +212,7 @@ namespace TugasAkhir1
             //MessageBox.Show("Red: "+cR+" Green: "+cG+" Blue: "+cB,"Result",MessageBoxButtons.OK);            
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (transformedImage.Image == null)
-            {
-                MessageBox.Show("There is no Transformed image yet","Incomplete Procedure Detected!",MessageBoxButtons.OK);
-            }
-            else
-            {
-                Bitmap decomposedImage = new Bitmap(transformedImage.Image);
-                transformedImage.Image = DWT.TransformDWT(false, true, 2, decomposedImage); 
-            }
-            
-        }
+        
 
         private void button9_Click(object sender, EventArgs e)
         {
@@ -271,15 +273,43 @@ namespace TugasAkhir1
             TimeExecTxt.Text = prob.ToString();//aa.ToString();
             //double d = HMM.Threshold(coeff);
             //totalScrambledTxt.Text = d.ToString();
-            TextWriter tw = new StreamWriter("Wavelet_Coefficients.txt");
-            tw.WriteLine("Jumlah Wavelet-Coeff: " + coeff.Count);
-            tw.WriteLine("Total pixel: " + b.Width * b.Height);
-            tw.WriteLine("");
-            for (int i = 0; i < coeff.Count; i++)
-            {
-                tw.WriteLine(coeff[i]);
-            }
-            tw.Close();
+            //TextWriter tw = new StreamWriter("Wavelet_Coefficients.txt");
+            //tw.WriteLine("Jumlah Wavelet-Coeff: " + coeff.Count);
+            //tw.WriteLine("Total pixel: " + b.Width * b.Height);
+            //tw.WriteLine("");
+            //for (int i = 0; i < coeff.Count; i++)
+            //{
+            //    tw.WriteLine(coeff[i]);
+            //}
+            //tw.Close();
+
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            //Bitmap bmp = new Bitmap(transformedImage.Image);
+            //var coeff = HMM.GetWaveletCoeff2(bmp, 0, "ALL");
+            //var threshold = HMM.Threshold(coeff);
+            //totalScrambledTxt.Text = threshold.ToString();
+
+            Bitmap bmp = new Bitmap(hostImage.Image);
+            Color c = bmp.GetPixel(1,1);
+            totalScrambledTxt.Text = c.R.ToString();
+
+            //TextWriter tw = new StreamWriter("DifferentMatrixTransform.txt");
+            //tw.WriteLine("Jumlah Wavelet-Coeff: " + coeff.Count);
+            //tw.WriteLine("Total pixel: " + bmp.Width * bmp.Height);
+            //tw.WriteLine("");
+            //for (int i = 0; i < coeff.Count; i++)
+            //{
+            //    tw.WriteLine(coeff[i]);
+            //}
+            //tw.Close();
+
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
 
         }
 
