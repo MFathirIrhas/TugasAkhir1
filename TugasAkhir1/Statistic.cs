@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Accord.Math;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace TugasAkhir1
 {
@@ -15,7 +17,7 @@ namespace TugasAkhir1
             return mu;
         }
 
-        public static double Variance(List<int> d)
+        public static double Variance(List<double> d)
         {
             double mean = d.Average();
             double sum = d.Select(val => (val - mean) * (val - mean)).Sum();
@@ -35,6 +37,32 @@ namespace TugasAkhir1
             return det;
         }
 
+        public static double Akurasi(Bitmap bmp1, Bitmap bmp2)
+        {
+            List<int> akurasi = new List<int>();
+            //Bitmap tr = new Bitmap(transformedImage.Image);
+            for (int i = 0; i < bmp1.Height; i++)
+            {
+                for (int j = 0; j < bmp1.Width; j++)
+                {
+                    Color c1 = bmp1.GetPixel(j, i);
+                    Color c2 = bmp2.GetPixel(j, i);
+                    if (c1.R == c2.R)
+                    {
+                        akurasi.Add(1);
+                    }
+                    else
+                    {
+                        akurasi.Add(0);
+                    }
+
+                }
+            }
+            double sumup = akurasi.Sum();
+            double ak = (sumup / (double)akurasi.Count) * 100;
+            return ak;
+        }
+        
         
     }
 }

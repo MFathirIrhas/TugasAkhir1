@@ -20,14 +20,14 @@ namespace TugasAkhir1
      * 5. Interleaving Sequence
      * 6. Segment
      * */
-    public class Matrix
+    public class Scramble
     {
         //Global Variables
-        int[] pnseed = new int[4];
+        static int[] pnseed = new int[4];
 
         #region 1. ConvertToVectorMatrix
         //Convert to 1 Dimensional Matrix fill with black and white value
-        public List<int> ConvertToVectorMatrix(Bitmap bmp)
+        public static List<int> ConvertToVectorMatrix(Bitmap bmp)
         {
             List<int> m = new List<int>();
             int width = bmp.Width;
@@ -48,7 +48,7 @@ namespace TugasAkhir1
 
         #region 2. ConvertToBinaryVectorMatrix
         //Convert to 0 or 1 bit sequence , 1 denote to white space and 0 denote to black space
-        public List<int> ConvertToBinaryVectorMatrix(List<int> vm)
+        public static List<int> ConvertToBinaryVectorMatrix(List<int> vm)
         {
             List<int> bvm = new List<int>();
             foreach (int i in vm)
@@ -80,7 +80,7 @@ namespace TugasAkhir1
          *      g2 = { 1, 1, 0, 1, 1, 0, 0, 1 }
          *      g3 = { 1, 0, 0, 1, 0, 1, 0, 1 }
          **/
-        public List<int> ConvolutionCode(List<int> m)
+        public static List<int> ConvolutionCode(List<int> m)
         {
             List<int> mc = new List<int>(); //Output list
             int elm = 0;
@@ -126,7 +126,7 @@ namespace TugasAkhir1
          * 3. PN Sequence is generated using a key
          * 4. The result will be a sequence contain values 1 and -1 with length = input bit length * PN Sequence length
          * */
-        public List<int> DSSS(List<int> mc)
+        public static List<int> DSSS(List<int> mc)
         {
             List<int> dsss = new List<int>();
             int pnlength = mc.Count * 4;
@@ -159,7 +159,7 @@ namespace TugasAkhir1
         }
 
         //Generate PNSequence using LFSR(Linear Feedback Shift Register)
-        public List<int> PNSeqLFSR(string seed, string mask, int length)
+        public static List<int> PNSeqLFSR(string seed, string mask, int length)
         {
             List<int> pnseq = new List<int>();
 
@@ -189,7 +189,7 @@ namespace TugasAkhir1
         }
 
         //Shift pnseed to the right
-        public int[] Roll(int[] key)
+        public static int[] Roll(int[] key)
         {
             int[] ShiftedKey = new int[key.Length];
             for (int i = 0; i < key.Length; i++)
@@ -214,7 +214,7 @@ namespace TugasAkhir1
         #endregion
 
         #region 5. Interleaving Sequence
-        public List<int> Interleaving(List<int> dsss)
+        public static List<int> Interleaving(List<int> dsss)
         {
             List<int> il = new List<int>();
             var ds3 = dsss;
@@ -241,7 +241,7 @@ namespace TugasAkhir1
             return il;
         }
 
-        public List<int> GenerateRandomBinarySeq(int length) //generate random binary sequence for Interleaving sequence
+        public static List<int> GenerateRandomBinarySeq(int length) //generate random binary sequence for Interleaving sequence
         {
             var randBin = new List<int>();
             Random rand = new Random();
@@ -265,13 +265,13 @@ namespace TugasAkhir1
 
         #region 6. Segmentation
         //Group the Interleaved sequence into M-bit segments. M = 15.
-        public List<List<int>> Segment(List<int> Interleaved)
+        public static List<List<int>> Segment(List<int> Interleaved)
         {
             List<List<int>> Tree = new List<List<int>>();
             List<int> tree_th = new List<int>();
         
             //Get total number of trees
-            double t = Interleaved.Count / 15; //15 didapat dari jumlah node dalam 1 pohon HMM, 3 parents dan 12 anak-nya untuk setiap scale.
+            double t = Interleaved.Count / 5; //15 didapat dari jumlah node dalam 1 pohon HMM, 3 parents dan 12 anak-nya untuk setiap scale.
             int nSize =(int)Math.Floor(t);
             double s = Interleaved.Count / nSize;
             int segSize = (int)s;
@@ -286,7 +286,52 @@ namespace TugasAkhir1
         #endregion
 
         #region 7. Mapping the Scrambled Watermark
+        public static double[,] Mapping(List<List<int>> SegmentedWatermark)
+        {
+            double[,] MappedWatermark = new double[SegmentedWatermark.Count,15];
+            for (int i = 0; i < SegmentedWatermark.Count; i++)
+            {
+                int[] repeated_version = SegmentedWatermark[i].ToArray();
+                int[] inversed_version = new int[SegmentedWatermark[i].Count];
+                for (int j = 0; j < SegmentedWatermark[i].Count; j++)
+                {
+                    if (SegmentedWatermark[i][j] == 0)
+                    {
+                        inversed_version[j] = 1;
+                    }
+                    else
+                    {
+                        inversed_version[j] = 0;
+                    }
+                }
+
+                //Horizontal -> LH : Level 1 and 2
+                MappedWatermark[i,0] = repeated_version[0];
+                MappedWatermark[i,1] = repeated_version[3];
+                MappedWatermark[i,2] = inversed_version[1];
+                MappedWatermark[i,3] = inversed_version[4];
+                MappedWatermark[i,4] = repeated_version[2];
+
+                //Diagonal -> HH : Level 1 and 2
+                MappedWatermark[i,5] = repeated_version[1];
+                MappedWatermark[i,6] = repeated_version[4];
+                MappedWatermark[i,7] = inversed_version[2];
+                MappedWatermark[i,8] = repeated_version[0];
+                MappedWatermark[i,9] = repeated_version[3];
+
+                //Vertical -> HL : Level 1 and 2
+                MappedWatermark[i,10] = repeated_version[2];
+                MappedWatermark[i,11] = inversed_version[0];
+                MappedWatermark[i,12] = inversed_version[3];
+                MappedWatermark[i,13] = repeated_version[1];
+                MappedWatermark[i,14] = repeated_version[4];
+            }
+
+            return MappedWatermark;
+        }
         
         #endregion
+
+        
     }
 }

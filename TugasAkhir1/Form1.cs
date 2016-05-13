@@ -22,6 +22,13 @@ namespace TugasAkhir1
         public Bitmap OriginalImage { get; set; }
         public Bitmap DWTImage { get; set; }
 
+        //Global Variables
+        public double[,] Wavelet_Coefficients;
+        public List<int> Scrambled_Watermark = new List<int>();
+        public double[,] Embedded_Wavelet_Coefficients; 
+        public double[,] Inversed_Wavelet_Coefficients;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +37,12 @@ namespace TugasAkhir1
             this.watermarkImage.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
+
+        //Sementara
+        public void Print(string s)
+        {
+            MessageBox.Show("Result: " + s, "Succeed", MessageBoxButtons.OK);
+        }
         private void button1_Click(object sender, EventArgs e) //Open Original Image
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -37,6 +50,22 @@ namespace TugasAkhir1
             ofd.InitialDirectory = @"F:\College\Semester 8\TA2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                //Bitmap bmp = new Bitmap(ofd.FileName);
+                //int w = bmp.Width;
+                //int h = bmp.Height;
+                //double x1 = Math.Log(w,2);
+                //double x2 = Math.Log(h,2);
+                ////Cek if dimension is 2^n
+                //if (x1 % 1 == 0 && x2 % 1 == 0)
+                //{
+                //    HostImageLocationTxt.Text = ofd.FileName;
+                //    hostImage.Image = new Bitmap(ofd.FileName);
+                //}
+                //else
+                //{
+                //    MessageBox.Show("Image dimension must have 2^n x 2^m pixels, \n n and m might be same, might be not.", "Input Error", MessageBoxButtons.OK);
+                //}
+
                 HostImageLocationTxt.Text = ofd.FileName;
                 hostImage.Image = new Bitmap(ofd.FileName);
             }
@@ -84,7 +113,7 @@ namespace TugasAkhir1
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Select a Picture as Watermark";
-            ofd.InitialDirectory = @"C:\Users\Fathir Irhas\Pictures";
+            ofd.InitialDirectory = @"F:\College\Semester 8\TA2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 WatermarkImageLocationTxt.Text = ofd.FileName;
@@ -92,13 +121,25 @@ namespace TugasAkhir1
             }
         }
 
+        /// <summary>
+        /// Forward DWT Transform and Extract the Wavelet Coefficients
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e) //Forward Transform
         {
             if (hostImage.Image != null)
             {
+                ///For Visualization
                 OriginalImage = new Bitmap(hostImage.Image);
-                //DWTImage = new Bitmap(transformImage.Image);
-                transformedImage.Image = DWT.TransformDWT(true, false, 1, OriginalImage);
+                transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
+
+                ///For Wavelet Coefficients Extraction
+                Bitmap b = new Bitmap(hostImage.Image);
+                double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+                double[,] ArrayImage = IMatrix;
+                Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+                
             }
             else
             {
@@ -106,7 +147,14 @@ namespace TugasAkhir1
             }    
         }
 
-        private void button3_Click(object sender, EventArgs e) //Inverse Transform
+        
+
+        /// <summary>
+        /// Inverse DWT
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e/*, double[,] Embedded_Coefficients*/) //Inverse Transform
         {
             if (transformedImage.Image == null)
             {
@@ -114,23 +162,42 @@ namespace TugasAkhir1
             }
             else
             {
-                Bitmap decomposedImage = new Bitmap(transformedImage.Image);
-                transformedImage.Image = DWT.TransformDWT(false, false, 1, decomposedImage);
+                //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
+                Inversed_Wavelet_Coefficients = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
+                transformedImage.Image = ImageProcessing.ConvertToBitmap(Inversed_Wavelet_Coefficients);
+                MessageBox.Show("Embedded Wavelet Coefficients: " + Inversed_Wavelet_Coefficients[0, 0], "blabal", MessageBoxButtons.OK);
+                Color c = new Bitmap(hostImage.Image).GetPixel(0, 0);
+                MessageBox.Show("Original : " + c.R, "blabal", MessageBoxButtons.OK);
             }
 
         }
 
-        private void button5_Click(object sender, EventArgs e) //Generate bit sequence contain 0 and 1
+        /// <summary>
+        /// Scramble the watermark bits
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button5_Click(object sender, EventArgs e/*,double[,] coeffs*/) //Generate bit sequence contain 0 and 1
         {
-            Bitmap bmp = new Bitmap(watermarkImage.Image);
-            Matrix m = new Matrix();
-            ImageProcessing ip = new ImageProcessing();
+            if (watermarkImage.Image == null)
+            {
+                MessageBox.Show("Load Watermark Image First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                //double[,] coefficients = coeffs;
+                Bitmap bmp = new Bitmap(watermarkImage.Image);
+                Scramble m = new Scramble();
+                Bitmap b = ImageProcessing.ConvertToBinary(bmp);
+                List<int> VectorImage = Scramble.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
+                List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
+                List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage);
+                Scrambled_Watermark = scrambled_Watermark;
+                MessageBox.Show("Watermark is Succeed. \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);  
+            }
+            
 
-            Bitmap b = ip.ConvertToBinary(bmp);
-            List<int> VectorImage = m.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
-            List<int> BinaryVectorImage = m.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
-            //transformedImage.Image = b;
-            MessageBox.Show("Nilai: " + BinaryVectorImage[34], "ini adalah", MessageBoxButtons.OK);
+            
         }
 
         private void button6_Click(object sender, EventArgs e) //Testing button
@@ -166,15 +233,14 @@ namespace TugasAkhir1
 
             var time = Stopwatch.StartNew();
             ImageProcessing ip = new ImageProcessing();
-            Matrix m = new Matrix();
             Bitmap bmp = new Bitmap(hostImage.Image);
             //transformedImage.Image = ip.ConvertToBinary(bmp);
-            List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
-            List<int> b = m.ConvertToBinaryVectorMatrix(a);
-            List<int> c = m.ConvolutionCode(b);
-            List<int> d = m.DSSS(c);
-            List<int> ee = m.Interleaving(d);
-            List<List<int>> totaloftree = m.Segment(ee);
+            List<int> a = Scramble.ConvertToVectorMatrix(ImageProcessing.ConvertToBinary(bmp));
+            List<int> b = Scramble.ConvertToBinaryVectorMatrix(a);
+            List<int> c = Scramble.ConvolutionCode(b);
+            List<int> d = Scramble.DSSS(c);
+            List<int> ee = Scramble.Interleaving(d);
+            List<List<int>> totaloftree = Scramble.Segment(ee);
             time.Stop();
             var elapsedTime = time.ElapsedMilliseconds / 1000;
 
@@ -216,105 +282,44 @@ namespace TugasAkhir1
 
         private void button9_Click(object sender, EventArgs e)
         {
-            //ImageProcessing ip = new ImageProcessing();
-            //Matrix m = new Matrix();
-            //Bitmap bmp = new Bitmap(hostImage.Image);
-            ////transformedImage.Image = ip.ConvertToBinary(bmp);
-            //List<int> a = m.ConvertToVectorMatrix(ip.ConvertToBinary(bmp));
-            //List<int> b = m.ConvertToBinaryVectorMatrix(a);
-            //List<int> c = m.ConvolutionCode(b);
-            //List<int> d = m.DSSS(c);
-            //List<int> ee = m.Interleaving(d);
-            //List<List<int>> ff = m.Segment(ee);
-
-            //TextWriter tw = new StreamWriter("Segmented_Data.txt");
-            ////tw.WriteLine(ff[0].ToString());
-            //tw.WriteLine("Total First Segment: " + ff[0].Count);
-            ////foreach (int i in ff[0])
-            ////tw.WriteLine(ff[0][]);
-            //for (int i = 0; i < ff[0].Count; i++)
-            //{
-            //    tw.WriteLine(ff[0][i]);
-            //}
-            //tw.Close();
-
-            //Bitmap bmp = new Bitmap(hostImage.Image);
-            //Color c, c2, c3;
-            //int w = bmp.Width / 2;
-            //int w2 = w / 2;
-            //c = bmp.GetPixel(0, 0);//width=397 , height=367
-            //c2 = bmp.GetPixel(1, 0);
-            //c3 = bmp.GetPixel(w2 + 1, w2 + 1);
-            //int R = c.R;
-            //int R2 = c2.R;
-            //int R3 = c3.R;
-
-            //int[] f = { 3, 2, 3, 2, 3, 1, 1, 2 };
-            //int[] g = { 2, 2, 2, 2, 2, 2 };
-            //double m = Statistic.Mean(g);
-            //double var = Statistic.Variance(g);
-            //MessageBox.Show("RGB Value:" +m+","+var, "succeed", MessageBoxButtons.OK);
-
-            //MessageBox.Show("Pixel Sudut Kiri:" + R + ",Pixel tetangga:" + R2 + ",Pixel Decomposed:" +R3 +",", "succeed", MessageBoxButtons.OK);
-
-            
-            var b = new Bitmap(hostImage.Image);
-            var coeff = HMM.GetWaveletCoeff(b,0,"ALL");
-            var hs = HMM.GetHiddenStates(coeff);
-            var hs12 = HMM.CountHS(hs);
-            int aa = hs12.Item1 + hs12.Item2;
-            double prob1 = (double)hs12.Item1 / aa;
-            double prob2 = (double)hs12.Item2 / aa;
-            double prob11 = Math.Round(prob1, 2);
-            double prob22 = Math.Round(prob2, 2);
-            totalWatermarkTxt.Text = prob11.ToString();//hs12.Item1.ToString();
-            totalScrambledTxt.Text = prob22.ToString();//hs12.Item2.ToString();
-            double prob = prob1+prob2;
-            TimeExecTxt.Text = prob.ToString();//aa.ToString();
-            //double d = HMM.Threshold(coeff);
-            //totalScrambledTxt.Text = d.ToString();
-            //TextWriter tw = new StreamWriter("Wavelet_Coefficients.txt");
-            //tw.WriteLine("Jumlah Wavelet-Coeff: " + coeff.Count);
-            //tw.WriteLine("Total pixel: " + b.Width * b.Height);
-            //tw.WriteLine("");
-            //for (int i = 0; i < coeff.Count; i++)
-            //{
-            //    tw.WriteLine(coeff[i]);
-            //}
-            //tw.Close();
+            double akurasi = Statistic.Akurasi(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            Print(akurasi.ToString());
 
         }
 
-        private void button11_Click(object sender, EventArgs e)
-        {
-            //Bitmap bmp = new Bitmap(transformedImage.Image);
-            //var coeff = HMM.GetWaveletCoeff2(bmp, 0, "ALL");
-            //var threshold = HMM.Threshold(coeff);
-            //totalScrambledTxt.Text = threshold.ToString();
+        
 
-            Bitmap bmp = new Bitmap(hostImage.Image);
-            Color c = bmp.GetPixel(1,1);
-            totalScrambledTxt.Text = c.R.ToString();
-
-            //TextWriter tw = new StreamWriter("DifferentMatrixTransform.txt");
-            //tw.WriteLine("Jumlah Wavelet-Coeff: " + coeff.Count);
-            //tw.WriteLine("Total pixel: " + bmp.Width * bmp.Height);
-            //tw.WriteLine("");
-            //for (int i = 0; i < coeff.Count; i++)
-            //{
-            //    tw.WriteLine(coeff[i]);
-            //}
-            //tw.Close();
-
-        }
+       
 
         private void button8_Click(object sender, EventArgs e)
         {
 
         }
 
-        
-
-        
+        /// <summary>
+        /// Embed the Watermark
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button7_Click(object sender, EventArgs e/*, double[,] coeffs, List<int> scrambled_Watermark*/) //Embed Watermark
+        {
+            if (hostImage.Image == null)
+            {
+                MessageBox.Show("Load Host Image Image First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+            else if (watermarkImage.Image == null)
+            {
+                MessageBox.Show("Load Watermark Image First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
+                double[,] MappedWatermark = Scramble.Mapping(Segmented);
+                double[,] EmbeddedWatermark = HMM.Embedding(Wavelet_Coefficients,MappedWatermark);
+                double[,] InverseDWT = DWT.WaveletCoeff(EmbeddedWatermark, false, 2);
+                transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+            }
+        }
+      
     }
 }

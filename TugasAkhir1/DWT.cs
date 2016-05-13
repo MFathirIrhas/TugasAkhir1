@@ -81,7 +81,7 @@ namespace TugasAkhir1
                         data[i, j] = col[i];
                 }
             }
-        }        
+        }
 
         public static void Inverse1D(double[] data)
         {
@@ -91,8 +91,8 @@ namespace TugasAkhir1
             for (int i = 0; i < h; i++)
             {
                 int k = (i << 1);
-                temp[k] = (data[i] * s0 + data[i + h] * w0);// w0; //Change After Matrix Transformation Changed to 1/sqrt(2)
-                temp[k + 1] = (data[i] * s1 + data[i + h] * w1)  ;// s0; //Change After Matrix Transformation Changed to 1/sqrt(2)
+                temp[k] = (data[i] * s0 + data[i + h] * w0);// w0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                temp[k + 1] = (data[i] * s1 + data[i + h] * w1);// s0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
             }
 
             for (int i = 0; i < data.Length; i++)
@@ -302,14 +302,22 @@ namespace TugasAkhir1
         }
 
 
-        public static double[,] GetWaveletCoeff(double[,] pixels, int level)
+        public static double[,] WaveletCoeff(double[,] pixels, bool forward, int level)
         {
             double[,] p = pixels;
-            Forward2D(p, level);
+            if (forward == true)
+            {
+                Forward2D(p, level); //Forward Haar DWT
+            }
+            else
+            {
+                Inverse2D(p, level); //Inverse Haar DWT
+            }
+
             return p;
         }
 
-        public static double[,] GetWaveletCoeff2(Bitmap bmp, int level)
+        public static double[,] GetWaveletCoeff(Bitmap bmp, int level)
         {
             double[,] p = new double[bmp.Height, bmp.Width];
             for (int y = 0; y < bmp.Height; y++)
@@ -320,10 +328,134 @@ namespace TugasAkhir1
                     p[y, x] = c.R;
                 }
             }
-
-            double[,] coeffs = GetWaveletCoeff(p, level);
+            double[,] coeffs = WaveletCoeff(p, true, level);
             return coeffs;
         }
-         
+
+        public static double[,] InverseWaveletCoeff(Bitmap bmp, int level)
+        {
+            double[,] p = new double[bmp.Height, bmp.Width];
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    p[y, x] = c.R;
+                }
+            }
+            double[,] coeffs = WaveletCoeff(p, true, level);
+            double[,] InvertedCoeffs = WaveletCoeff(coeffs, false, level);
+            return InvertedCoeffs;
+        }
+
+
+
+        #region Subbands of Decomposed Image
+        //Subbands of Decomposed Image
+        public static double[,] GetSubband(double[,] coeffs, int level, string subband)
+        {
+            if (level == 1 && subband == "LL1")
+            {
+                double[,] LL1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
+                for (int i = 0; i < LL1.GetLength(0); i++)
+                {
+                    for (int j = 0; j < LL1.GetLength(1); j++)
+                    {
+                        LL1[i, j] = coeffs[i, j];
+                    }
+                }
+                return LL1;
+            }
+            else if (level == 1 && subband == "LH1")
+            {
+                double[,] LH1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
+                for (int i = 0; i < LH1.GetLength(0); i++)
+                {
+                    for (int j = 0; j < LH1.GetLength(1); j++)
+                    {
+                        LH1[i, j] = coeffs[i, j + (coeffs.GetLength(1) / 4)];
+                    }
+                }
+                return LH1;
+            }
+            else if (level == 1 && subband == "HL1")
+            {
+                double[,] HL1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
+                for (int i = 0; i < HL1.GetLength(0); i++)
+                {
+                    for (int j = 0; j < HL1.GetLength(1); j++)
+                    {
+                        HL1[i, j] = coeffs[i + (coeffs.GetLength(0) / 4), j];
+                    }
+                }
+                return HL1;
+            }
+            else if (level == 1 && subband == "HH1")
+            {
+                double[,] HH1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
+                for (int i = 0; i < HH1.GetLength(0); i++)
+                {
+                    for (int j = 0; j < HH1.GetLength(1); j++)
+                    {
+                        HH1[i, j] = coeffs[i + (coeffs.GetLength(0) / 4), j + (coeffs.GetLength(1) / 4)];
+                    }
+                }
+                return HH1;
+            }
+            else if (level == 2 && subband == "LH2")
+            {
+                double[,] LH2 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
+                for (int i = 0; i < LH2.GetLength(0); i++)
+                {
+                    for (int j = 0; j < LH2.GetLength(1); j++)
+                    {
+                        LH2[i, j] = coeffs[i, j + (coeffs.GetLength(1) / 2)];
+                    }
+                }
+                return LH2;
+            }
+            else if (level == 2 && subband == "HL2")
+            {
+                double[,] HL2 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
+                for (int i = 0; i < HL2.GetLength(0); i++)
+                {
+                    for (int j = 0; j < HL2.GetLength(1); j++)
+                    {
+                        HL2[i, j] = coeffs[i + (coeffs.GetLength(0) / 2), j];
+                    }
+                }
+                return HL2;
+            }
+            else //if(level == 2 && subband == "HH2")
+            {
+                double[,] HH2 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
+                for (int i = 0; i < HH2.GetLength(0); i++)
+                {
+                    for (int j = 0; j < HH2.GetLength(1); j++)
+                    {
+                        HH2[i, j] = coeffs[i + (coeffs.GetLength(0) / 2), j + (coeffs.GetLength(1) / 2)];
+                    }
+                }
+                return HH2;
+            }
+        }
+        #endregion
+
+        public static double VarianceOfSubband(double[,] subband)
+        {
+            List<double> s = new List<double>();
+            
+            for (int i = 0; i < subband.GetLength(0); i++)
+            {
+                for (int j = 0; j < subband.GetLength(1); j++)
+                {
+                    s.Add(subband[i, j]);
+                }
+            }
+
+            double var = Statistic.Variance(s);
+            return var;
+        }
+
     }
 }

@@ -68,3 +68,57 @@ Python pywt library for Haar Wavelet Transform used matrix transformation:
 ---------
 Wavelet Coefficients FIXED HAHAHHAHHA!!!!
 
+
+---------
+According to pywt python library for Discrete Wavelet Transform, this is what this code will looks like:
+	 ______________________
+	|			|		   |
+	|    LL     |   LH     |
+	|           |          |
+	|___________|__________|
+	|           |          |
+	|    HL     |   HH     |
+	|           |          |
+	|___________|__________|
+
+---------
+First Experiment:
+	- Try to implement watermark embedding in maximum value of variance of (Paper amini2014)
+
+
+---------
+Batasan TA:
+	- Image Size must be 2^n x 2^n
+	- Because the pairing up mechanism in Haar Wavelet Transform, if it's not like this, then the error result wrong wavelet coefficients.
+
+---------
+Strange??
+	Why do the images sometime agree with 2^n images, sometime not??
+
+
+---------
+Probability of Hidden States transition is	Probability that the child node is in state n(n=1,2) given its parent node is in state m(m=1,2)
+--> P(m->n) = P(n|m)
+--> state probability of child node -> P(n) = P(n|m)P(m)
+--> Note :
+	p(n) = State Probability of Child nodes.
+	p(n|m) = State probability of child node given parent nodes.
+	p(m) = State probability of parent nodes.
+
+---------
+For every Quad Tree(1 parent node, 4 child node), there is WD-HMM Model for them. 
+
+---------
+J = Level = 1,2,3...
+For this , 2.
+
+---------
+Bimbingan 3:
+	- embed watermark using paper's method:
+		- Create M-bit segment(M=5) , then map each segment into 15 bit with mapping method.
+		- Embed those 15 mapped bit into each 15 node tree HMM
+	- Extract watermark using paper's method:
+		- Create HMM model from quad trees in DWT domain in embedded image
+		- Estimate HMM model from its parameter
+		- Use this estimated value as given value in likelihood probability calculation.
+		- Calculate the Maximum Likelihood probability.
