@@ -29,6 +29,7 @@ namespace TugasAkhir1
         public double[,] Inversed_Wavelet_Coefficients;
 
 
+        Stopwatch time = new Stopwatch();
         public Form1()
         {
             InitializeComponent();
@@ -37,6 +38,58 @@ namespace TugasAkhir1
             this.watermarkImage.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
+
+        public void GUIStart(string status)
+        {
+            StatusPanel.BackColor = Color.Gray;
+            StatusTxt.BackColor = Color.Gray;
+            StatusTxt.Text = status;
+            StatusTxt.ForeColor = Color.Red;
+            StatusTxt.BackColor = Color.Gray;
+            label4.BackColor = Color.Gray;
+            label5.BackColor = Color.Gray;
+            TimeExecTxt.BackColor = Color.Gray;
+            PSNRlbl.BackColor = Color.Gray;
+            BERlbl.BackColor = Color.Gray;
+            BERValue.BackColor = Color.Gray;
+            PSNRValue.BackColor = Color.Gray;
+            TimeExecTxt.Text = "0";
+            BERValue.Text = "0";
+            PSNRValue.Text = "0";
+            StatusTxt.Refresh();
+            label4.Refresh();
+            label5.Refresh();
+            PSNRlbl.Refresh();
+            BERlbl.Refresh();
+            PSNRValue.Refresh();
+            BERValue.Refresh();
+            TimeExecTxt.Refresh();
+
+
+            time = Stopwatch.StartNew();
+        }
+
+        public void GUIEnd(string status,double mse, double psnr, double ber )
+        {
+            time.Stop();
+            var elapsedTime = time.ElapsedMilliseconds / 1000;
+
+            StatusPanel.BackColor = Color.LightSkyBlue;
+            StatusTxt.BackColor = Color.LightSkyBlue;
+            StatusTxt.Text = status;
+            StatusTxt.ForeColor = Color.DarkGreen;
+            label4.BackColor = Color.LightSkyBlue;
+            label5.BackColor = Color.LightSkyBlue;
+            TimeExecTxt.BackColor = Color.LightSkyBlue;
+            TimeExecTxt.Text = " " + elapsedTime.ToString() + " Second(s)";
+            PSNRValue.Text = String.Format("{0:0.00}", psnr) ;//psnr.ToString();
+            BERValue.Text = String.Format("{0:0.00}", ber);//ber.ToString();
+            MSEValue.Text = String.Format("{0:0.00}", mse);//mse.ToString();
+            PSNRlbl.BackColor = Color.LightSkyBlue;
+            BERlbl.BackColor = Color.LightSkyBlue;
+            BERValue.BackColor = Color.LightSkyBlue;
+            PSNRValue.BackColor = Color.LightSkyBlue;
+        }
 
         //Sementara
         public void Print(string s)
@@ -130,6 +183,7 @@ namespace TugasAkhir1
         {
             if (hostImage.Image != null)
             {
+                GUIStart("Processing...!");
                 ///For Visualization
                 OriginalImage = new Bitmap(hostImage.Image);
                 transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
@@ -139,7 +193,7 @@ namespace TugasAkhir1
                 double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
                 double[,] ArrayImage = IMatrix;
                 Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
-                
+                GUIEnd("FDWT Succeed!", 0, 0, 0);
             }
             else
             {
@@ -164,6 +218,7 @@ namespace TugasAkhir1
             }
             else
             {
+                GUIStart("Processing......!");
                 //double[,] coefficients = coeffs;
                 Bitmap bmp = new Bitmap(watermarkImage.Image);
                 Scramble m = new Scramble();
@@ -172,6 +227,7 @@ namespace TugasAkhir1
                 List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
                 List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage);
                 Scrambled_Watermark = scrambled_Watermark;
+                GUIEnd("Scramble Succeed!", 0, 0, 0);
                 MessageBox.Show("Watermark is Succeed. \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);  
             }
             
@@ -192,20 +248,20 @@ namespace TugasAkhir1
             label4.BackColor = Color.Gray;
             label5.BackColor = Color.Gray;
             TimeExecTxt.BackColor = Color.Gray;
-            label7.BackColor = Color.Gray;
-            label8.BackColor = Color.Gray;
-            totalScrambledTxt.BackColor = Color.Gray;
-            totalWatermarkTxt.BackColor = Color.Gray;
+            PSNRlbl.BackColor = Color.Gray;
+            BERlbl.BackColor = Color.Gray;
+            BERValue.BackColor = Color.Gray;
+            PSNRValue.BackColor = Color.Gray;
             TimeExecTxt.Text = "0";
-            totalScrambledTxt.Text = "0";
-            totalWatermarkTxt.Text = "0";
+            BERValue.Text = "0";
+            PSNRValue.Text = "0";
             StatusTxt.Refresh();
             label4.Refresh();
             label5.Refresh();
-            label7.Refresh();
-            label8.Refresh();
-            totalWatermarkTxt.Refresh();
-            totalScrambledTxt.Refresh();
+            PSNRlbl.Refresh();
+            BERlbl.Refresh();
+            PSNRValue.Refresh();
+            BERValue.Refresh();
             TimeExecTxt.Refresh();
             #endregion
 
@@ -234,12 +290,12 @@ namespace TugasAkhir1
             TimeExecTxt.BackColor = Color.LightSkyBlue;
             TimeExecTxt.Text = " " + elapsedTime.ToString() + " Second(s)";
             int totalOriginalImage = hostImg.Height * hostImg.Width;
-            totalWatermarkTxt.Text = totalOriginalImage.ToString();
-            totalScrambledTxt.Text = totaloftree[13247].Count.ToString();
-            label7.BackColor = Color.LightSkyBlue;
-            label8.BackColor = Color.LightSkyBlue;
-            totalScrambledTxt.BackColor = Color.LightSkyBlue;
-            totalWatermarkTxt.BackColor = Color.LightSkyBlue;
+            PSNRValue.Text = totalOriginalImage.ToString();
+            BERValue.Text = totaloftree[13247].Count.ToString();
+            PSNRlbl.BackColor = Color.LightSkyBlue;
+            BERlbl.BackColor = Color.LightSkyBlue;
+            BERValue.BackColor = Color.LightSkyBlue;
+            PSNRValue.BackColor = Color.LightSkyBlue;
             #endregion
 
             //Write Result of Scrambling to Txt.
@@ -292,10 +348,12 @@ namespace TugasAkhir1
             }
             else
             {
+                GUIStart("Processing.....!");
                 List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
                 double[,] MappedWatermark = Scramble.Mapping(Segmented);
                 double[,] EmbeddedWatermark = HMM.Embedding(Wavelet_Coefficients,MappedWatermark);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
+                GUIEnd("Embedding Succeed!", 0, 0, 0);
                 MessageBox.Show("Embedding Succeed!", "Embedding Process", MessageBoxButtons.OK);
             }
         }
@@ -314,9 +372,14 @@ namespace TugasAkhir1
             }
             else
             {
+                GUIStart("Processing.....!");
                 //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
                 double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
                 transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+                double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                GUIEnd("IDWT Succeed!",mse,psnr,ber);
             }
 
         }

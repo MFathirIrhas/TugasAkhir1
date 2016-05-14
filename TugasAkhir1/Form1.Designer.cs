@@ -49,10 +49,12 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StatusPanel = new System.Windows.Forms.Panel();
-            this.totalScrambledTxt = new System.Windows.Forms.Label();
-            this.totalWatermarkTxt = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.MSEValue = new System.Windows.Forms.Label();
+            this.MSElbl = new System.Windows.Forms.Label();
+            this.BERValue = new System.Windows.Forms.Label();
+            this.PSNRValue = new System.Windows.Forms.Label();
+            this.BERlbl = new System.Windows.Forms.Label();
+            this.PSNRlbl = new System.Windows.Forms.Label();
             this.TimeExecTxt = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -303,10 +305,12 @@
             // StatusPanel
             // 
             this.StatusPanel.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.StatusPanel.Controls.Add(this.totalScrambledTxt);
-            this.StatusPanel.Controls.Add(this.totalWatermarkTxt);
-            this.StatusPanel.Controls.Add(this.label8);
-            this.StatusPanel.Controls.Add(this.label7);
+            this.StatusPanel.Controls.Add(this.MSEValue);
+            this.StatusPanel.Controls.Add(this.MSElbl);
+            this.StatusPanel.Controls.Add(this.BERValue);
+            this.StatusPanel.Controls.Add(this.PSNRValue);
+            this.StatusPanel.Controls.Add(this.BERlbl);
+            this.StatusPanel.Controls.Add(this.PSNRlbl);
             this.StatusPanel.Controls.Add(this.TimeExecTxt);
             this.StatusPanel.Controls.Add(this.label6);
             this.StatusPanel.Controls.Add(this.label5);
@@ -317,46 +321,64 @@
             this.StatusPanel.Size = new System.Drawing.Size(1033, 31);
             this.StatusPanel.TabIndex = 9;
             // 
-            // totalScrambledTxt
+            // MSEValue
             // 
-            this.totalScrambledTxt.AutoSize = true;
-            this.totalScrambledTxt.Location = new System.Drawing.Point(918, 10);
-            this.totalScrambledTxt.Name = "totalScrambledTxt";
-            this.totalScrambledTxt.Size = new System.Drawing.Size(13, 13);
-            this.totalScrambledTxt.TabIndex = 8;
-            this.totalScrambledTxt.Text = "0";
+            this.MSEValue.AutoSize = true;
+            this.MSEValue.Location = new System.Drawing.Point(755, 10);
+            this.MSEValue.Name = "MSEValue";
+            this.MSEValue.Size = new System.Drawing.Size(13, 13);
+            this.MSEValue.TabIndex = 10;
+            this.MSEValue.Text = "0";
             // 
-            // totalWatermarkTxt
+            // MSElbl
             // 
-            this.totalWatermarkTxt.AutoSize = true;
-            this.totalWatermarkTxt.Location = new System.Drawing.Point(715, 10);
-            this.totalWatermarkTxt.Name = "totalWatermarkTxt";
-            this.totalWatermarkTxt.Size = new System.Drawing.Size(13, 13);
-            this.totalWatermarkTxt.TabIndex = 7;
-            this.totalWatermarkTxt.Text = "0";
+            this.MSElbl.AutoSize = true;
+            this.MSElbl.Location = new System.Drawing.Point(723, 10);
+            this.MSElbl.Name = "MSElbl";
+            this.MSElbl.Size = new System.Drawing.Size(36, 13);
+            this.MSElbl.TabIndex = 9;
+            this.MSElbl.Text = "MSE :";
             // 
-            // label8
+            // BERValue
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(834, 10);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(90, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Total Scrambled: ";
+            this.BERValue.AutoSize = true;
+            this.BERValue.Location = new System.Drawing.Point(951, 10);
+            this.BERValue.Name = "BERValue";
+            this.BERValue.Size = new System.Drawing.Size(13, 13);
+            this.BERValue.TabIndex = 8;
+            this.BERValue.Text = "0";
             // 
-            // label7
+            // PSNRValue
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(626, 10);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(92, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Total Watermark: ";
+            this.PSNRValue.AutoSize = true;
+            this.PSNRValue.Location = new System.Drawing.Point(864, 10);
+            this.PSNRValue.Name = "PSNRValue";
+            this.PSNRValue.Size = new System.Drawing.Size(13, 13);
+            this.PSNRValue.TabIndex = 7;
+            this.PSNRValue.Text = "0";
+            // 
+            // BERlbl
+            // 
+            this.BERlbl.AutoSize = true;
+            this.BERlbl.Location = new System.Drawing.Point(920, 10);
+            this.BERlbl.Name = "BERlbl";
+            this.BERlbl.Size = new System.Drawing.Size(38, 13);
+            this.BERlbl.TabIndex = 6;
+            this.BERlbl.Text = "BER : ";
+            // 
+            // PSNRlbl
+            // 
+            this.PSNRlbl.AutoSize = true;
+            this.PSNRlbl.Location = new System.Drawing.Point(822, 10);
+            this.PSNRlbl.Name = "PSNRlbl";
+            this.PSNRlbl.Size = new System.Drawing.Size(46, 13);
+            this.PSNRlbl.TabIndex = 5;
+            this.PSNRlbl.Text = "PSNR : ";
             // 
             // TimeExecTxt
             // 
             this.TimeExecTxt.AutoSize = true;
-            this.TimeExecTxt.Location = new System.Drawing.Point(187, 10);
+            this.TimeExecTxt.Location = new System.Drawing.Point(264, 10);
             this.TimeExecTxt.Name = "TimeExecTxt";
             this.TimeExecTxt.Size = new System.Drawing.Size(13, 13);
             this.TimeExecTxt.TabIndex = 4;
@@ -373,7 +395,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(107, 10);
+            this.label5.Location = new System.Drawing.Point(172, 10);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(86, 13);
             this.label5.TabIndex = 2;
@@ -491,14 +513,16 @@
         private System.Windows.Forms.Label TimeExecTxt;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label totalScrambledTxt;
-        private System.Windows.Forms.Label totalWatermarkTxt;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label BERValue;
+        private System.Windows.Forms.Label PSNRValue;
+        private System.Windows.Forms.Label BERlbl;
+        private System.Windows.Forms.Label PSNRlbl;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Label MSEValue;
+        private System.Windows.Forms.Label MSElbl;
     }
 }
 

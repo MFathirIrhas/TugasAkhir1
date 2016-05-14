@@ -64,5 +64,61 @@ namespace TugasAkhir1
         }
         
         
+        ///Performance calculation
+        ///MSE
+        ///PSNR
+        ///BER
+
+        public static double MSE(Bitmap original, Bitmap transformed)
+        {
+            double[,] originalM = ImageProcessing.ConvertToMatrix(original);
+            double[,] transformedM = ImageProcessing.ConvertToMatrix(transformed);
+
+            double size = original.Width * original.Height;
+            double sum=0;
+            for (int i = 0; i < original.Height; i++)
+            {
+                for (int j = 0; j < original.Width; j++)
+                {
+                    sum += Math.Pow(originalM[i,j]-transformedM[i,j],2);
+                }
+            }
+
+            double mse = sum / size;
+            return mse;
+        }
+
+        public static double PSNR(Bitmap transformed,double mse)
+        {
+            double[,] transformedM = ImageProcessing.ConvertToMatrix(transformed);
+            double max = transformedM.Cast<double>().Max();
+            double psnr = 10 * (Math.Log10(max / Math.Sqrt(mse)));
+            return psnr;
+        }
+
+        public static double BER(Bitmap bmp1, Bitmap bmp2)
+        {
+            List<int> check = new List<int>();
+            for (int i = 0; i < bmp1.Height; i++)
+            {
+                for (int j = 0; j < bmp1.Width; j++)
+                {
+                    Color c1 = bmp1.GetPixel(j, i);
+                    Color c2 = bmp2.GetPixel(j, i);
+                    if (c1.R == c2.R)
+                    {
+                        check.Add(1);
+                    }
+                    else
+                    {
+                        check.Add(0);
+                    }
+
+                }
+            }
+            double sumup = check.Sum();
+            double ber = (sumup / (double)check.Count) * 100;
+            return ber;
+        }
     }
 }
