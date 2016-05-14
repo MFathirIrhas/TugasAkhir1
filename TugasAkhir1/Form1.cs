@@ -149,28 +149,7 @@ namespace TugasAkhir1
 
         
 
-        /// <summary>
-        /// Inverse DWT
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button3_Click(object sender, EventArgs e/*, double[,] Embedded_Coefficients*/) //Inverse Transform
-        {
-            if (transformedImage.Image == null)
-            {
-                MessageBox.Show("There is no Transformed image yet", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
-            }
-            else
-            {
-                //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
-                Inversed_Wavelet_Coefficients = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
-                transformedImage.Image = ImageProcessing.ConvertToBitmap(Inversed_Wavelet_Coefficients);
-                MessageBox.Show("Embedded Wavelet Coefficients: " + Inversed_Wavelet_Coefficients[0, 0], "blabal", MessageBoxButtons.OK);
-                Color c = new Bitmap(hostImage.Image).GetPixel(0, 0);
-                MessageBox.Show("Original : " + c.R, "blabal", MessageBoxButtons.OK);
-            }
-
-        }
+        
 
         /// <summary>
         /// Scramble the watermark bits
@@ -316,9 +295,30 @@ namespace TugasAkhir1
                 List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
                 double[,] MappedWatermark = Scramble.Mapping(Segmented);
                 double[,] EmbeddedWatermark = HMM.Embedding(Wavelet_Coefficients,MappedWatermark);
-                double[,] InverseDWT = DWT.WaveletCoeff(EmbeddedWatermark, false, 2);
+                Embedded_Wavelet_Coefficients = EmbeddedWatermark;
+                MessageBox.Show("Embedding Succeed!", "Embedding Process", MessageBoxButtons.OK);
+            }
+        }
+
+
+        /// <summary>
+        /// Inverse DWT
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e/*, double[,] Embedded_Coefficients*/) //Inverse Transform
+        {
+            if (transformedImage.Image == null)
+            {
+                MessageBox.Show("There is no Transformed image yet", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
+                double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
                 transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
             }
+
         }
       
     }

@@ -104,18 +104,18 @@ namespace TugasAkhir1
             }
 
             ///LH2
-            //int iLH2 = 0;
-            //for (int i = 0; i < (TrainedWatermark.GetLength(0) / 2) - 1; i += 2)
-            //{
-            //    for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1) - 1; j += 2)
-            //    {
-            //        TrainedWatermark[i, j] = LH2[iLH2, 0];
-            //        TrainedWatermark[i, j + 1] = LH2[iLH2, 1];
-            //        TrainedWatermark[i + 1, j] = LH2[iLH2, 2];
-            //        TrainedWatermark[i + 1, j + 1] = LH2[iLH2, 3];
-            //        iLH2++;
-            //    }
-            //}
+            int iLH2 = 0;
+            for (int i = 0; i < (TrainedWatermark.GetLength(0) / 4); i += 2)
+            {
+                for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1)*0.75; j += 2)
+                {
+                    TrainedWatermark[i, j] = LH2[iLH2, 0];
+                    TrainedWatermark[i, j + 1] = LH2[iLH2, 1];
+                    TrainedWatermark[i + 1, j] = LH2[iLH2, 2];
+                    TrainedWatermark[i + 1, j + 1] = LH2[iLH2, 3];
+                    iLH2++;
+                }
+            }
 
 
             ///HH1
@@ -138,18 +138,18 @@ namespace TugasAkhir1
             }
 
             ///HH2
-            //int iHH2 = 0;
-            //for (int i = TrainedWatermark.GetLength(0)/2; i < TrainedWatermark.GetLength(0); i += 2)
-            //{
-            //    for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1); j += 2)
-            //    {
-            //        TrainedWatermark[i, j] = HH2[iHH2, 0];
-            //        TrainedWatermark[i, j + 1] = HH2[iHH2, 1];
-            //        TrainedWatermark[i + 1, j] = HH2[iHH2, 2];
-            //        TrainedWatermark[i + 1, j + 1] = HH2[iHH2, 3];
-            //        iHH2++;
-            //    }
-            //}
+            int iHH2 = 0;
+            for (int i = TrainedWatermark.GetLength(0) / 2; i < TrainedWatermark.GetLength(0)*0.75; i += 2)
+            {
+                for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1)*0.75; j += 2)
+                {
+                    TrainedWatermark[i, j] = HH2[iHH2, 0];
+                    TrainedWatermark[i, j + 1] = HH2[iHH2, 1];
+                    TrainedWatermark[i + 1, j] = HH2[iHH2, 2];
+                    TrainedWatermark[i + 1, j + 1] = HH2[iHH2, 3];
+                    iHH2++;
+                }
+            }
 
             ///HL1
             int iHL1 = 0;
@@ -171,18 +171,18 @@ namespace TugasAkhir1
             }
 
             ///HL2
-            //int iHL2 = 0;
-            //for (int i = TrainedWatermark.GetLength(0) / 2; i < TrainedWatermark.GetLength(0); i += 2)
-            //{
-            //    for (int j = 0; j < TrainedWatermark.GetLength(1)/2; j += 2)
-            //    {
-            //        TrainedWatermark[i, j] = HL2[iHL2, 0];
-            //        TrainedWatermark[i, j + 1] = HL2[iHL2, 1];
-            //        TrainedWatermark[i + 1, j] = HL2[iHL2, 2];
-            //        TrainedWatermark[i + 1, j + 1] = HL2[iHL2, 3];
-            //        iHL2++;
-            //    }
-            //}
+            int iHL2 = 0;
+            for (int i = TrainedWatermark.GetLength(0) / 2; i < TrainedWatermark.GetLength(0)*0.75; i += 2)
+            {
+                for (int j = 0; j < TrainedWatermark.GetLength(1)/4 / 2; j += 2)
+                {
+                    TrainedWatermark[i, j] = HL2[iHL2, 0];
+                    TrainedWatermark[i, j + 1] = HL2[iHL2, 1];
+                    TrainedWatermark[i + 1, j] = HL2[iHL2, 2];
+                    TrainedWatermark[i + 1, j + 1] = HL2[iHL2, 3];
+                    iHL2++;
+                }
+            }
 
             return TrainedWatermark;
         }
