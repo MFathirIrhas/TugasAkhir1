@@ -77,6 +77,7 @@ namespace TugasAkhir1
             return b;
         }
 
+        //For Grayscale Host Image
         public static double[,] ConvertToMatrix(Bitmap bmp)
         {
             double[,] IMatrix = new double[bmp.Height, bmp.Width];
@@ -91,6 +92,28 @@ namespace TugasAkhir1
             return IMatrix;
         }
 
+        //For Color Host Image
+        public static Tuple<double[,],double[,],double[,]> ConvertToMatrix2(Bitmap bmp)
+        {
+            double[,] IMatrixR = new double[bmp.Height,bmp.Width];
+            double[,] IMatrixG = new double[bmp.Height, bmp.Width];
+            double[,] IMatrixB = new double[bmp.Height, bmp.Width];
+
+            for (int i = 0; i < bmp.Height; i++)
+            {
+                for (int j = 0; j < bmp.Width; j++)
+                {
+                    Color c = bmp.GetPixel(j, i);
+                    IMatrixR[i, j] = c.R;
+                    IMatrixG[i, j] = c.G;
+                    IMatrixB[i, j] = c.B;
+                }
+            }
+
+            return new Tuple<double[,], double[,], double[,]>(IMatrixR, IMatrixG, IMatrixB);
+        }
+
+        //For Grayscale
         public static Bitmap ConvertToBitmap(double[,] ICoeffs)
         {
             Bitmap bmp = new Bitmap(ICoeffs.GetLength(1), ICoeffs.GetLength(0));
@@ -98,19 +121,55 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < ICoeffs.GetLength(1); j++)
                 {
-                    //if (ICoeffs[i, j] < 0)
-                    //{
-                    //    Color c = Color.FromArgb(0, 0, 0);
-                    //    bmp.SetPixel(j, i, c);
-                    //}
-                    //else
-                    //{
-                    //    Color c = Color.FromArgb((int)ICoeffs[i, j], (int)ICoeffs[i, j], (int)ICoeffs[i, j]);
-                    //    bmp.SetPixel(j, i, c);
-                    //}
+                    if (ICoeffs[i, j] < 0)
+                    {
+                        Color c = Color.FromArgb(0, 0, 0);
+                        bmp.SetPixel(j, i, c);
+                    }
+                    else if (ICoeffs[i, j] > 254)
+                    {
+                        Color c = Color.FromArgb(254,254,254);
+                        bmp.SetPixel(j, i, c);
+                    }
+                    else
+                    {
+                        Color c = Color.FromArgb((int)ICoeffs[i, j], (int)ICoeffs[i, j], (int)ICoeffs[i, j]);
+                        bmp.SetPixel(j, i, c);
+                    }
 
-                    Color c = Color.FromArgb((int)ICoeffs[i, j], (int)ICoeffs[i, j], (int)ICoeffs[i, j]);
-                    bmp.SetPixel(j, i, c);
+                    //Color c = Color.FromArgb((int)ICoeffs[i, j], (int)ICoeffs[i, j], (int)ICoeffs[i, j]);
+                    //bmp.SetPixel(j, i, c);
+                }
+            }
+            return bmp;
+        }
+
+        //For Color Image
+        public static Bitmap ConvertToBitmap2(double[,] ICoeffs, double[,] IMatrixR, double[,] IMatrixB)
+        {
+            Bitmap bmp = new Bitmap(ICoeffs.GetLength(1), ICoeffs.GetLength(0));
+            for (int i = 0; i < ICoeffs.GetLength(0); i++)
+            {
+                for (int j = 0; j < ICoeffs.GetLength(1); j++)
+                {
+                    if (ICoeffs[i, j] < 0)
+                    {
+                        Color c = Color.FromArgb(0, 0, 0);
+                        bmp.SetPixel(j, i, c);
+                    }
+                    else if (ICoeffs[i, j] > 254)
+                    {
+                        Color c = Color.FromArgb(254, 254, 254);
+                        bmp.SetPixel(j, i, c);
+                    }
+                    else
+                    {
+                        Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
+                        bmp.SetPixel(j, i, c);
+                    }
+
+                    //Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
+                    //bmp.SetPixel(j, i, c);
                 }
             }
             return bmp;

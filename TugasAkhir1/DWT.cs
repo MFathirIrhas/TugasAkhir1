@@ -302,6 +302,7 @@ namespace TugasAkhir1
         }
 
 
+        #region FOR GRAYSCALE HOST IMAGE
         public static double[,] WaveletCoeff(double[,] pixels, bool forward, int level)
         {
             double[,] p = pixels;
@@ -347,115 +348,13 @@ namespace TugasAkhir1
             double[,] InvertedCoeffs = WaveletCoeff(coeffs, false, level);
             return InvertedCoeffs;
         }
-
-
-
-        #region Subbands of Decomposed Image
-        //Subbands of Decomposed Image
-        public static double[,] GetSubband(double[,] coeffs, int level, string subband)
-        {
-            if (level == 1 && subband == "LL1")
-            {
-                double[,] LL1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
-                for (int i = 0; i < LL1.GetLength(0); i++)
-                {
-                    for (int j = 0; j < LL1.GetLength(1); j++)
-                    {
-                        LL1[i, j] = coeffs[i, j];
-                    }
-                }
-                return LL1;
-            }
-            else if (level == 1 && subband == "LH1")
-            {
-                double[,] LH1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
-                for (int i = 0; i < LH1.GetLength(0); i++)
-                {
-                    for (int j = 0; j < LH1.GetLength(1); j++)
-                    {
-                        LH1[i, j] = coeffs[i, j + (coeffs.GetLength(1) / 4)];
-                    }
-                }
-                return LH1;
-            }
-            else if (level == 1 && subband == "HL1")
-            {
-                double[,] HL1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
-                for (int i = 0; i < HL1.GetLength(0); i++)
-                {
-                    for (int j = 0; j < HL1.GetLength(1); j++)
-                    {
-                        HL1[i, j] = coeffs[i + (coeffs.GetLength(0) / 4), j];
-                    }
-                }
-                return HL1;
-            }
-            else if (level == 1 && subband == "HH1")
-            {
-                double[,] HH1 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
-                for (int i = 0; i < HH1.GetLength(0); i++)
-                {
-                    for (int j = 0; j < HH1.GetLength(1); j++)
-                    {
-                        HH1[i, j] = coeffs[i + (coeffs.GetLength(0) / 4), j + (coeffs.GetLength(1) / 4)];
-                    }
-                }
-                return HH1;
-            }
-            else if (level == 2 && subband == "LH2")
-            {
-                double[,] LH2 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
-                for (int i = 0; i < LH2.GetLength(0); i++)
-                {
-                    for (int j = 0; j < LH2.GetLength(1); j++)
-                    {
-                        LH2[i, j] = coeffs[i, j + (coeffs.GetLength(1) / 2)];
-                    }
-                }
-                return LH2;
-            }
-            else if (level == 2 && subband == "HL2")
-            {
-                double[,] HL2 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
-                for (int i = 0; i < HL2.GetLength(0); i++)
-                {
-                    for (int j = 0; j < HL2.GetLength(1); j++)
-                    {
-                        HL2[i, j] = coeffs[i + (coeffs.GetLength(0) / 2), j];
-                    }
-                }
-                return HL2;
-            }
-            else //if(level == 2 && subband == "HH2")
-            {
-                double[,] HH2 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
-                for (int i = 0; i < HH2.GetLength(0); i++)
-                {
-                    for (int j = 0; j < HH2.GetLength(1); j++)
-                    {
-                        HH2[i, j] = coeffs[i + (coeffs.GetLength(0) / 2), j + (coeffs.GetLength(1) / 2)];
-                    }
-                }
-                return HH2;
-            }
-        }
         #endregion
 
-        public static double VarianceOfSubband(double[,] subband)
-        {
-            List<double> s = new List<double>();
-            
-            for (int i = 0; i < subband.GetLength(0); i++)
-            {
-                for (int j = 0; j < subband.GetLength(1); j++)
-                {
-                    s.Add(subband[i, j]);
-                }
-            }
+        #region FOR COLOR IMAGE
 
-            double var = Statistic.Variance(s);
-            return var;
-        }
+        #endregion
+
+
 
     }
 }

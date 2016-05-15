@@ -27,6 +27,9 @@ namespace TugasAkhir1
         public List<int> Scrambled_Watermark = new List<int>();
         public double[,] Embedded_Wavelet_Coefficients; 
         public double[,] Inversed_Wavelet_Coefficients;
+        public double[,] IMatrixR;
+        public double[,] IMatrixG;
+        public double[,] IMatrixB;
 
 
         Stopwatch time = new Stopwatch();
@@ -190,8 +193,10 @@ namespace TugasAkhir1
 
                 ///For Wavelet Coefficients Extraction
                 Bitmap b = new Bitmap(hostImage.Image);
-                double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
-                double[,] ArrayImage = IMatrix;
+                IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+                IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+                IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+                double[,] ArrayImage = IMatrixG; //Embedding in Green 
                 Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
                 GUIEnd("FDWT Succeed!", 0, 0, 0);
             }
@@ -351,7 +356,7 @@ namespace TugasAkhir1
                 GUIStart("Processing.....!");
                 List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
                 double[,] MappedWatermark = Scramble.Mapping(Segmented);
-                double[,] EmbeddedWatermark = HMM.Embedding(Wavelet_Coefficients,MappedWatermark);
+                double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
                 GUIEnd("Embedding Succeed!", 0, 0, 0);
                 MessageBox.Show("Embedding Succeed!", "Embedding Process", MessageBoxButtons.OK);
@@ -375,13 +380,19 @@ namespace TugasAkhir1
                 GUIStart("Processing.....!");
                 //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
                 double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
-                transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                transformedImage.Image = ImageProcessing.ConvertToBitmap2(InverseDWT,IMatrixR,IMatrixB);
                 double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
                 double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
                 double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
                 GUIEnd("IDWT Succeed!",mse,psnr,ber);
             }
 
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            hostImage.Image = ImageProcessing.CovertToGray(new Bitmap(hostImage.Image));
         }
       
     }
