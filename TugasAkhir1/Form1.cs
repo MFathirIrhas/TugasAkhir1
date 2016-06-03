@@ -199,6 +199,20 @@ namespace TugasAkhir1
             {
                 WatermarkedImageTxt.Text = ofd.FileName;
                 transformedImage.Image = new Bitmap(ofd.FileName);
+
+                //Enable button
+                histeqBtn.Enabled = true;
+                meanFilterBtn.Enabled = true;
+                medianFilterBtn.Enabled = true;
+                modusFilterBtn.Enabled = true;
+                jpegencoderBtn.Enabled = true;
+
+                histeqBtn.BackColor = Color.DeepSkyBlue;
+                meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+
             }
         }
 
@@ -507,7 +521,19 @@ namespace TugasAkhir1
             }
         }
 
-        
+        private void button14_Click(object sender, EventArgs e)
+        {
+            if(transformedImage.Image != null)
+            {
+                transformedImage.Image = ImageAttack.JpegCompress(this.transformedImage.Image, 20, "CompressedImage20.jpg");
+                MessageBox.Show("Image Successfully Compressed!", "Success", MessageBoxButtons.OK);
+                resultLbl.Text = "Compressed Image";
+            }
+            else
+            {
+                MessageBox.Show("Watermark the host image first!", "Incomplete Procedure Detected");
+            }
+        }
 
         ///END
     }

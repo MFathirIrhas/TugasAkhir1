@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+
+
 
 namespace TugasAkhir1
 {
@@ -289,6 +293,53 @@ namespace TugasAkhir1
         }
         #endregion
 
+        #region JPEG COMPRESSION
+        //JPEG Compression : compress the image using jpeg encoder
+        public static Bitmap JpegCompress(Image source, int quality, string filename)
+        {
+            //SaveFileDialog sfd = new SaveFileDialog();
+            //sfd.Title = "Select Where Compressed Image will be Saved";
+            //sfd.InitialDirectory = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Saved_Image";
+            //if(sfd.ShowDialog() == DialogResult.OK)
+            //{
+                try
+                {
+                    //codec info
+                    ImageCodecInfo jpegCodec = null;
+
+                    //Set quality factor for compression
+                    EncoderParameter imageQualityParameter = new EncoderParameter(
+                        System.Drawing.Imaging.Encoder.Quality, quality);
+
+                    //List all codec 
+                    ImageCodecInfo[] alleCodecs = ImageCodecInfo.GetImageEncoders();
+
+                    EncoderParameters codecParameter = new EncoderParameters(1);
+                    codecParameter.Param[0] = imageQualityParameter;
+
+                    //Find and choose JPEG codec
+                    for (int i = 0; i < alleCodecs.Length; i++)
+                    {
+                        if (alleCodecs[i].MimeType == "image/jpeg")
+                        {
+                            jpegCodec = alleCodecs[i];
+                            break;
+                        }
+                    }
+
+                    string path = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Saved_Image\"+filename;
+                    //Save and display compressed image
+                    source.Save(path, jpegCodec, codecParameter);
+                    
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
+            //}
+            return new Bitmap(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Saved_Image\" + filename);
+        }
+        #endregion
 
     }
 }

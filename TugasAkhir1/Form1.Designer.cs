@@ -36,11 +36,14 @@
             this.HostImageLocationTxt = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
+            this.resultLbl = new System.Windows.Forms.Label();
+            this.WatermarkedImageTxt = new System.Windows.Forms.TextBox();
+            this.button12 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.transformedImage = new System.Windows.Forms.PictureBox();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.watermarkImage = new System.Windows.Forms.PictureBox();
@@ -65,13 +68,13 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.histeqBtn = new System.Windows.Forms.Button();
-            this.meanFilterBtn = new System.Windows.Forms.Button();
-            this.medianFilterBtn = new System.Windows.Forms.Button();
             this.modusFilterBtn = new System.Windows.Forms.Button();
-            this.WatermarkedImageTxt = new System.Windows.Forms.TextBox();
-            this.button12 = new System.Windows.Forms.Button();
-            this.resultLbl = new System.Windows.Forms.Label();
+            this.medianFilterBtn = new System.Windows.Forms.Button();
+            this.meanFilterBtn = new System.Windows.Forms.Button();
+            this.histeqBtn = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.button13 = new System.Windows.Forms.Button();
+            this.jpegencoderBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -172,25 +175,41 @@
             this.panel2.Size = new System.Drawing.Size(653, 656);
             this.panel2.TabIndex = 3;
             // 
-            // button11
+            // resultLbl
             // 
-            this.button11.Location = new System.Drawing.Point(595, 3);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 23);
-            this.button11.TabIndex = 14;
-            this.button11.Text = "Grayscale";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
+            this.resultLbl.AutoSize = true;
+            this.resultLbl.Location = new System.Drawing.Point(53, 5);
+            this.resultLbl.Name = "resultLbl";
+            this.resultLbl.Size = new System.Drawing.Size(16, 13);
+            this.resultLbl.TabIndex = 14;
+            this.resultLbl.Text = "---";
             // 
-            // button9
+            // WatermarkedImageTxt
             // 
-            this.button9.Location = new System.Drawing.Point(483, 3);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 23);
-            this.button9.TabIndex = 12;
-            this.button9.Text = "button9";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.WatermarkedImageTxt.BackColor = System.Drawing.SystemColors.Window;
+            this.WatermarkedImageTxt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.WatermarkedImageTxt.Enabled = false;
+            this.WatermarkedImageTxt.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.WatermarkedImageTxt.Location = new System.Drawing.Point(77, 630);
+            this.WatermarkedImageTxt.Multiline = true;
+            this.WatermarkedImageTxt.Name = "WatermarkedImageTxt";
+            this.WatermarkedImageTxt.Size = new System.Drawing.Size(291, 20);
+            this.WatermarkedImageTxt.TabIndex = 5;
+            // 
+            // button12
+            // 
+            this.button12.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button12.Location = new System.Drawing.Point(3, 630);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(75, 20);
+            this.button12.TabIndex = 4;
+            this.button12.TabStop = false;
+            this.button12.Text = "Browse ";
+            this.button12.UseVisualStyleBackColor = false;
+            this.button12.Click += new System.EventHandler(this.button12_Click_1);
             // 
             // button10
             // 
@@ -224,6 +243,26 @@
             this.transformedImage.Size = new System.Drawing.Size(645, 603);
             this.transformedImage.TabIndex = 0;
             this.transformedImage.TabStop = false;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(595, 3);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.TabIndex = 14;
+            this.button11.Text = "Grayscale";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(483, 3);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.TabIndex = 12;
+            this.button9.Text = "button9";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button3
             // 
@@ -489,6 +528,9 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.jpegencoderBtn);
+            this.panel4.Controls.Add(this.button13);
+            this.panel4.Controls.Add(this.label8);
             this.panel4.Controls.Add(this.modusFilterBtn);
             this.panel4.Controls.Add(this.medianFilterBtn);
             this.panel4.Controls.Add(this.meanFilterBtn);
@@ -498,48 +540,6 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(97, 656);
             this.panel4.TabIndex = 13;
-            // 
-            // histeqBtn
-            // 
-            this.histeqBtn.BackColor = System.Drawing.Color.LightSlateGray;
-            this.histeqBtn.Enabled = false;
-            this.histeqBtn.FlatAppearance.BorderSize = 0;
-            this.histeqBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.histeqBtn.Location = new System.Drawing.Point(3, 26);
-            this.histeqBtn.Name = "histeqBtn";
-            this.histeqBtn.Size = new System.Drawing.Size(91, 23);
-            this.histeqBtn.TabIndex = 13;
-            this.histeqBtn.Text = "HistEq";
-            this.histeqBtn.UseVisualStyleBackColor = false;
-            this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
-            // 
-            // meanFilterBtn
-            // 
-            this.meanFilterBtn.BackColor = System.Drawing.Color.SlateGray;
-            this.meanFilterBtn.Enabled = false;
-            this.meanFilterBtn.FlatAppearance.BorderSize = 0;
-            this.meanFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.meanFilterBtn.Location = new System.Drawing.Point(3, 55);
-            this.meanFilterBtn.Name = "meanFilterBtn";
-            this.meanFilterBtn.Size = new System.Drawing.Size(91, 23);
-            this.meanFilterBtn.TabIndex = 14;
-            this.meanFilterBtn.Text = "Mean Filter";
-            this.meanFilterBtn.UseVisualStyleBackColor = false;
-            this.meanFilterBtn.Click += new System.EventHandler(this.meanFilterBtn_Click);
-            // 
-            // medianFilterBtn
-            // 
-            this.medianFilterBtn.BackColor = System.Drawing.Color.SlateGray;
-            this.medianFilterBtn.Enabled = false;
-            this.medianFilterBtn.FlatAppearance.BorderSize = 0;
-            this.medianFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.medianFilterBtn.Location = new System.Drawing.Point(3, 84);
-            this.medianFilterBtn.Name = "medianFilterBtn";
-            this.medianFilterBtn.Size = new System.Drawing.Size(91, 23);
-            this.medianFilterBtn.TabIndex = 15;
-            this.medianFilterBtn.Text = "Median Filter";
-            this.medianFilterBtn.UseVisualStyleBackColor = false;
-            this.medianFilterBtn.Click += new System.EventHandler(this.medianFilterBtn_Click);
             // 
             // modusFilterBtn
             // 
@@ -555,41 +555,84 @@
             this.modusFilterBtn.UseVisualStyleBackColor = false;
             this.modusFilterBtn.Click += new System.EventHandler(this.modusFilterBtn_Click);
             // 
-            // WatermarkedImageTxt
+            // medianFilterBtn
             // 
-            this.WatermarkedImageTxt.BackColor = System.Drawing.SystemColors.Window;
-            this.WatermarkedImageTxt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.WatermarkedImageTxt.Enabled = false;
-            this.WatermarkedImageTxt.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.WatermarkedImageTxt.Location = new System.Drawing.Point(77, 630);
-            this.WatermarkedImageTxt.Multiline = true;
-            this.WatermarkedImageTxt.Name = "WatermarkedImageTxt";
-            this.WatermarkedImageTxt.Size = new System.Drawing.Size(291, 20);
-            this.WatermarkedImageTxt.TabIndex = 5;
+            this.medianFilterBtn.BackColor = System.Drawing.Color.SlateGray;
+            this.medianFilterBtn.Enabled = false;
+            this.medianFilterBtn.FlatAppearance.BorderSize = 0;
+            this.medianFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.medianFilterBtn.Location = new System.Drawing.Point(3, 84);
+            this.medianFilterBtn.Name = "medianFilterBtn";
+            this.medianFilterBtn.Size = new System.Drawing.Size(91, 23);
+            this.medianFilterBtn.TabIndex = 15;
+            this.medianFilterBtn.Text = "Median Filter";
+            this.medianFilterBtn.UseVisualStyleBackColor = false;
+            this.medianFilterBtn.Click += new System.EventHandler(this.medianFilterBtn_Click);
             // 
-            // button12
+            // meanFilterBtn
             // 
-            this.button12.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button12.FlatAppearance.BorderSize = 0;
-            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button12.Location = new System.Drawing.Point(3, 630);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(75, 20);
-            this.button12.TabIndex = 4;
-            this.button12.TabStop = false;
-            this.button12.Text = "Browse ";
-            this.button12.UseVisualStyleBackColor = false;
-            this.button12.Click += new System.EventHandler(this.button12_Click_1);
+            this.meanFilterBtn.BackColor = System.Drawing.Color.SlateGray;
+            this.meanFilterBtn.Enabled = false;
+            this.meanFilterBtn.FlatAppearance.BorderSize = 0;
+            this.meanFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.meanFilterBtn.Location = new System.Drawing.Point(3, 55);
+            this.meanFilterBtn.Name = "meanFilterBtn";
+            this.meanFilterBtn.Size = new System.Drawing.Size(91, 23);
+            this.meanFilterBtn.TabIndex = 14;
+            this.meanFilterBtn.Text = "Mean Filter";
+            this.meanFilterBtn.UseVisualStyleBackColor = false;
+            this.meanFilterBtn.Click += new System.EventHandler(this.meanFilterBtn_Click);
             // 
-            // resultLbl
+            // histeqBtn
             // 
-            this.resultLbl.AutoSize = true;
-            this.resultLbl.Location = new System.Drawing.Point(53, 5);
-            this.resultLbl.Name = "resultLbl";
-            this.resultLbl.Size = new System.Drawing.Size(16, 13);
-            this.resultLbl.TabIndex = 14;
-            this.resultLbl.Text = "---";
+            this.histeqBtn.BackColor = System.Drawing.Color.LightSlateGray;
+            this.histeqBtn.Enabled = false;
+            this.histeqBtn.FlatAppearance.BorderSize = 0;
+            this.histeqBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.histeqBtn.Location = new System.Drawing.Point(3, 26);
+            this.histeqBtn.Name = "histeqBtn";
+            this.histeqBtn.Size = new System.Drawing.Size(91, 23);
+            this.histeqBtn.TabIndex = 13;
+            this.histeqBtn.Text = "HistEq";
+            this.histeqBtn.UseVisualStyleBackColor = false;
+            this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label8.Location = new System.Drawing.Point(4, 347);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Extraction:";
+            // 
+            // button13
+            // 
+            this.button13.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button13.FlatAppearance.BorderSize = 0;
+            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button13.Location = new System.Drawing.Point(4, 367);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(90, 23);
+            this.button13.TabIndex = 15;
+            this.button13.TabStop = false;
+            this.button13.Text = "Train HMM";
+            this.button13.UseVisualStyleBackColor = false;
+            // 
+            // jpegencoderBtn
+            // 
+            this.jpegencoderBtn.BackColor = System.Drawing.Color.SlateGray;
+            this.jpegencoderBtn.Enabled = false;
+            this.jpegencoderBtn.FlatAppearance.BorderSize = 0;
+            this.jpegencoderBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.jpegencoderBtn.Location = new System.Drawing.Point(3, 142);
+            this.jpegencoderBtn.Name = "jpegencoderBtn";
+            this.jpegencoderBtn.Size = new System.Drawing.Size(91, 23);
+            this.jpegencoderBtn.TabIndex = 18;
+            this.jpegencoderBtn.Text = "JPEG Encoder";
+            this.jpegencoderBtn.UseVisualStyleBackColor = false;
+            this.jpegencoderBtn.Click += new System.EventHandler(this.button14_Click);
             // 
             // Form1
             // 
@@ -677,6 +720,9 @@
         private System.Windows.Forms.TextBox WatermarkedImageTxt;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Label resultLbl;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button jpegencoderBtn;
     }
 }
 
