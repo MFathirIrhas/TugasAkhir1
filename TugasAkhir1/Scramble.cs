@@ -305,6 +305,7 @@ namespace TugasAkhir1
                     }
                 }
 
+                //Watermark Mapping
                 //Horizontal -> LH : Level 1 and 2
                 MappedWatermark[i,0] = repeated_version[0];
                 MappedWatermark[i,1] = repeated_version[3];

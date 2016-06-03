@@ -10,17 +10,17 @@ namespace TugasAkhir1
 {
     public class Embed
     {
-        public static double[,] Embedding(double[,] Wavelet_coefficients, double[,] MappedWatermark)
+        public static double[,] Embedding(double[,] Wavelet_coefficients, double[,] MappedWatermark, double[,] HVSValues)
         {
             double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
             double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
-            int embedding_Strength = 1;
+            double embedding_Strength = 0.3;
 
             for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
             {
                 for (int j = 0; j < Wavelet_coefficients.GetLength(1); j++)
                 {
-                    Embedded_Watermark[i, j] = Wavelet_coefficients[i, j] + (Trained_Watermark[i, j] * embedding_Strength);
+                    Embedded_Watermark[i, j] = Wavelet_coefficients[i, j] + (Trained_Watermark[i, j] * embedding_Strength * HVSValues[i,j]);
                 }
             }
 

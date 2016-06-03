@@ -122,3 +122,10 @@ Bimbingan 3:
 		- Estimate HMM model from its parameter
 		- Use this estimated value as given value in likelihood probability calculation.
 		- Calculate the Maximum Likelihood probability.
+---------
+Progress: 
+	- Scramble -> Succeed
+	- Forward DWT -> Succeed
+	- Embedding -> Succeed
+	- HVS -> Succeed
+	- Inverse DWT -> Succeed

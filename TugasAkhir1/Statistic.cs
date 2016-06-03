@@ -64,15 +64,21 @@ namespace TugasAkhir1
         }
         
         
-        ///Performance calculation
+        #region Performance calculation
         ///MSE
         ///PSNR
         ///BER
 
+        /*
+         * Mean Square Error = Differences between Original Image and and Watermarked Image
+         * Peak Signal Noise Ratio = Similarity between Original Image and Watermarked Image
+         * Bit Error Rate = Percentage of different bit between original image and watermarked image,
+         *      also between pre-embed watermark and extracted watermark.
+         */
         public static double MSE(Bitmap original, Bitmap transformed)
         {
-            double[,] originalM = ImageProcessing.ConvertToMatrix(original);
-            double[,] transformedM = ImageProcessing.ConvertToMatrix(transformed);
+            double[,] originalM = ImageProcessing.ConvertToMatrix2(original).Item2;
+            double[,] transformedM = ImageProcessing.ConvertToMatrix2(transformed).Item2;
 
             double size = original.Width * original.Height;
             double sum=0;
@@ -90,7 +96,7 @@ namespace TugasAkhir1
 
         public static double PSNR(Bitmap transformed,double mse)
         {
-            double[,] transformedM = ImageProcessing.ConvertToMatrix(transformed);
+            double[,] transformedM = ImageProcessing.ConvertToMatrix2(transformed).Item2;
             double max = transformedM.Cast<double>().Max();
             double psnr = 10 * (Math.Log10(max / Math.Sqrt(mse)));
             return psnr;
@@ -105,7 +111,7 @@ namespace TugasAkhir1
                 {
                     Color c1 = bmp1.GetPixel(j, i);
                     Color c2 = bmp2.GetPixel(j, i);
-                    if (c1.R == c2.R)
+                    if (c1.G == c2.G)
                     {
                         check.Add(1);
                     }
@@ -120,5 +126,8 @@ namespace TugasAkhir1
             double ber = (sumup / (double)check.Count) * 100;
             return ber;
         }
+        #endregion
+
+
     }
 }

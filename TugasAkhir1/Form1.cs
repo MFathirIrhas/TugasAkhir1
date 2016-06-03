@@ -31,6 +31,7 @@ namespace TugasAkhir1
         public double[,] IMatrixG;
         public double[,] IMatrixB;
 
+        public Bitmap WatermarkedImage;
 
         Stopwatch time = new Stopwatch();
         public Form1()
@@ -39,6 +40,14 @@ namespace TugasAkhir1
             this.hostImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.transformedImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.watermarkImage.SizeMode = PictureBoxSizeMode.Zoom;
+
+            //GUI Initialize
+            HostImageLocationTxt.Text = "Browse Image to be inserted watermark";
+            HostImageLocationTxt.ForeColor = Color.LightGray;
+            WatermarkImageLocationTxt.Text = "Browse Watermark Image";
+            WatermarkImageLocationTxt.ForeColor = Color.LightGray;
+            WatermarkedImageTxt.Text = "Browse Watermarked Image to be Attacked";
+            WatermarkedImageTxt.ForeColor = Color.LightGray;
         }
 
 
@@ -53,6 +62,7 @@ namespace TugasAkhir1
             label5.BackColor = Color.Gray;
             TimeExecTxt.BackColor = Color.Gray;
             PSNRlbl.BackColor = Color.Gray;
+            MSElbl.BackColor = Color.Gray;
             BERlbl.BackColor = Color.Gray;
             BERValue.BackColor = Color.Gray;
             PSNRValue.BackColor = Color.Gray;
@@ -88,6 +98,7 @@ namespace TugasAkhir1
             PSNRValue.Text = String.Format("{0:0.00}", psnr) ;//psnr.ToString();
             BERValue.Text = String.Format("{0:0.00}", ber);//ber.ToString();
             MSEValue.Text = String.Format("{0:0.00}", mse);//mse.ToString();
+            MSElbl.BackColor = Color.LightSkyBlue;
             PSNRlbl.BackColor = Color.LightSkyBlue;
             BERlbl.BackColor = Color.LightSkyBlue;
             BERValue.BackColor = Color.LightSkyBlue;
@@ -106,6 +117,7 @@ namespace TugasAkhir1
             ofd.InitialDirectory = @"F:\College\Semester 8\TA2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                ///Check Image Dimension before processing
                 //Bitmap bmp = new Bitmap(ofd.FileName);
                 //int w = bmp.Width;
                 //int h = bmp.Height;
@@ -177,6 +189,20 @@ namespace TugasAkhir1
             }
         }
 
+
+        private void button12_Click_1(object sender, EventArgs e) //Open Watermarked Image
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select a Picture as Watermark";
+            ofd.InitialDirectory = @"F:\College\Semester 8\TA2";
+            if(ofd.ShowDialog() == DialogResult.OK)
+            {
+                WatermarkedImageTxt.Text = ofd.FileName;
+                transformedImage.Image = new Bitmap(ofd.FileName);
+            }
+        }
+
+
         /// <summary>
         /// Forward DWT Transform and Extract the Wavelet Coefficients
         /// </summary>
@@ -196,9 +222,15 @@ namespace TugasAkhir1
                 IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
                 IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
                 IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+                //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+                //Test
+                //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+
                 double[,] ArrayImage = IMatrixG; //Embedding in Green 
                 Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
                 GUIEnd("FDWT Succeed!", 0, 0, 0);
+                
+                
             }
             else
             {
@@ -240,6 +272,7 @@ namespace TugasAkhir1
             
         }
 
+        #region TESTING BUTTON
         private void button6_Click(object sender, EventArgs e) //Testing button
         {
             Bitmap hostImg = new Bitmap(hostImage.Image);
@@ -317,8 +350,9 @@ namespace TugasAkhir1
             //var cB = p.B;
             //MessageBox.Show("Red: "+cR+" Green: "+cG+" Blue: "+cB,"Result",MessageBoxButtons.OK);            
         }
+        #endregion
 
-        
+
 
         private void button9_Click(object sender, EventArgs e)
         {
@@ -356,7 +390,17 @@ namespace TugasAkhir1
                 GUIStart("Processing.....!");
                 List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
                 double[,] MappedWatermark = Scramble.Mapping(Segmented);
-                double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark);
+                double[,] HVSValues = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                if (transformedImage.Image == null)
+                {
+                    MessageBox.Show("Do Forward Transform First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+                    HVSValues = ImageProcessing.HVS(EdgyImage);
+                }
+                double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark,HVSValues);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
                 GUIEnd("Embedding Succeed!", 0, 0, 0);
                 MessageBox.Show("Embedding Succeed!", "Embedding Process", MessageBoxButtons.OK);
@@ -381,19 +425,90 @@ namespace TugasAkhir1
                 //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
                 double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
                 //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
-                transformedImage.Image = ImageProcessing.ConvertToBitmap2(InverseDWT,IMatrixR,IMatrixB);
+                transformedImage.Image = ImageProcessing.ConvertToBitmap2(IMatrixR, InverseDWT, IMatrixB);
                 double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
                 double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
                 double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
                 GUIEnd("IDWT Succeed!",mse,psnr,ber);
+
+
+                ///Activate Attack Button
+                histeqBtn.Enabled = true;
+                histeqBtn.BackColor = Color.DeepSkyBlue;
+                meanFilterBtn.Enabled = true;
+                meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                medianFilterBtn.Enabled = true;
+                medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                modusFilterBtn.Enabled = true;
+                modusFilterBtn.BackColor = Color.DeepSkyBlue;
+
+                resultLbl.Text = "Watermarked Image";
+                WatermarkedImage = new Bitmap(transformedImage.Image);
+                //test
+                //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
             }
 
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            hostImage.Image = ImageProcessing.CovertToGray(new Bitmap(hostImage.Image));
+            hostImage.Image = ImageProcessing.ConvertToGray(new Bitmap(hostImage.Image));
         }
-      
+
+        private void button12_Click(object sender, EventArgs e) //Histogram Equilization Attack
+        {
+            if (transformedImage.Image != null)
+            {
+                transformedImage.Image = ImageAttack.HistEq(WatermarkedImage);
+                resultLbl.Text = "Histogram Equilization of Watermarked Image";
+            }
+            else
+            {
+                MessageBox.Show("Watermark the Host Image first!", "Incomplete Procedure Detected");
+            }
+        }
+
+        private void meanFilterBtn_Click(object sender, EventArgs e) //Mean Filter Attack
+        {
+            if (transformedImage.Image != null)
+            {
+                transformedImage.Image = ImageAttack.MeanFilter(WatermarkedImage, 1);
+                resultLbl.Text = "Mean Filter of Watermarked Image";
+            }
+            else
+            {
+                MessageBox.Show("Watermark the Host Image first!", "Incomplete Procedure Detected");
+            }
+        }
+
+        private void medianFilterBtn_Click(object sender, EventArgs e) //Median Filter Attack
+        {
+            if (transformedImage.Image != null)
+            {
+                transformedImage.Image = ImageAttack.MedianFilter(WatermarkedImage, 3);
+                resultLbl.Text = "Median Filter of Watermarked Image";
+            }
+            else
+            {
+                MessageBox.Show("Watermark the Host Image first!", "Incomplete Procedure Detected");
+            }
+        }
+
+        private void modusFilterBtn_Click(object sender, EventArgs e) //Modus Filter Attack
+        {
+            if (transformedImage.Image != null)
+            {
+                transformedImage.Image = ImageAttack.ModusFilter(WatermarkedImage, 1);
+                resultLbl.Text = "Modus Filter of Watermarked Image";
+            }
+            else
+            {
+                MessageBox.Show("Watermark the Host Image first!", "Incomplete Procedure Detected");
+            }
+        }
+
+        
+
+        ///END
     }
 }

@@ -79,6 +79,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="HMM.cs" />
+    <Compile Include="ImageAttack.cs" />
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="Scramble.cs" />
     <Compile Include="Program.cs" />
