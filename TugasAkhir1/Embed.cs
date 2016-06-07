@@ -90,7 +90,7 @@ namespace TugasAkhir1
             {
                 for (int j = TrainedWatermark.GetLength(1) / 4; j < TrainedWatermark.GetLength(1) / 2; j++)
                 {
-                    if (iLH1 < MW.GetLength(0))
+                    if (iLH1 < MW.GetLength(0)) //Check if counter smaller than total of tree provided compared to all coefficients in the subband.
                     {
                         TrainedWatermark[i, j] = LH1[iLH1];
                         iLH1++;

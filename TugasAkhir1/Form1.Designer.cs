@@ -53,6 +53,8 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StatusPanel = new System.Windows.Forms.Panel();
+            this.button15 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
             this.MSEValue = new System.Windows.Forms.Label();
             this.MSElbl = new System.Windows.Forms.Label();
             this.BERValue = new System.Windows.Forms.Label();
@@ -68,13 +70,13 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.jpegencoderBtn = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
             this.modusFilterBtn = new System.Windows.Forms.Button();
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.button13 = new System.Windows.Forms.Button();
-            this.jpegencoderBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -246,11 +248,11 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(595, 3);
+            this.button11.Location = new System.Drawing.Point(564, 3);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(75, 23);
             this.button11.TabIndex = 14;
-            this.button11.Text = "Grayscale";
+            this.button11.Text = "test3";
             this.button11.UseVisualStyleBackColor = true;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
@@ -369,6 +371,8 @@
             // StatusPanel
             // 
             this.StatusPanel.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.StatusPanel.Controls.Add(this.button15);
+            this.StatusPanel.Controls.Add(this.button14);
             this.StatusPanel.Controls.Add(this.MSEValue);
             this.StatusPanel.Controls.Add(this.button11);
             this.StatusPanel.Controls.Add(this.MSElbl);
@@ -386,6 +390,26 @@
             this.StatusPanel.Name = "StatusPanel";
             this.StatusPanel.Size = new System.Drawing.Size(1132, 31);
             this.StatusPanel.TabIndex = 9;
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(726, 4);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(75, 23);
+            this.button15.TabIndex = 16;
+            this.button15.Text = "test2";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(645, 5);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 23);
+            this.button14.TabIndex = 15;
+            this.button14.Text = "test";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click_1);
             // 
             // MSEValue
             // 
@@ -541,6 +565,43 @@
             this.panel4.Size = new System.Drawing.Size(97, 656);
             this.panel4.TabIndex = 13;
             // 
+            // jpegencoderBtn
+            // 
+            this.jpegencoderBtn.BackColor = System.Drawing.Color.SlateGray;
+            this.jpegencoderBtn.Enabled = false;
+            this.jpegencoderBtn.FlatAppearance.BorderSize = 0;
+            this.jpegencoderBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.jpegencoderBtn.Location = new System.Drawing.Point(3, 142);
+            this.jpegencoderBtn.Name = "jpegencoderBtn";
+            this.jpegencoderBtn.Size = new System.Drawing.Size(91, 23);
+            this.jpegencoderBtn.TabIndex = 18;
+            this.jpegencoderBtn.Text = "JPEG Encoder";
+            this.jpegencoderBtn.UseVisualStyleBackColor = false;
+            this.jpegencoderBtn.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // button13
+            // 
+            this.button13.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button13.FlatAppearance.BorderSize = 0;
+            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button13.Location = new System.Drawing.Point(4, 367);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(90, 23);
+            this.button13.TabIndex = 15;
+            this.button13.TabStop = false;
+            this.button13.Text = "Train HMM";
+            this.button13.UseVisualStyleBackColor = false;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label8.Location = new System.Drawing.Point(4, 347);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Extraction:";
+            // 
             // modusFilterBtn
             // 
             this.modusFilterBtn.BackColor = System.Drawing.Color.SlateGray;
@@ -596,43 +657,6 @@
             this.histeqBtn.Text = "HistEq";
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label8.Location = new System.Drawing.Point(4, 347);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
-            this.label8.TabIndex = 17;
-            this.label8.Text = "Extraction:";
-            // 
-            // button13
-            // 
-            this.button13.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button13.FlatAppearance.BorderSize = 0;
-            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button13.Location = new System.Drawing.Point(4, 367);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(90, 23);
-            this.button13.TabIndex = 15;
-            this.button13.TabStop = false;
-            this.button13.Text = "Train HMM";
-            this.button13.UseVisualStyleBackColor = false;
-            // 
-            // jpegencoderBtn
-            // 
-            this.jpegencoderBtn.BackColor = System.Drawing.Color.SlateGray;
-            this.jpegencoderBtn.Enabled = false;
-            this.jpegencoderBtn.FlatAppearance.BorderSize = 0;
-            this.jpegencoderBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.jpegencoderBtn.Location = new System.Drawing.Point(3, 142);
-            this.jpegencoderBtn.Name = "jpegencoderBtn";
-            this.jpegencoderBtn.Size = new System.Drawing.Size(91, 23);
-            this.jpegencoderBtn.TabIndex = 18;
-            this.jpegencoderBtn.Text = "JPEG Encoder";
-            this.jpegencoderBtn.UseVisualStyleBackColor = false;
-            this.jpegencoderBtn.Click += new System.EventHandler(this.button14_Click);
             // 
             // Form1
             // 
@@ -723,6 +747,8 @@
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button jpegencoderBtn;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
     }
 }
 

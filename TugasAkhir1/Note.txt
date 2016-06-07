@@ -129,3 +129,34 @@ Progress:
 	- Embedding -> Succeed
 	- HVS -> Succeed
 	- Inverse DWT -> Succeed
+
+---------
+How to calculate Covariance matrix for Multivariate mixture Gaussian model:
+	- Vector of wavelet coefficients * transpose of vector of wavelet coefficients -> W(j,k) * transpose(W(j,k))
+
+---------
+Threshold untuk State Value adalah rata-rata dari keseluruhan wavelet coefficients yang dijumlahkan.
+
+---------
+Model Mixture-Gaussian applied to EACH Wavelet Coefficient.
+
+---------
+HMM Model Parameters Estimation:
+	- Scalar DWT-HMM:
+		- 2 Mixture variances for the wavelet coefficients at each scale.
+		- 2 probabilities for the root state probabilities(at the coarsest scale, scale 1).
+		- 2x2 matrices of state transition probabilities for child scale(scale 2).
+		- Parameter = {P1,A2,Variance} (m=1,2)
+	- Vector DWT-HMM:
+		- 2 covariance matrix from vector of wavelet coefficients from same scale and location in different subband.
+		- 2 probabilities for the root state probabilities(at the coarsest scale, scale 1).
+		- 2x2 matrices of state transition probabilities for child scale(scale 2).
+		- Parameter = {P1,A2,CovMatrix} (m=1,2)
+
+--------
+Rule for Optimal mapping strategy:
+	1. Mapped watermark should be designed to modify the vector tree randomly while their distance is kept.
+	2. Parents node should be preferably chosen to embed the watermark.
+
+--------
+One HMM Model is for whole tree in input image.

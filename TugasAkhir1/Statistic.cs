@@ -63,6 +63,19 @@ namespace TugasAkhir1
             return ak;
         }
         
+        public static double Mean2(List<double> subband)
+        {
+            double mean = subband.Average();
+            return mean;
+        }
+
+        public static double Mode2(List<double> subband)
+        {
+            var groups = subband.GroupBy(v => v);
+            int maxCount = groups.Max(g => g.Count());
+            double mode = groups.First(g => g.Count() == maxCount).Key;
+            return mode;
+        }
         
         #region Performance calculation
         ///MSE

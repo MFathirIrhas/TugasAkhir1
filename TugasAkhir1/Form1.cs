@@ -242,6 +242,7 @@ namespace TugasAkhir1
 
                 double[,] ArrayImage = IMatrixG; //Embedding in Green 
                 Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+                resultLbl.Text = "Decomposed Host Image";
                 GUIEnd("FDWT Succeed!", 0, 0, 0);
                 
                 
@@ -370,8 +371,20 @@ namespace TugasAkhir1
 
         private void button9_Click(object sender, EventArgs e)
         {
-            double akurasi = Statistic.Akurasi(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-            Print(akurasi.ToString());
+            //double akurasi = Statistic.Akurasi(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            //Print(akurasi.ToString());
+            List<double> coeff1D = new List<double>();
+            for(int i = 0; i < Wavelet_Coefficients.GetLength(0); i++)
+            {
+                for(int j = 0; j < Wavelet_Coefficients.GetLength(1); j++)
+                {
+                    coeff1D.Add(Wavelet_Coefficients[i,j]);
+                }
+            }
+            double mean = HMM.Threshold(coeff1D).Item1;
+            double mode = HMM.Threshold(coeff1D).Item2;
+            double max = HMM.Threshold(coeff1D).Item3;
+            MessageBox.Show("Mean: " + mean + "\n Mode: " + mode + " \n Max: " + max + "\n First Coeff: "+Wavelet_Coefficients[0,0], "Result", MessageBoxButtons.OK);
 
         }
 
@@ -456,7 +469,7 @@ namespace TugasAkhir1
                 modusFilterBtn.Enabled = true;
                 modusFilterBtn.BackColor = Color.DeepSkyBlue;
 
-                resultLbl.Text = "Watermarked Image";
+                resultLbl.Text = "Watermarked Host Image";
                 WatermarkedImage = new Bitmap(transformedImage.Image);
                 //test
                 //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
@@ -466,7 +479,147 @@ namespace TugasAkhir1
 
         private void button11_Click(object sender, EventArgs e)
         {
-            hostImage.Image = ImageProcessing.ConvertToGray(new Bitmap(hostImage.Image));
+            //Scale 2
+            List<double> LL2 = new List<double>();
+            List<double> LH2 = new List<double>();
+            List<double> HH2 = new List<double>();
+            List<double> HL2 = new List<double>();
+
+            //Scale 1
+            List<double> LH1 = new List<double>();
+            List<double> HH1 = new List<double>();
+            List<double> HL1 = new List<double>();
+
+            //LL2
+            for (int i = 0; i < Wavelet_Coefficients.GetLength(0) / 4; i++)
+            {
+                for (int j = 0; j < Wavelet_Coefficients.GetLength(1) / 4; j++)
+                {
+                    LL2.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+            //LH2
+            for (int i = 0; i < Wavelet_Coefficients.GetLength(0) / 4; i++)
+            {
+                for (int j = Wavelet_Coefficients.GetLength(1) / 4; j < Wavelet_Coefficients.GetLength(1) / 2; j++)
+                {
+                    LH2.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+            //HH2
+            for (int i = Wavelet_Coefficients.GetLength(0) / 4; i < Wavelet_Coefficients.GetLength(0) / 2; i++)
+            {
+                for (int j = Wavelet_Coefficients.GetLength(1) / 4; j < Wavelet_Coefficients.GetLength(1) / 2; j++)
+                {
+                    HH2.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+            //HL2
+            for (int i = Wavelet_Coefficients.GetLength(0) / 4; i < Wavelet_Coefficients.GetLength(0) / 2; i++)
+            {
+                for (int j = 0; j < Wavelet_Coefficients.GetLength(1) / 4; j++)
+                {
+                    HL2.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+
+            //LH1
+            for (int i = 0 ; i < Wavelet_Coefficients.GetLength(0) / 2; i++)
+            {
+                for (int j = Wavelet_Coefficients.GetLength(1) / 2; j < Wavelet_Coefficients.GetLength(1); j++)
+                {
+                    LH1.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+            //HH1
+            for (int i = Wavelet_Coefficients.GetLength(0) / 2; i < Wavelet_Coefficients.GetLength(0); i++)
+            {
+                for (int j = Wavelet_Coefficients.GetLength(1) / 2; j < Wavelet_Coefficients.GetLength(1); j++)
+                {
+                    HH1.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+            //HL1
+            for (int i = Wavelet_Coefficients.GetLength(0) / 2; i < Wavelet_Coefficients.GetLength(0); i++)
+            {
+                for (int j = 0; j < Wavelet_Coefficients.GetLength(1)/2; j++)
+                {
+                    HL1.Add(Wavelet_Coefficients[i, j]);
+                }
+            }
+
+            //LL2.Sort();
+            //LH2.Sort();
+            //HH2.Sort();
+            //HL2.Sort();
+
+            //LH1.Sort();
+            //HH1.Sort();
+            //HL1.Sort();
+            //TextWriter tw1 = new StreamWriter("SortedLenaWCLL2.txt");
+            //tw1.WriteLine("Total of Wavelet Coefficients: " + LL2.Count);
+            //foreach (double i in LL2)
+            //    tw1.WriteLine(i);
+            //tw1.Close();
+
+            //TextWriter tw2 = new StreamWriter("SortedLenaWCLH2.txt");
+            //tw2.WriteLine("Total of Wavelet Coefficients: " + LH2.Count);
+            //foreach (double i in LH2)
+            //    tw2.WriteLine(i);
+            //tw2.Close();
+
+            //TextWriter tw3 = new StreamWriter("SortedLenaWCHH2.txt");
+            //tw3.WriteLine("Total of Wavelet Coefficients: " + HH2.Count);
+            //foreach (double i in HH2)
+            //    tw3.WriteLine(i);
+            //tw3.Close();
+
+            //TextWriter tw4 = new StreamWriter("SortedLenaWCHL2.txt");
+            //tw4.WriteLine("Total of Wavelet Coefficients: " + HL2.Count);
+            //foreach (double i in HL2)
+            //    tw4.WriteLine(i);
+            //tw4.Close();
+
+            //TextWriter tw5 = new StreamWriter("SortedLenaWCLH1.txt");
+            //tw5.WriteLine("Total of Wavelet Coefficients: " + LH1.Count);
+            //foreach (double i in LH1)
+            //    tw5.WriteLine(i);
+            //tw5.Close();
+
+            //TextWriter tw6 = new StreamWriter("SortedLenaWCHH1.txt");
+            //tw6.WriteLine("Total of Wavelet Coefficients: " + HH1.Count);
+            //foreach (double i in HH1)
+            //    tw6.WriteLine(i);
+            //tw6.Close();
+
+            //TextWriter tw7 = new StreamWriter("SortedLenaWCHL1.txt");
+            //tw7.WriteLine("Total of Wavelet Coefficients: " + HL1.Count);
+            //foreach (double i in HL1)
+            //    tw7.WriteLine(i);
+            //tw7.Close();
+            double meanLL2 = Statistic.Mode2(LL2);
+            double meanLH2 = Statistic.Mode2(LH2);
+            double meanHH2 = Statistic.Mode2(HH2);
+            double meanHL2 = Statistic.Mode2(HL2);
+
+            double meanLH1 = Statistic.Mode2(LH1);
+            double meanHH1 = Statistic.Mode2(HH1);
+            double meanHL1 = Statistic.Mode2(HL1);
+
+            double mode = HMM.Threshold2(Wavelet_Coefficients);
+            MessageBox.Show("LL2: " + meanLL2 
+                + "\n LH2: " + meanLH2 
+                + "\n HH2: " + meanHH2 
+                + "\n HL2: " + meanHL2 
+                + "\n LH1: " + meanLH1 
+                + "\n HH1: " + meanHH1 
+                + "\n HL1: " + meanHL1+"  "+mode,"Succeed", MessageBoxButtons.OK);
         }
 
         private void button12_Click(object sender, EventArgs e) //Histogram Equilization Attack
@@ -533,6 +686,41 @@ namespace TugasAkhir1
             {
                 MessageBox.Show("Watermark the host image first!", "Incomplete Procedure Detected");
             }
+        }
+
+        private void button14_Click_1(object sender, EventArgs e)
+        {
+            double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
+            double threshold = HMM.Threshold2(Wavelet_Coefficients);
+            double probm1 = HMM.StateProbability2(hiddenstates, 1, 1);
+            double probm2 = HMM.StateProbability2(hiddenstates, 1, 2);
+            double prob = probm1 + probm2; //Summation of the probability should be 1
+            MessageBox.Show("Prob m = 1(High): " + probm1 + "\n Prob m = 2(Low): " + probm2 + "\n Sum: " + prob + "\n Threshold: " + threshold, "Succeed", MessageBoxButtons.OK);
+
+            //double mean = HMM.Threshold2(Wavelet_Coefficients);
+            //MessageBox.Show("Mean: " + mean, "Succeed!", MessageBoxButtons.OK);
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
+            int count1 = 0;
+            int count2 = 0;
+            for(int i = 0; i < hiddenstates.GetLength(0); i++)
+            {
+                for(int j = 0; j < hiddenstates.GetLength(1); j++)
+                {
+                    if(hiddenstates[i,j] == 1)
+                    {
+                        count1++;
+                    }else
+                    {
+                        count2++;
+                    }
+                }
+            }
+            int summation = count1 + count2;
+            MessageBox.Show("Count 1: " + count1 + "\n Count2: " + count2+"\n Sum:  "+summation,"Succeed", MessageBoxButtons.OK);
         }
 
         ///END

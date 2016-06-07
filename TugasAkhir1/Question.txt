@@ -1,8 +1,13 @@
 ﻿Question 1: 
-	What is scale? -> scale is each subband in each level
-	How to compute variance in each state?
+	What is scale? -> scale is each level of decomposition in wavelet transform.
+	How to compute variance in each state?, compute it in each scale.
 
 ---------
 
 Question 2:
 	What are the Wavelet Coefficients?, are they simply the pixel value of the decomposed image?
+	-> Wavelet Coefficients are the result of pairing up and sum the neighbouring pixels and divide by square root of 2.
+
+---------
+Question 3: 
+	Do we include the LL while measuring the probability of State variable in coarsest scale?

@@ -333,6 +333,29 @@ namespace TugasAkhir1
             return coeffs;
         }
 
+        public static List<double> WaveletCoeff1D(double[,] pixels, bool forward, int level)
+        {
+            double[,] p = pixels;
+            List<double> WC1D = new List<double>();
+            if (forward == true)
+            {
+                Forward2D(p, level); //Forward Haar DWT
+            }
+            else
+            {
+                Inverse2D(p, level); //Inverse Haar DWT
+            }
+
+            for(int i = 0; i < p.GetLength(0); i++)
+            {
+                for(int j = 0; j < p.GetLength(1); j++)
+                {
+                    WC1D.Add(p[i, j]);
+                }
+            }
+            return WC1D;
+        }
+
         public static double[,] InverseWaveletCoeff(Bitmap bmp, int level)
         {
             double[,] p = new double[bmp.Height, bmp.Width];
@@ -350,11 +373,21 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region FOR COLOR IMAGE
 
-        #endregion
+        //Convert 2 dimension watermark matrix into 1 dimension watermark.
+        public static List<double> ConvertTo1DCoeff(double[,] wc)
+        {
+            List<double> WaveletCoefficient1D = new List<double>();
+            for(int i = 0; i < wc.GetLength(0); i++)
+            {
+                for(int j = 0; j < wc.GetLength(1); j++)
+                {
+                    WaveletCoefficient1D.Add(wc[i, j]);
+                }
+            }
 
-
+            return WaveletCoefficient1D;
+        }
 
     }
 }

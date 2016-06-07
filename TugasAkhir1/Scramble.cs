@@ -307,25 +307,25 @@ namespace TugasAkhir1
 
                 //Watermark Mapping
                 //Horizontal -> LH : Level 1 and 2
-                MappedWatermark[i,0] = repeated_version[0];
-                MappedWatermark[i,1] = repeated_version[3];
-                MappedWatermark[i,2] = inversed_version[1];
-                MappedWatermark[i,3] = inversed_version[4];
-                MappedWatermark[i,4] = repeated_version[2];
+                MappedWatermark[i,0] = repeated_version[0]; //Triangle #0 
+                MappedWatermark[i,1] = repeated_version[3]; //Triangle #3
+                MappedWatermark[i,2] = inversed_version[1]; //Square   #1
+                MappedWatermark[i,3] = inversed_version[4]; //Square   #4
+                MappedWatermark[i,4] = repeated_version[2]; //Circle   #2
 
                 //Diagonal -> HH : Level 1 and 2
-                MappedWatermark[i,5] = repeated_version[1];
-                MappedWatermark[i,6] = repeated_version[4];
-                MappedWatermark[i,7] = inversed_version[2];
-                MappedWatermark[i,8] = repeated_version[0];
-                MappedWatermark[i,9] = repeated_version[3];
+                MappedWatermark[i,5] = repeated_version[1]; //Triangle #1
+                MappedWatermark[i,6] = repeated_version[4]; //Triangle #4
+                MappedWatermark[i,7] = inversed_version[2]; //Square   #2
+                MappedWatermark[i,8] = repeated_version[0]; //Circle   #0
+                MappedWatermark[i,9] = repeated_version[3]; //Circle   #3
 
                 //Vertical -> HL : Level 1 and 2
-                MappedWatermark[i,10] = repeated_version[2];
-                MappedWatermark[i,11] = inversed_version[0];
-                MappedWatermark[i,12] = inversed_version[3];
-                MappedWatermark[i,13] = repeated_version[1];
-                MappedWatermark[i,14] = repeated_version[4];
+                MappedWatermark[i,10] = repeated_version[2]; //Triangle #2
+                MappedWatermark[i,11] = inversed_version[0]; //Square   #0
+                MappedWatermark[i,12] = inversed_version[3]; //Square   #3
+                MappedWatermark[i,13] = repeated_version[1]; //Circle   #1
+                MappedWatermark[i,14] = repeated_version[4]; //Circle   #4
             }
 
             return MappedWatermark;
