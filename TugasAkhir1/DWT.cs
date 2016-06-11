@@ -389,5 +389,128 @@ namespace TugasAkhir1
             return WaveletCoefficient1D;
         }
 
+        /// Convert Scale 2 to 1 dimension
+        /// 1 dimension array of double
+        public static double[] Scale2To1DCoeff(double[,] coeffs) //only LH,HH,HL in Scale 2
+        {
+            int size = ((coeffs.GetLength(0) / 4) * (coeffs.GetLength(1) / 4)) * 3;
+            List<double> Scale2Coeffs = new List<double>();
+            //LH2
+            for(int i = 0; i < coeffs.GetLength(0)/4; i++)
+            {
+                for(int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    Scale2Coeffs.Add(coeffs[i, j]);
+                }
+            }
+
+            //HH2
+            for (int k = coeffs.GetLength(0) / 4; k < coeffs.GetLength(0) / 2; k++)
+            {
+                for (int l = coeffs.GetLength(1) / 4; l < coeffs.GetLength(1) / 2; l++)
+                {
+                    Scale2Coeffs.Add(coeffs[k, l]);
+                }
+            }
+
+            //HL2
+            for (int m = coeffs.GetLength(0) / 4; m < coeffs.GetLength(0) / 2; m++)
+            {
+                for (int n = 0; n < coeffs.GetLength(1) / 4; n++)
+                {
+                    Scale2Coeffs.Add(coeffs[m, n]);
+                }
+            }
+
+            double[] Scale2 = Scale2Coeffs.ToArray();
+
+            return Scale2;
+        }
+
+        /// Convert Scale 1 to 1 dimension
+        /// 2 dimension array of double
+        public static double[,] Scale1To1DCoeff(double[,] coeffs) //only LH,HH,HL in Scale 1
+        {
+            int size = (coeffs.GetLength(0) / 4) * (coeffs.GetLength(1) / 4);
+            double[,] lh1 = new double[size, 4];
+            double[,] hh1 = new double[size, 4];
+            double[,] hl1 = new double[size, 4];
+            double[,] Scale1 = new double[size * 3, 4];
+
+            //LH1
+            int c  = 0;
+            for(int i = 0; i < coeffs.GetLength(0) / 2; i+=2)
+            {
+                for(int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j+=2)
+                {
+                    lh1[c, 0] = coeffs[i, j];
+                    lh1[c, 1] = coeffs[i, j+1];
+                    lh1[c, 2] = coeffs[i+1, j];
+                    lh1[c, 3] = coeffs[i+1, j+1];
+                    c++;
+                }
+            }
+
+            //HH1
+            int c2 = 0;
+            for (int k = coeffs.GetLength(0) / 2; k < coeffs.GetLength(0); k += 2)
+            {
+                for (int l = coeffs.GetLength(1) / 2; l < coeffs.GetLength(1); l += 2)
+                {
+                    hh1[c2, 0] = coeffs[k, l];
+                    hh1[c2, 1] = coeffs[k, l + 1];
+                    hh1[c2, 2] = coeffs[k + 1, l];
+                    hh1[c2, 3] = coeffs[k + 1, l + 1];
+                    c2++;
+                }
+            }
+
+            //HL1
+            int c3 = 0;
+            for (int m = coeffs.GetLength(0) / 2; m < coeffs.GetLength(0); m += 2)
+            {
+                for (int n = 0; n < coeffs.GetLength(1) / 2; n += 2)
+                {
+                    hl1[c3, 0] = coeffs[m, n];
+                    hl1[c3, 1] = coeffs[m, n + 1];
+                    hl1[c3, 2] = coeffs[m + 1, n];
+                    hl1[c3, 3] = coeffs[m + 1, n + 1];
+                    c3++;
+                }
+            }
+
+            ///Unite all 3 subband into 1 array
+            //LH1
+            for(int i = 0; i < lh1.GetLength(0); i++)
+            {
+                for(int j = 0; j < lh1.GetLength(1); j++)
+                {
+                    Scale1[i, j] = lh1[i, j];
+                }
+            }
+
+            //HH1
+            for (int i = 0; i < hh1.GetLength(0); i++)
+            {
+                for (int j = 0; j < hh1.GetLength(1); j++)
+                {
+                    Scale1[i+lh1.GetLength(0), j] = hh1[i, j];
+                }
+            }
+
+            //HL1
+            for (int i = 0; i < hh1.GetLength(0); i++)
+            {
+                for (int j = 0; j < hh1.GetLength(1); j++)
+                {
+                    Scale1[i + lh1.GetLength(0)+hh1.GetLength(0), j] = hh1[i, j];
+                }
+            }
+
+            return Scale1;
+        }
+
+
+        //END
     }
 }

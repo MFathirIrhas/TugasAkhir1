@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using Accord.Statistics;
 
 namespace TugasAkhir1
 {
@@ -248,7 +250,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region StateProbability excluding the LL subband
+        #region StateProbability excluding the LL subband (USED)
         public static double StateProbability2(double[,] hiddenstates, int scale, int m)
         {
             List<int> count11 = new List<int>();
@@ -390,6 +392,16 @@ namespace TugasAkhir1
         }
         #endregion
 
+
+        ///Calculate Parameters of HMM Model
+        /// tetha = {P1, A2, variances/covariance)
+        /// 1. P1 = Parent Hidden States Probability
+        /// 2. A2 = Hidden States Probability 
+        ///     [ P(n=1|m=1)  P(n=2|m=1) ]
+        ///     [ P(n=1|m=2)  P(n=2|m=2) ]
+        /// 3. Variances -> ignore cross correlation among subband
+        ///    Covariances -> Consist of Wavelet Coefficients at the same scale and location
+        #region Parent Hidden States Probability
         /// <summary>
         /// Calculate the probability of hidden states in coarsest scale where parents node reside.
         /// P(Sj->1=m), j=1 and m=1,2
@@ -406,36 +418,327 @@ namespace TugasAkhir1
             pmf[1] = pmf2;
             return pmf;
         }
+        #endregion
 
-
+        #region Parent-Child Hidden States Transition Probability
         /// <summary>
         /// Calculate likelihood probability of child node in state n given the parent node in state m.
-        /// P(n|m) , n = child node and m = parent node. 
+        /// P(n|m) , n = child node and m = parent node.
+        /// Create A Matrix that contain:
+        ///     [P(n=1|m=1)  P(n=2|m=1)]   -> [ pos=1    pos=2 ]
+        ///     [P(n=1|m=2)  P(n=2|m=2)]      [ pos=3    pos=4 ]
+        /// The nature of Child Hidden States are that 1 & 3 always same, and 2 & 4 always same.(still in doubt)
         /// </summary>
         /// <param name="coeffs">Wavelet Coefficients</param>
         /// <param name="pos">Position of child node for each parent -> pos ={1,2,3,4}</param>
+        /// <param name="m">Hidden state of Parent node</param>
+        /// <param name="n">Hidden state of Child node</param>
         /// <returns></returns>
-        //public static double TransitionProbability(double[,] coeffs, int pos)
-        //{
-        //    double[,] hiddenstates = GetHiddenStateValue(coeffs);
-        //    // Calculate number of parent node with state 1 or 2
-        //    double rootpmf1 = StateProbability(hiddenstates, 2, 1);
-        //    double rootpmf2 = StateProbability(hiddenstates, 2, 2);
+        public static double TransitionProbability(double[,] coeffs, /*int pos,*/ int n, int m)
+        {
+            double[,] hiddenstates = GetHiddenStateValue(coeffs);
+            // Calculate number of parent node with state 1 or 2
+            double rootpmf1 = StateProbability2(hiddenstates, 2, 1);
+            double rootpmf2 = StateProbability2(hiddenstates, 2, 2);
+            double NumOfRootm1 = (double)rootpmf1 * (double)(((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3); //Number of parent node whose m = 1
+            double NumOfRootm2 = (double)rootpmf2 * (double)(((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3); //Number of parent node whose m = 2
+
+            double[] Scale2 = DWT.Scale2To1DCoeff(hiddenstates);
+            double[,] Scale1 = DWT.Scale1To1DCoeff(hiddenstates);
+            double[,] Scale = new double[Scale2.Length, 5];
+
+            for (int i = 0; i < Scale2.Length; i++)
+            {
+                Scale[i, 0] = Scale2[i];
+                Scale[i, 1] = Scale1[i, 0];
+                Scale[i, 2] = Scale1[i, 1];
+                Scale[i, 3] = Scale1[i, 2];
+                Scale[i, 4] = Scale1[i, 3];
+
+            }
 
 
-        //    if (pos == 1)
-        //    {
-        //        for (int i = 0; i < coeffs.GetLength(0); i += 2)
-        //        {
-        //            for (int j = 0; j < coeffs.GetLength(1); j += 2)
-        //            {
+            ///Calculating Transition probability
+            int c1 = 0;
+            int c2 = 0;
+            int c3 = 3;
+            int c4 = 4;
+            if(n==1 && m == 1)
+            {
+                for(int i = 0; i < Scale.GetLength(0); i++)
+                {
+                    for (int j = 1; j < Scale.GetLength(1); j++)
+                    {
+                        if (Scale[i, j] == 1 && Scale[i, 0] == 1)
+                        {
+                            c1++;
+                        }
+                    }
+                }
+                double transitionProb = (double)c1 / (double)NumOfRootm1;
+                return transitionProb;
 
-        //            }
-        //        }
-        //    }
-            
-        //}
+            }
+            else if(n==2 && m==1)
+            {
+                for (int i = 0; i < Scale.GetLength(0); i++)
+                {
+                    for (int j = 1; j < Scale.GetLength(1); j++)
+                    {
+                        if (Scale[i, j] == 2 && Scale[i, 0] == 1)
+                        {
+                            c2++;
+                        }
+                    }
+                }
+                double transitionProb = (double)c2 / (double)NumOfRootm1;
+                return transitionProb;
+            }
+            else if(n==1 && m==2)
+            {
+                for (int i = 0; i < Scale.GetLength(0); i++)
+                {
+                    for (int j = 1; j < Scale.GetLength(1); j++)
+                    {
+                        if (Scale[i, j] == 1 && Scale[i, 0] == 2)
+                        {
+                            c3++;
+                        }
+                    }
+                }
+                double transtitionProb = (double)c3 / (double)NumOfRootm2;
+                return transtitionProb;
+            }
+            else
+            {
+                for (int i = 0; i < Scale.GetLength(0); i++)
+                {
+                    for (int j = 1; j < Scale.GetLength(1); j++)
+                    {
+                        if (Scale[i, j] == 2 && Scale[i, 0] == 2)
+                        {
+                            c4++;
+                        }
+                    }
+                }
+                double transtitionProb = (double)c4 / (double)NumOfRootm2;
+                return transtitionProb;
+            }
+        }
+        #endregion
+
+        #region Variances
+        // CODE HERE
+        public static double Variances(double[,] coeffs, int j, int m)
+        {
+            double[] j2m1 = Scale2m1(coeffs);
+            double[] j2m2 = Scale2m2(coeffs);
+            double[] j1m1 = Scale1m1(coeffs);
+            double[] j1m2 = Scale1m2(coeffs);
+
+            if(j==2 && m == 1)
+            {
+                double v = Tools.Variance(j2m1);
+                return v;
+            }
+            else if(j==2 && m == 2)
+            {
+                double v = Tools.Variance(j2m2);
+                return v;
+            }
+            else if(j==1 && m == 1)
+            {
+                double v = Tools.Variance(j1m1);
+                return v;
+            }
+            else
+            {
+                double v = Tools.Variance(j1m2);
+                return v;
+            }
+        }
+
+        public static double[] Scale2m1(double[,] coeffs)
+        {
+            //int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
+            List<double> w = new List<double>();
+            double threshold = Threshold2(coeffs);
+            //LH2
+            for(int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            {
+                for(int j= coeffs.GetLength(1)/4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    if (coeffs[i, j] > threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }                    
+                }
+            }
+
+            //HH2
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    if (coeffs[i, j] > threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HL2
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
+                {
+                    if (coeffs[i, j] > threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+            double[] w2 = w.ToArray();
+            return w2;
+        }
+
+        public static double[] Scale2m2(double[,] coeffs)
+        {
+            //int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
+            List<double> w = new List<double>();
+            double threshold = Threshold2(coeffs);
+            //LH2
+            for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            {
+                for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    if (coeffs[i, j] <= threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HH2
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    if (coeffs[i, j] <= threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HL2
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
+                {
+                    if (coeffs[i, j] <= threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+            double[] w2 = w.ToArray();
+            return w2;
+        }
+
+        public static double[] Scale1m1(double[,] coeffs)
+        {
+            //int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
+            List<double> w = new List<double>();
+            double threshold = Threshold2(coeffs);
+            //LH2
+            for (int i = 0; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1) ; j++)
+                {
+                    if (coeffs[i, j] > threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HH2
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1) ; j++)
+                {
+                    if (coeffs[i, j] > threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HL2
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0) ; i++)
+            {
+                for (int j = 0; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    if (coeffs[i, j] > threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+            double[] w2 = w.ToArray();
+            return w2;
+        }
+
+        public static double[] Scale1m2(double[,] coeffs)
+        {
+            //int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
+            List<double> w = new List<double>();
+            double threshold = Threshold2(coeffs);
+            //LH2
+            for (int i = 0; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j++)
+                {
+                    if (coeffs[i, j] <= threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HH2
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j++)
+                {
+                    if (coeffs[i, j] <= threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+
+            //HL2
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
+            {
+                for (int j = 0; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    if (coeffs[i, j] <= threshold)
+                    {
+                        w.Add(coeffs[i, j]);
+                    }
+                }
+            }
+            double[] w2 = w.ToArray();
+            return w2;
+        }
+        #endregion
+
+        #region covariances
         
+        #endregion
+
         //end
     }
 }

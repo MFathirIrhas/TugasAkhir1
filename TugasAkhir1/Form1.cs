@@ -598,7 +598,7 @@ namespace TugasAkhir1
             //    tw6.WriteLine(i);
             //tw6.Close();
 
-            //TextWriter tw7 = new StreamWriter("SortedLenaWCHL1.txt");
+            //TextWriter tw7 = new StreamWriter("LenaWCHL1_2.txt");
             //tw7.WriteLine("Total of Wavelet Coefficients: " + HL1.Count);
             //foreach (double i in HL1)
             //    tw7.WriteLine(i);
@@ -695,8 +695,10 @@ namespace TugasAkhir1
             double probm1 = HMM.StateProbability2(hiddenstates, 1, 1);
             double probm2 = HMM.StateProbability2(hiddenstates, 1, 2);
             double prob = probm1 + probm2; //Summation of the probability should be 1
-            MessageBox.Show("Prob m = 1(High): " + probm1 + "\n Prob m = 2(Low): " + probm2 + "\n Sum: " + prob + "\n Threshold: " + threshold, "Succeed", MessageBoxButtons.OK);
+            //MessageBox.Show("Prob m = 1(High): " + probm1 + "\n Prob m = 2(Low): " + probm2 + "\n Sum: " + prob + "\n Threshold: " + threshold, "Succeed", MessageBoxButtons.OK);
+            HMM.TransitionProbability(Wavelet_Coefficients, 1, 1);
 
+            //MessageBox.Show("256: " + Wavelet_Coefficients[0, 256] + "\n 257: " + Wavelet_Coefficients[0, 257] + "\n 768:" + Wavelet_Coefficients[1, 256] + "\n 769:" + Wavelet_Coefficients[1, 257]);
             //double mean = HMM.Threshold2(Wavelet_Coefficients);
             //MessageBox.Show("Mean: " + mean, "Succeed!", MessageBoxButtons.OK);
         }
