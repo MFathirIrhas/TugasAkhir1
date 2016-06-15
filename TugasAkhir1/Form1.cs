@@ -24,6 +24,7 @@ namespace TugasAkhir1
 
         //Global Variables
         public double[,] Wavelet_Coefficients;
+        public double[,] Watermarked_Wavelet_Coefficients;
         public List<int> Scrambled_Watermark = new List<int>();
         public double[,] Embedded_Wavelet_Coefficients; 
         public double[,] Inversed_Wavelet_Coefficients;
@@ -32,6 +33,12 @@ namespace TugasAkhir1
         public double[,] IMatrixB;
 
         public Bitmap WatermarkedImage;
+
+        //HMM Parameters
+        public double[] rootpmf = new double[2];
+        public double[,] transition = new double[2, 2];
+        public double[,] variances = new double[2, 5];
+
 
         Stopwatch time = new Stopwatch();
         public Form1()
@@ -139,11 +146,23 @@ namespace TugasAkhir1
             }
         }
 
+        public static Bitmap Create24bpp(Image image)
+        {
+            Bitmap b = new Bitmap(image);
+            Bitmap bmp = new Bitmap(b.Width, b.Height,
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            using (Graphics gr = Graphics.FromImage(bmp))
+                gr.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height));
+            return bmp;
+        }
+
         private void button10_Click(object sender, EventArgs e) //Save Transformed/Watermarked Image
         {
             if (transformedImage.Image != null)
             {
-                Bitmap bmp = new Bitmap(transformedImage.Image);
+                //Bitmap bmp = new Bitmap(transformedImage.Image);
+                Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
+
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Title = "Select Save Location";
                 sfd.InitialDirectory = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Saved_Image";
@@ -723,6 +742,42 @@ namespace TugasAkhir1
             }
             int summation = count1 + count2;
             MessageBox.Show("Count 1: " + count1 + "\n Count2: " + count2+"\n Sum:  "+summation,"Succeed", MessageBoxButtons.OK);
+        }
+
+        private void button13_Click(object sender, EventArgs e) //Train HMM
+        {
+            GUIStart("Training HMM Model...");
+            //transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
+
+            ///For Wavelet Coefficients Extraction
+            Bitmap b = new Bitmap(transformedImage.Image);
+            IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+            IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+            IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+            //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+            //Test
+            //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+
+            double[,] ArrayImage = IMatrixG; //Embedding in Green 
+            Watermarked_Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+            rootpmf = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item1;
+            transition = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item2;
+            variances = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item3;
+            GUIEnd("HMM Model Trained!",0,0,0);
+            MessageBox.Show("Training HMM Model Succeed!", "Succeed", MessageBoxButtons.OK);
+
+
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+            double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            MSEValue.Text = mse.ToString();
+            PSNRValue.Text = psnr.ToString();
+            BERValue.Text = ber.ToString();
+
         }
 
         ///END

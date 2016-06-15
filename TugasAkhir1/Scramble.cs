@@ -264,7 +264,7 @@ namespace TugasAkhir1
         #endregion
 
         #region 6. Segmentation
-        //Group the Interleaved sequence into M-bit segments. M = 15.
+        //Group the Interleaved sequence into M-bit segments. M = 5.
         public static List<List<int>> Segment(List<int> Interleaved)
         {
             List<List<int>> Tree = new List<List<int>>();

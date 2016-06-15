@@ -11,3 +11,7 @@ Question 2:
 ---------
 Question 3: 
 	Do we include the LL while measuring the probability of State variable in coarsest scale?
+
+---------
+Question 4:
+	Do we use HMM Model for each tree of wavelet coefficients of for whole image?

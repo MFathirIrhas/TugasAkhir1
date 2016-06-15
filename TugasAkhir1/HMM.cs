@@ -146,6 +146,8 @@ namespace TugasAkhir1
             return HiddenStates;
         }
 
+        #region Wrong Calculation of HMM Model
+
         #region StateProbability including the LL subband
         /// <summary>
         /// Calculating state probability of each state of each wavelet coefficient.
@@ -527,8 +529,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region Variances
-        // CODE HERE
+        #region Variances (NOT SURE)
         public static double Variances(double[,] coeffs, int j, int m)
         {
             double[] j2m1 = Scale2m1(coeffs);
@@ -735,10 +736,511 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region covariances
-        
+        #region Covariances
+
         #endregion
 
+        #endregion
+
+        #region Recalculation of HMM Model (Scalar Model)
+        /// <summary>
+        /// EM Steps of estimating the probability
+        /// </summary>
+        /// <param name="coeffs"></param>
+        /// <returns></returns>
+        public static double[] ParentStateProbability(double[,] coeffs) //P(m)
+        {
+            double[,] hiddenstates = GetHiddenStateValue(coeffs);
+            double[] pmf = new double[2];
+            double pmf1 = StateProbability2(hiddenstates, 2, 1); //PMF for parent's state m = 1
+            double pmf2 = StateProbability2(hiddenstates, 2, 2); //PMF for parent's state m = 2
+            pmf[0] = pmf1;
+            pmf[1] = pmf2;
+            return pmf;
+        }
+
+        /// <summary>
+        /// Child State Probability : Pi(m) = Sigma(m'): Ppi(m')*P(m|m') 
+        /// </summary>
+        /// <param name="coeffs"></param>
+        /// <returns></returns>
+        public static double[] ChildStateProbability(double[,] coeffs) //P(n)
+        {
+            double[] rootpmf = ParentStateProbability(coeffs);
+            double[] pmf = new double[2];
+            double transitionn1m1 = TransitionStateProbability(coeffs, 1, 1);
+            double transitionn2m1 = TransitionStateProbability(coeffs, 2, 1);
+            double transitionn1m2 = TransitionStateProbability(coeffs, 1, 2);
+            double transitionn2m2 = TransitionStateProbability(coeffs, 2, 2);
+
+            double pmf1 = (rootpmf[0] * transitionn1m1) + (rootpmf[1] * transitionn1m2);
+            double pmf2 = (rootpmf[0] * transitionn2m1) + (rootpmf[1] * transitionn2m2);
+            pmf[0] = pmf1;
+            pmf[1] = pmf2;
+            return pmf;
+        }
+        public static double TransitionStateProbability(double[,] coeffs, int n, int m) //P(n|m)
+        {
+            int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
+            double[,] hiddenstates = GetHiddenStateValue(coeffs);
+            double[] transitionProb = new double[size];
+            double[,] trees = ExtractTrees(hiddenstates);
+
+            int n1m1 = 0;
+            int n2m1 = 0;
+            int n1m2 = 0;
+            int n2m2 = 0;
+            if (n == 1 && m == 1)
+            {
+                for (int i = 0; i < trees.GetLength(0); i++)
+                {
+                    n1m1 = 0;
+                    for (int j = 1; j < trees.GetLength(1); j++)
+                    {
+                        if (trees[i, j] == 1 && trees[i, 0] == 1)
+                        {
+                            n1m1++;
+                        }
+                    }
+                    transitionProb[i] = (double)n1m1 / (double)4;
+                }
+
+                double sum = transitionProb.Sum();
+                double[] rootpmf = ParentStateProbability(coeffs);
+                double pmf1 = rootpmf[0];
+                double transitionn1m1 = (double)sum / ((double)trees.GetLength(0) * (double)pmf1);
+                return transitionn1m1;
+
+            }
+            else if (n == 2 && m == 1)
+            {
+                for (int i = 0; i < trees.GetLength(0); i++)
+                {
+                    n2m1 = 0;
+                    for (int j = 1; j < trees.GetLength(1); j++)
+                    {
+                        if (trees[i, j] == 2 && trees[i, 0] == 1)
+                        {
+                            n2m1++;
+                        }
+                    }
+                    transitionProb[i] = (double)n2m1 / (double)4;
+                }
+
+                double sum = transitionProb.Sum();
+                double[] rootpmf = ParentStateProbability(coeffs);
+                double pmf1 = rootpmf[0];
+                double transitionn2m1 = (double)sum / ((double)trees.GetLength(0) * (double)pmf1);
+                return transitionn2m1;
+            }
+            else if (n == 1 && m == 2)
+            {
+                for (int i = 0; i < trees.GetLength(0); i++)
+                {
+                    n1m2 = 0;
+                    for (int j = 1; j < trees.GetLength(1); j++)
+                    {
+                        if (trees[i, j] == 1 && trees[i, 0] == 2)
+                        {
+                            n1m2++;
+                        }
+                    }
+                    transitionProb[i] = (double)n1m2 / (double)4;
+                }
+
+                double sum = transitionProb.Sum();
+                double[] rootpmf = ParentStateProbability(coeffs);
+                double pmf2 = rootpmf[1];
+                double transitionn1m2 = (double)sum / ((double)trees.GetLength(0) * (double)pmf2);
+                return transitionn1m2;
+            }
+            else
+            {
+                for (int i = 0; i < trees.GetLength(0); i++)
+                {
+                    n2m2 = 0;
+                    for (int j = 1; j < trees.GetLength(1); j++)
+                    {
+                        if (trees[i, j] == 2 && trees[i, 0] == 2)
+                        {
+                            n2m2++;
+                        }
+                    }
+                    transitionProb[i] = (double)n2m2 / (double)4;
+                }
+
+                double sum = transitionProb.Sum();
+                double[] rootpmf = ParentStateProbability(coeffs);
+                double pmf2 = rootpmf[1];
+                double transitionn2m2 = (double)sum / ((double)trees.GetLength(0) * (double)pmf2);
+                return transitionn2m2;
+            }
+        }
+
+        public static double[] Means(double[,] coeffs, int m)
+        {
+            double[] mean = new double[5]; //5 node each tree
+            double[,] treesOfcoeffs = ExtractTrees(coeffs);
+            double[,] hiddenstates = GetHiddenStateValue(coeffs);
+            double[,] treesOfHiddenStates = ExtractTrees(hiddenstates);
+
+            //P(m)
+            double[] rootpmf = ParentStateProbability(hiddenstates); 
+
+            //P(n|m)
+            double transitionn1m1 = TransitionProbability(hiddenstates, 1, 1); 
+            double transitionn2m1 = TransitionProbability(hiddenstates, 2, 1); 
+            double transitionn1m2 = TransitionProbability(hiddenstates, 1, 2); 
+            double transitionn2m2 = TransitionProbability(hiddenstates, 2, 2); 
+
+            //P(n)
+            double[] childpmf = ChildStateProbability(hiddenstates);
+            
+            if (m == 1)
+            {
+                double sum  = 0;
+                double sum2 = 0;
+                double sum3 = 0;
+                double sum4 = 0;
+                double sum5 = 0;
+                
+                    // Parent Node
+                    for(int j = 0; j < treesOfcoeffs.GetLength(0); j++) 
+                    {
+                        sum += treesOfcoeffs[j, 0] * rootpmf[0];
+                    }
+                    double mean1 = (double)sum / ((double)treesOfcoeffs.GetLength(0)*(double)rootpmf[0]);
+
+                    // Child node 1
+                    for(int k = 0; k < treesOfcoeffs.GetLength(0); k++)
+                    {
+                        sum2 += treesOfcoeffs[k, 1] * childpmf[0];
+                    }
+                    double mean2 = (double)sum2 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+                    
+                    // Child node 2
+                    for (int l = 0; l < treesOfcoeffs.GetLength(0); l++)
+                    {
+                        sum3 += treesOfcoeffs[l, 2] * childpmf[0];
+                    }
+                    double mean3 = (double)sum3 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                    // Child node 3
+                    for (int o = 0; o < treesOfcoeffs.GetLength(0); o++)
+                    {
+                        sum4 += treesOfcoeffs[o, 3] * childpmf[0];
+                    }
+                    double mean4 = (double)sum4 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                    // Child node 4
+                    for (int p = 0; p < treesOfcoeffs.GetLength(0); p++)
+                    {
+                        sum5 += treesOfcoeffs[p, 4] * childpmf[0];
+                    }
+                    double mean5 = (double)sum5 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                mean[0] = mean1;
+                mean[1] = mean2;
+                mean[2] = mean3;
+                mean[3] = mean4;
+                mean[4] = mean5;
+
+            }
+            else
+            {
+                double sum = 0;
+                double sum2 = 0;
+                double sum3 = 0;
+                double sum4 = 0;
+                double sum5 = 0;
+
+                // Parent Node
+                for (int j = 0; j < treesOfcoeffs.GetLength(0); j++)
+                {
+                    sum += treesOfcoeffs[j, 0] * rootpmf[1];
+                }
+                double mean1 = (double)sum / ((double)treesOfcoeffs.GetLength(0) * (double)rootpmf[1]);
+
+                // Child node 1
+                for (int k = 0; k < treesOfcoeffs.GetLength(0); k++)
+                {
+                    sum2 += treesOfcoeffs[k, 1] * childpmf[1];
+                }
+                double mean2 = (double)sum2 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                // Child node 2
+                for (int l = 0; l < treesOfcoeffs.GetLength(0); l++)
+                {
+                    sum3 += treesOfcoeffs[l, 2] * childpmf[1];
+                }
+                double mean3 = (double)sum3 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                // Child node 3
+                for (int o = 0; o < treesOfcoeffs.GetLength(0); o++)
+                {
+                    sum4 += treesOfcoeffs[o, 3] * childpmf[1];
+                }
+                double mean4 = (double)sum4 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                // Child node 4
+                for (int p = 0; p < treesOfcoeffs.GetLength(0); p++)
+                {
+                    sum5 += treesOfcoeffs[p, 4] * childpmf[1];
+                }
+                double mean5 = (double)sum5 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                mean[0] = mean1;
+                mean[1] = mean2;
+                mean[2] = mean3;
+                mean[3] = mean4;
+                mean[4] = mean5;
+
+            }
+
+            return mean;
+        }
+
+        public static double[] Variances(double[,] coeffs , int m)
+        {
+            double[] variances = new double[5]; //5 node each tree
+            double[,] treesOfcoeffs = ExtractTrees(coeffs);
+            double[,] hiddenstates = GetHiddenStateValue(coeffs);
+            double[,] treesOfHiddenStates = ExtractTrees(hiddenstates);
+
+            //P(m)
+            double[] rootpmf = ParentStateProbability(hiddenstates);
+
+            //P(n|m)
+            double transitionn1m1 = TransitionProbability(hiddenstates, 1, 1);
+            double transitionn2m1 = TransitionProbability(hiddenstates, 2, 1);
+            double transitionn1m2 = TransitionProbability(hiddenstates, 1, 2);
+            double transitionn2m2 = TransitionProbability(hiddenstates, 2, 2);
+
+            //P(n)
+            double[] childpmf = ChildStateProbability(hiddenstates);
+
+            double[] mean1 = Means(coeffs, 1);
+            double[] mean2 = Means(coeffs, 2);
+
+            if (m == 1)
+            {
+                double sum = 0;
+                double sum2 = 0;
+                double sum3 = 0;
+                double sum4 = 0;
+                double sum5 = 0;
+
+                // Parent Node
+                for (int j = 0; j < treesOfcoeffs.GetLength(0); j++)
+                {
+                    sum += Math.Pow((treesOfcoeffs[j, 0]-mean1[0]),2) * rootpmf[0];
+                }
+                double variance1 = (double)sum / ((double)treesOfcoeffs.GetLength(0) * (double)rootpmf[0]);
+
+                // Child node 1
+                for (int k = 0; k < treesOfcoeffs.GetLength(0); k++)
+                {
+                    sum2 += Math.Pow((treesOfcoeffs[k, 1]-mean1[1]),2) * childpmf[0];
+                }
+                double variance2 = (double)sum2 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                // Child node 2
+                for (int l = 0; l < treesOfcoeffs.GetLength(0); l++)
+                {
+                    sum3 += Math.Pow((treesOfcoeffs[l, 2] - mean1[2]), 2) * childpmf[0];
+                }
+                double variance3 = (double)sum3 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                // Child node 3
+                for (int o = 0; o < treesOfcoeffs.GetLength(0); o++)
+                {
+                    sum4 += Math.Pow((treesOfcoeffs[o, 3] - mean1[3]), 2) * childpmf[0];
+                }
+                double variance4 = (double)sum4 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                // Child node 4
+                for (int p = 0; p < treesOfcoeffs.GetLength(0); p++)
+                {
+                    sum5 += Math.Pow((treesOfcoeffs[p, 4] - mean1[4]), 2) * childpmf[0];
+                }
+                double variance5 = (double)sum5 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[0]);
+
+                variances[0] = variance1;
+                variances[1] = variance2;
+                variances[2] = variance3;
+                variances[3] = variance4;
+                variances[4] = variance5;
+
+            }
+            else
+            {
+                double sum = 0;
+                double sum2 = 0;
+                double sum3 = 0;
+                double sum4 = 0;
+                double sum5 = 0;
+
+                // Parent Node
+                for (int j = 0; j < treesOfcoeffs.GetLength(0); j++)
+                {
+                    sum += Math.Pow((treesOfcoeffs[j, 0] - mean2[0]), 2) * rootpmf[1];
+                }
+                double variance1 = (double)sum / ((double)treesOfcoeffs.GetLength(0) * (double)rootpmf[1]);
+
+                // Child node 1
+                for (int k = 0; k < treesOfcoeffs.GetLength(0); k++)
+                {
+                    sum2 += Math.Pow((treesOfcoeffs[k, 1] - mean2[1]), 2) * childpmf[1];
+                }
+                double variance2 = (double)sum2 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                // Child node 2
+                for (int l = 0; l < treesOfcoeffs.GetLength(0); l++)
+                {
+                    sum3 += Math.Pow((treesOfcoeffs[l, 2] - mean2[2]), 2) * childpmf[1];
+                }
+                double variance3 = (double)sum3 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                // Child node 3
+                for (int o = 0; o < treesOfcoeffs.GetLength(0); o++)
+                {
+                    sum4 += Math.Pow((treesOfcoeffs[o, 3] - mean2[3]), 2) * childpmf[1];
+                }
+                double variance4 = (double)sum4 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                // Child node 4
+                for (int p = 0; p < treesOfcoeffs.GetLength(0); p++)
+                {
+                    sum5 += Math.Pow((treesOfcoeffs[p, 4] - mean2[4]), 2) * childpmf[1];
+                }
+                double variance5 = (double)sum5 / ((double)treesOfcoeffs.GetLength(0) * (double)childpmf[1]);
+
+                variances[0] = variance1;
+                variances[1] = variance2;
+                variances[2] = variance3;
+                variances[3] = variance4;
+                variances[4] = variance5;
+
+            }
+
+            return variances;
+        }
+
+        public static double[,] ExtractTrees(double[,] coeffs)
+        {
+            int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
+            int subsize = size / 3;
+            int subsize2 = subsize * 2;
+            double[,] trees = new double[size,5];
+            ///Scale 2
+            //LH2
+            int lh2 = 0;
+            for(int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            {
+                for(int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    trees[lh2, 0] = coeffs[i,j];
+                }
+            }
+
+            //HH2
+            int hh2 = 0;
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0)/ 2; i++)
+            {
+                for(int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    trees[hh2 + subsize, 0] = coeffs[i, j];
+                }
+            }
+
+            //HL2
+            int hl2 = 0;
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0)/2 ; i++)
+            {
+                for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
+                {
+                    trees[hh2 + subsize2, 0] = coeffs[i, j];
+                }
+            }
+
+            ///Scale 1
+            //LH1
+            int lh1 = 0;
+            for (int i = 0; i < coeffs.GetLength(0) / 2; i+=2)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j+=2)
+                {
+                    trees[lh1, 1] = coeffs[i, j];
+                    trees[lh1, 2] = coeffs[i, j + 1];
+                    trees[lh1, 3] = coeffs[i + 1, j];
+                    trees[lh1, 4] = coeffs[i + 1, j + 1];
+                }
+            }
+
+            //HH1
+            int hh1 = 0;
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i += 2)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j += 2)
+                {
+                    trees[hh1 + subsize, 1] = coeffs[i, j];
+                    trees[hh1 + subsize, 2] = coeffs[i, j + 1];
+                    trees[hh1 + subsize, 3] = coeffs[i + 1, j];
+                    trees[hh1 + subsize, 4] = coeffs[i + 1, j + 1];
+                }
+            }
+
+            //HL1
+            int hl1 = 0;
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i += 2)
+            {
+                for (int j = 0; j < coeffs.GetLength(1)/2; j += 2)
+                {
+                    trees[hh1 + subsize2, 1] = coeffs[i, j];
+                    trees[hh1 + subsize2, 2] = coeffs[i, j + 1];
+                    trees[hh1 + subsize2, 3] = coeffs[i + 1, j];
+                    trees[hh1 + subsize2, 4] = coeffs[i + 1, j + 1];
+                }
+            }
+
+            return trees;
+        }
+        #endregion
+
+        #region INITIATE HMM PARAMETERS
+        public static Tuple<double[],double[,], double[,]> CreateHMMModel(double[,] coeffs)
+        {
+            // Parent nodes PMF
+            double[] rootpmf = ParentStateProbability(coeffs);
+
+            // Transition State Probability
+            double[,] transition = new double[2, 2];
+            double transitionn1m1 = TransitionStateProbability(coeffs, 1, 1);
+            double transitionn2m1 = TransitionStateProbability(coeffs, 2, 1);
+            double transitionn1m2 = TransitionStateProbability(coeffs, 1, 2);
+            double transitionn2m2 = TransitionStateProbability(coeffs, 2, 2);
+            transition[0, 0] = transitionn1m1;
+            transition[0, 1] = transitionn2m1;
+            transition[1, 0] = transitionn1m2;
+            transition[1, 1] = transitionn2m2;
+
+            //Variances
+            double[,] variances = new double[2, 5];
+            double[] variancem1 = Variances(coeffs, 1);
+            double[] variancem2 = Variances(coeffs, 2);
+            for(int i = 0; i < 5; i++)
+            {
+                variances[0, i] = variancem1[i];
+            }
+            for(int j = 0; j < 5; j++)
+            {
+                variances[1, j] = variancem2[j];
+            }
+
+            return new Tuple<double[], double[,], double[,]>(rootpmf, transition, variances);
+
+        }
+        #endregion
         //end
     }
 }

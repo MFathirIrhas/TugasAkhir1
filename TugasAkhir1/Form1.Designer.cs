@@ -77,6 +77,7 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -166,6 +167,7 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.button16);
             this.panel2.Controls.Add(this.resultLbl);
             this.panel2.Controls.Add(this.WatermarkedImageTxt);
             this.panel2.Controls.Add(this.button12);
@@ -591,6 +593,7 @@
             this.button13.TabStop = false;
             this.button13.Text = "Train HMM";
             this.button13.UseVisualStyleBackColor = false;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // label8
             // 
@@ -657,6 +660,16 @@
             this.histeqBtn.Text = "HistEq";
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(479, 628);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(75, 23);
+            this.button16.TabIndex = 17;
+            this.button16.Text = "Performance";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // Form1
             // 
@@ -749,6 +762,7 @@
         private System.Windows.Forms.Button jpegencoderBtn;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
     }
 }
 

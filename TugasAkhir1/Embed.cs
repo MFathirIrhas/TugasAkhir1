@@ -103,6 +103,7 @@ namespace TugasAkhir1
                 }
             }
 
+            
             ///LH2
             //int iLH2 = 0;
             //for (int i = 0; i < (TrainedWatermark.GetLength(0) / 4); i += 2)
