@@ -111,7 +111,7 @@ namespace TugasAkhir1
         {
             double[,] transformedM = ImageProcessing.ConvertToMatrix2(transformed).Item2;
             double max = transformedM.Cast<double>().Max();
-            double psnr = 10 * (Math.Log10(max / Math.Sqrt(mse)));
+            double psnr = 10 * (Math.Log10(Math.Pow(max,2) / Math.Sqrt(mse)));
             return psnr;
         }
 
