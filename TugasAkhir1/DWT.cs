@@ -510,6 +510,23 @@ namespace TugasAkhir1
             return Scale1;
         }
 
+        public static double[,] ListOfCoeffs(double[,] coeffs)
+        {
+            double[] Scale2 = DWT.Scale2To1DCoeff(coeffs);
+            double[,] Scale1 = DWT.Scale1To1DCoeff(coeffs);
+            double[,] Scale = new double[Scale2.Length, 5];
+
+            for (int i = 0; i < Scale2.Length; i++)
+            {
+                Scale[i, 0] = Scale2[i];
+                Scale[i, 1] = Scale1[i, 0];
+                Scale[i, 2] = Scale1[i, 1];
+                Scale[i, 3] = Scale1[i, 2];
+                Scale[i, 4] = Scale1[i, 3];
+
+            }
+            return Scale;
+        }
 
         //END
     }
