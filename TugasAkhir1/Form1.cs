@@ -449,7 +449,7 @@ namespace TugasAkhir1
                 double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark,HVSValues);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
                 GUIEnd("Embedding Succeed!", 0, 0, 0);
-                MessageBox.Show("Embedding Succeed!", "Embedding Process", MessageBoxButtons.OK);
+                MessageBox.Show("Embedding Succeed!", "Embedding Process : "+MappedWatermark.GetLength(0), MessageBoxButtons.OK);
             }
         }
 
@@ -778,6 +778,20 @@ namespace TugasAkhir1
             PSNRValue.Text = psnr.ToString();
             BERValue.Text = ber.ToString();
 
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            //double[][] detection = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients,transformedImage.Image ,rootpmf, transition, variances);
+            double[][] detectedWatermark = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients, transformedImage.Image, rootpmf, transition, variances);
+            double[][] treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, 6480);
+            double[][] CombinedTree = Extract.CombineTrees(treeOfWatermark);
+            //Inverse mapping
+            double[,] InverseMappingTriangle = Extract.InverseMapping(CombinedTree).Item1;
+            double[,] InverseMappingCircle = Extract.InverseMapping(CombinedTree).Item2;
+            double[,] InverseMappingSquare = Extract.InverseMapping(CombinedTree).Item3;
+
+            MessageBox.Show("Likelihood Value: " , "Result", MessageBoxButtons.OK);
         }
 
         ///END

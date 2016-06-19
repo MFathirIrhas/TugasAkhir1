@@ -271,7 +271,7 @@ namespace TugasAkhir1
             List<int> tree_th = new List<int>();
         
             //Get total number of trees
-            double t = Interleaved.Count / 5; //15 didapat dari jumlah node dalam 1 pohon HMM, 3 parents dan 12 anak-nya untuk setiap scale.
+            double t = Interleaved.Count / 5; //5 didapat dari jumlah node dalam 1 pohon HMM, 3 parents dan 12 anak-nya untuk setiap scale.
             int nSize =(int)Math.Floor(t);
             double s = Interleaved.Count / nSize;
             int segSize = (int)s;
@@ -330,9 +330,31 @@ namespace TugasAkhir1
 
             return MappedWatermark;
         }
-        
+
         #endregion
 
-        
+        #region 8. Inverse
+        public static List<double> MergeSegmentedWatermark(double[,] inversedMapping)
+        {
+            List<double> ScrambledWatermark = new List<double>();
+            for(int i = 0; i < inversedMapping.GetLength(0); i++)
+            {
+                for(int j = 0; j < inversedMapping.GetLength(1); j++)
+                {
+                    ScrambledWatermark.Add(inversedMapping[i, j]);
+                }
+            }
+            return ScrambledWatermark;
+        }
+
+        public static List<double> InverseDSSS(List<double> ScrambledWatermark)
+        {
+            List<double> InversedDSSS = new List<double> ();
+
+            return InversedDSSS;
+        }
+        #endregion
+
+
     }
 }

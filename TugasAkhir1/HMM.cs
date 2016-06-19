@@ -7,6 +7,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Accord.Statistics;
+using Accord.Statistics.Distributions.Univariate;
+using Accord.Statistics.Models.Markov;
+using Accord.Statistics.Models.Markov.Learning;
+using Accord.Statistics.Models.Markov.Topology;
+
 
 namespace TugasAkhir1
 {
@@ -158,7 +163,7 @@ namespace TugasAkhir1
         /// <param name="scale"></param>
         /// <param name="m"></param>
         /// <returns></returns>
-        public static double StateProbability(double[,] hiddenstates,int scale, int m)
+        public static double StateProbability(double[,] hiddenstates, int scale, int m)
         {
             List<int> count11 = new List<int>();
             List<int> count12 = new List<int>();
@@ -170,14 +175,15 @@ namespace TugasAkhir1
             {
                 if (m == 1)
                 {
-                    for(int i = 0; i < hiddenstates.GetLength(0) / 2; i++)
+                    for (int i = 0; i < hiddenstates.GetLength(0) / 2; i++)
                     {
-                        for(int j = 0; j < hiddenstates.GetLength(1) / 2; j++)
+                        for (int j = 0; j < hiddenstates.GetLength(1) / 2; j++)
                         {
                             if (hiddenstates[i, j] == 1)
                             {
                                 count21.Add(1);
-                            }else
+                            }
+                            else
                             {
                                 count21.Add(0);
                             }
@@ -186,7 +192,7 @@ namespace TugasAkhir1
                     prob = (double)count21.Sum() / (double)count21.Count;
 
                 }
-                else if(m == 2)
+                else if (m == 2)
                 {
                     for (int i = 0; i < hiddenstates.GetLength(0) / 2; i++)
                     {
@@ -264,9 +270,9 @@ namespace TugasAkhir1
             //Convert scale 2 to 1 dimension
             List<double> Scale2coefss = new List<double>();
             // LH
-            for(int i = 0; i < hiddenstates.GetLength(0) / 4; i++)
+            for (int i = 0; i < hiddenstates.GetLength(0) / 4; i++)
             {
-                for(int j = hiddenstates.GetLength(1) / 4; j < hiddenstates.GetLength(1) / 2; j++)
+                for (int j = hiddenstates.GetLength(1) / 4; j < hiddenstates.GetLength(1) / 2; j++)
                 {
                     Scale2coefss.Add(hiddenstates[i, j]);
                 }
@@ -327,9 +333,9 @@ namespace TugasAkhir1
             {
                 if (m == 1)
                 {
-                    for(int i = 0; i < Scale2coefss.Count; i++)
+                    for (int i = 0; i < Scale2coefss.Count; i++)
                     {
-                        if (Scale2coefss[i]== 1)
+                        if (Scale2coefss[i] == 1)
                         {
                             count21.Add(1);
                         }
@@ -465,9 +471,9 @@ namespace TugasAkhir1
             int c2 = 0;
             int c3 = 3;
             int c4 = 4;
-            if(n==1 && m == 1)
+            if (n == 1 && m == 1)
             {
-                for(int i = 0; i < Scale.GetLength(0); i++)
+                for (int i = 0; i < Scale.GetLength(0); i++)
                 {
                     for (int j = 1; j < Scale.GetLength(1); j++)
                     {
@@ -481,7 +487,7 @@ namespace TugasAkhir1
                 return transitionProb;
 
             }
-            else if(n==2 && m==1)
+            else if (n == 2 && m == 1)
             {
                 for (int i = 0; i < Scale.GetLength(0); i++)
                 {
@@ -496,7 +502,7 @@ namespace TugasAkhir1
                 double transitionProb = (double)c2 / (double)NumOfRootm1;
                 return transitionProb;
             }
-            else if(n==1 && m==2)
+            else if (n == 1 && m == 2)
             {
                 for (int i = 0; i < Scale.GetLength(0); i++)
                 {
@@ -537,17 +543,17 @@ namespace TugasAkhir1
             double[] j1m1 = Scale1m1(coeffs);
             double[] j1m2 = Scale1m2(coeffs);
 
-            if(j==2 && m == 1)
+            if (j == 2 && m == 1)
             {
                 double v = Tools.Variance(j2m1);
                 return v;
             }
-            else if(j==2 && m == 2)
+            else if (j == 2 && m == 2)
             {
                 double v = Tools.Variance(j2m2);
                 return v;
             }
-            else if(j==1 && m == 1)
+            else if (j == 1 && m == 1)
             {
                 double v = Tools.Variance(j1m1);
                 return v;
@@ -565,14 +571,14 @@ namespace TugasAkhir1
             List<double> w = new List<double>();
             double threshold = Threshold2(coeffs);
             //LH2
-            for(int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
             {
-                for(int j= coeffs.GetLength(1)/4; j < coeffs.GetLength(1) / 2; j++)
+                for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
                 {
                     if (coeffs[i, j] > threshold)
                     {
                         w.Add(coeffs[i, j]);
-                    }                    
+                    }
                 }
             }
 
@@ -655,7 +661,7 @@ namespace TugasAkhir1
             //LH2
             for (int i = 0; i < coeffs.GetLength(0) / 2; i++)
             {
-                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1) ; j++)
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j++)
                 {
                     if (coeffs[i, j] > threshold)
                     {
@@ -667,7 +673,7 @@ namespace TugasAkhir1
             //HH2
             for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
             {
-                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1) ; j++)
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j++)
                 {
                     if (coeffs[i, j] > threshold)
                     {
@@ -677,7 +683,7 @@ namespace TugasAkhir1
             }
 
             //HL2
-            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0) ; i++)
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
             {
                 for (int j = 0; j < coeffs.GetLength(1) / 2; j++)
                 {
@@ -784,7 +790,7 @@ namespace TugasAkhir1
             int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
             double[,] hiddenstates = GetHiddenStateValue(coeffs);
             double[] transitionProb = new double[size];
-            double[,] trees = ExtractTrees(hiddenstates);
+            double[,] trees = DWT.ListOfCoeffs(hiddenstates);
 
             int n1m1 = 0;
             int n2m1 = 0;
@@ -880,9 +886,9 @@ namespace TugasAkhir1
         public static double[] Means(double[,] coeffs, int m)
         {
             double[] mean = new double[5]; //5 node each tree
-            double[,] treesOfcoeffs = ExtractTrees(coeffs);
+            double[,] treesOfcoeffs = DWT.ListOfCoeffs(coeffs);
             double[,] hiddenstates = GetHiddenStateValue(coeffs);
-            double[,] treesOfHiddenStates = ExtractTrees(hiddenstates);
+            double[,] treesOfHiddenStates = DWT.ListOfCoeffs(hiddenstates);
 
             //P(m)
             double[] rootpmf = ParentStateProbability(hiddenstates); 
@@ -1003,9 +1009,9 @@ namespace TugasAkhir1
         public static double[] Variances(double[,] coeffs , int m)
         {
             double[] variances = new double[5]; //5 node each tree
-            double[,] treesOfcoeffs = ExtractTrees(coeffs);
+            double[,] treesOfcoeffs = DWT.ListOfCoeffs(coeffs);
             double[,] hiddenstates = GetHiddenStateValue(coeffs);
-            double[,] treesOfHiddenStates = ExtractTrees(hiddenstates);
+            double[,] treesOfHiddenStates = DWT.ListOfCoeffs(hiddenstates);
 
             //P(m)
             double[] rootpmf = ParentStateProbability(hiddenstates);
@@ -1125,8 +1131,10 @@ namespace TugasAkhir1
 
             return variances;
         }
+        #endregion
 
-        public static double[,] ExtractTrees(double[,] coeffs)
+
+        public static double[,] ExtractTrees(double[,] coeffs) //WRONG
         {
             int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
             int subsize = size / 3;
@@ -1145,65 +1153,109 @@ namespace TugasAkhir1
 
             //HH2
             int hh2 = 0;
-            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0)/ 2; i++)
+            for (int k = coeffs.GetLength(0) / 4; k < coeffs.GetLength(0)/ 2; k++)
             {
-                for(int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                for(int l = coeffs.GetLength(1) / 4; l < coeffs.GetLength(1) / 2; l++)
                 {
-                    trees[hh2 + subsize, 0] = coeffs[i, j];
+                    trees[hh2 + subsize, 0] = coeffs[k, l];
                 }
             }
 
             //HL2
             int hl2 = 0;
-            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0)/2 ; i++)
+            for (int m = coeffs.GetLength(0) / 4; m < coeffs.GetLength(0)/2 ; m++)
             {
-                for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
+                for (int n = 0; n < coeffs.GetLength(1) / 4; n++)
                 {
-                    trees[hh2 + subsize2, 0] = coeffs[i, j];
+                    trees[hh2 + subsize2, 0] = coeffs[m, n];
                 }
             }
 
             ///Scale 1
             //LH1
             int lh1 = 0;
-            for (int i = 0; i < coeffs.GetLength(0) / 2; i+=2)
+            for (int o = 0; o < coeffs.GetLength(0) / 2; o+=2)
             {
-                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j+=2)
+                for (int p = coeffs.GetLength(1) / 2; p < coeffs.GetLength(1); p+=2)
                 {
-                    trees[lh1, 1] = coeffs[i, j];
-                    trees[lh1, 2] = coeffs[i, j + 1];
-                    trees[lh1, 3] = coeffs[i + 1, j];
-                    trees[lh1, 4] = coeffs[i + 1, j + 1];
+                    trees[lh1, 1] = coeffs[o, p];
+                    trees[lh1, 2] = coeffs[o, p + 1];
+                    trees[lh1, 3] = coeffs[o + 1, p];
+                    trees[lh1, 4] = coeffs[o + 1, p + 1];
                 }
             }
 
             //HH1
             int hh1 = 0;
-            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i += 2)
+            for (int q = coeffs.GetLength(0) / 2; q < coeffs.GetLength(0); q += 2)
             {
-                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j += 2)
+                for (int r = coeffs.GetLength(1) / 2; r < coeffs.GetLength(1); r += 2)
                 {
-                    trees[hh1 + subsize, 1] = coeffs[i, j];
-                    trees[hh1 + subsize, 2] = coeffs[i, j + 1];
-                    trees[hh1 + subsize, 3] = coeffs[i + 1, j];
-                    trees[hh1 + subsize, 4] = coeffs[i + 1, j + 1];
+                    trees[hh1 + subsize, 1] = coeffs[q, r];
+                    trees[hh1 + subsize, 2] = coeffs[q, r + 1];
+                    trees[hh1 + subsize, 3] = coeffs[q + 1, r];
+                    trees[hh1 + subsize, 4] = coeffs[q + 1, r + 1];
                 }
             }
 
             //HL1
             int hl1 = 0;
-            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i += 2)
+            for (int s = coeffs.GetLength(0) / 2; s < coeffs.GetLength(0); s += 2)
             {
-                for (int j = 0; j < coeffs.GetLength(1)/2; j += 2)
+                for (int t = 0; t < coeffs.GetLength(1)/2; t += 2)
                 {
-                    trees[hh1 + subsize2, 1] = coeffs[i, j];
-                    trees[hh1 + subsize2, 2] = coeffs[i, j + 1];
-                    trees[hh1 + subsize2, 3] = coeffs[i + 1, j];
-                    trees[hh1 + subsize2, 4] = coeffs[i + 1, j + 1];
+                    trees[hh1 + subsize2, 1] = coeffs[s, t];
+                    trees[hh1 + subsize2, 2] = coeffs[s, t + 1];
+                    trees[hh1 + subsize2, 3] = coeffs[s + 1, t];
+                    trees[hh1 + subsize2, 4] = coeffs[s + 1, t + 1];
                 }
             }
 
             return trees;
+        }
+
+
+        #region USING BAUM-WELCH LEARNING METHOD
+        public static double[][] ConvertToNestedArray(double[,] coeffs)
+        {
+            double[,] treesOfCoeffs = DWT.ListOfCoeffs(coeffs);
+            double[][] Data = new double[treesOfCoeffs.GetLength(0)][];
+
+            for(int i = 0; i < treesOfCoeffs.GetLength(0); i++)
+            {
+                double[] row = new double[5];
+                for(int j = 0; j < treesOfCoeffs.GetLength(1); j++)
+                {
+                    row[j] = treesOfCoeffs[i, j];
+                    Data[i] = row;
+                }
+            }
+            return Data;
+        }
+
+        public static double BaumWelchLearning(double[][] data)
+        {
+            // Specify a initial normal distribution for the samples.
+            NormalDistribution density = new NormalDistribution();          
+
+            // Creates a continuous hidden Markov Model with two states organized in a forward
+            //  topology and an underlying univariate Normal distribution as probability density.
+            var model = new HiddenMarkovModel<NormalDistribution>(new Ergodic(2), density);
+
+            // Configure the learning algorithms to train the sequence classifier until the
+            // difference in the average log-likelihood changes only by as little as 0.0001
+            var teacher = new BaumWelchLearning<NormalDistribution>(model)
+            {
+                Tolerance = 0.001,
+                Iterations = 0,
+            };
+
+            // Fit the model
+            double likelihood = teacher.Run(data);
+
+            // See the log-probability of the sequences learned
+            double a1 = model.Evaluate(new[] { 0.999999999999928, 0 , 0.999999999999988 , 0 , 0.999999999999988 }); // -0.12799388666109757
+            return a1;
         }
         #endregion
 

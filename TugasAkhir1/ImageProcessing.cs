@@ -91,7 +91,7 @@ namespace TugasAkhir1
                 for (int j = 0; j < bmp.Width; j++)
                 {
                     Color c = bmp.GetPixel(j,i);
-                    IMatrix[i, j] = c.R;
+                    IMatrix[i, j] = c.G;
                 }
             }
             return IMatrix;
@@ -159,12 +159,12 @@ namespace TugasAkhir1
                 {
                     if (ICoeffs[i, j] < 0)
                     {
-                        Color c = Color.FromArgb(0, 0, 0);
+                        Color c = Color.FromArgb((int)IMatrixR[i, j], 0, (int)IMatrixB[i, j]);
                         bmp.SetPixel(j, i, c);
                     }
                     else if (ICoeffs[i, j] > 254)
                     {
-                        Color c = Color.FromArgb(254, 254, 254);
+                        Color c = Color.FromArgb((int)IMatrixR[i, j], 254, (int)IMatrixB[i, j]);
                         bmp.SetPixel(j, i, c);
                     }
                     else
@@ -191,28 +191,28 @@ namespace TugasAkhir1
                 {
                     if (IMatrix[i, j] <= 51)
                     {
-                        IMatrix[i, j] = 0.1;
+                        HVSValues[i, j] = 0.1;
                     }
                     else if (IMatrix[i, j] > 51 && IMatrix[i, j] <= 102)
                     {
-                        IMatrix[i,j] = 0.2;
+                        HVSValues[i,j] = 0.2;
                     }
                     else if (IMatrix[i, j] > 102 && IMatrix[i, j] <= 153)
                     {
-                        IMatrix[i, j] = 0.3;
+                        HVSValues[i, j] = 0.3;
                     }
                     else if (IMatrix[i, j] > 153 && IMatrix[i, j] <= 204)
                     {
-                        IMatrix[i, j] = 0.4;
+                        HVSValues[i, j] = 0.4;
                     }
                     else if (IMatrix[i, j] > 204 && IMatrix[i, j] <= 255)
                     {
-                        IMatrix[i, j] = 0.5;
+                        HVSValues[i, j] = 0.5;
                     }
                 }
             }
 
-            return IMatrix;
+            return HVSValues;
         }
         public static Bitmap LaplaceEdge(Bitmap DecomposedImage)
         {

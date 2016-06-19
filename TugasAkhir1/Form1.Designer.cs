@@ -36,6 +36,7 @@
             this.HostImageLocationTxt = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button16 = new System.Windows.Forms.Button();
             this.resultLbl = new System.Windows.Forms.Label();
             this.WatermarkedImageTxt = new System.Windows.Forms.TextBox();
             this.button12 = new System.Windows.Forms.Button();
@@ -77,7 +78,7 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
-            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -178,6 +179,16 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(653, 656);
             this.panel2.TabIndex = 3;
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(479, 628);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(75, 23);
+            this.button16.TabIndex = 17;
+            this.button16.Text = "Performance";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // resultLbl
             // 
@@ -554,6 +565,7 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.button17);
             this.panel4.Controls.Add(this.jpegencoderBtn);
             this.panel4.Controls.Add(this.button13);
             this.panel4.Controls.Add(this.label8);
@@ -661,15 +673,19 @@
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
             // 
-            // button16
+            // button17
             // 
-            this.button16.Location = new System.Drawing.Point(479, 628);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(75, 23);
-            this.button16.TabIndex = 17;
-            this.button16.Text = "Performance";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
+            this.button17.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button17.FlatAppearance.BorderSize = 0;
+            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button17.Location = new System.Drawing.Point(4, 397);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(90, 23);
+            this.button17.TabIndex = 19;
+            this.button17.TabStop = false;
+            this.button17.Text = "Extract";
+            this.button17.UseVisualStyleBackColor = false;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // Form1
             // 
@@ -763,6 +779,7 @@
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
     }
 }
 
