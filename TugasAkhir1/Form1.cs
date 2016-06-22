@@ -315,9 +315,9 @@ namespace TugasAkhir1
                 List<int> VectorImage = Scramble.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
                 List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
 
-                int pnlength = BinaryVectorImage.Count * 4;
-                string pn_seed = "1000"; 
-                string pn_mask = "1010";
+                int pnlength = BinaryVectorImage.Count * 5;
+                string pn_seed = "10000"; 
+                string pn_mask = "10100";
                 int pn_length = pnlength;
                 List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
                 List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage, PNSeq);
@@ -327,7 +327,7 @@ namespace TugasAkhir1
                 string hostName = Path.GetFileNameWithoutExtension(hostfilename);
                 string watermarkName = Path.GetFileNameWithoutExtension(watermarkfilename);
                 string name = hostName +"_"+ watermarkName +"_Key.txt";
-                int NumOfTrees = ((bmp.Height * bmp.Width) * 4) / 5; // Restult in total of tree from segmented watermark , i.e 6480
+                int NumOfTrees = pnlength / 5; // Restult in total of tree from segmented watermark , i.e 6480
                 //TextWriter tw = new StreamWriter(name);
                 using (TextWriter tw = File.CreateText(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key\" + name))
                 {
@@ -342,17 +342,19 @@ namespace TugasAkhir1
                         tw.WriteLine(i);
                     }
                 }
-                
-
-                //TextWriter tw = new StreamWriter("DSSS_ScrambledWatermark.txt");
-                //tw.WriteLine("Total Scrambled Data: " + scrambled_Watermark.Count);
-                //foreach (int i in scrambled_Watermark)
-                //    tw.WriteLine(i);
-                //tw.Close();
 
                 Scrambled_Watermark = scrambled_Watermark;
                 GUIEnd("Scramble Succeed!", 0, 0, 0);
-                MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);  
+                MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);
+
+
+                TextWriter tw2 = new StreamWriter("WATERMARK_BEFORE_SCRAMBLING.txt");
+                tw2.WriteLine("Total Watermark: " + BinaryVectorImage.Count);
+                foreach (int i in BinaryVectorImage)
+                    tw2.WriteLine(i);
+                tw2.Close();
+
+
             }
             
 
@@ -805,7 +807,7 @@ namespace TugasAkhir1
                 //variances = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item3;
 
                 detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfTrees/*, rootpmf, transition, variances*/);
-                treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, 6480);
+                treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, NumOfTrees);
                 CombinedTree = Extract.CombineTrees(treeOfWatermark);
                 //Inverse mapping
                 InversedMappingTriangle = Extract.InverseMapping(CombinedTree).Item1;
@@ -816,6 +818,20 @@ namespace TugasAkhir1
                 ScrambledWatermarkfromTriangle = Scramble.MergeSegmentedWatermark(InversedMappingTriangle);
                 ScrambledWatermarkfromCircle = Scramble.MergeSegmentedWatermark(InversedMappingCircle);
                 ScrambledWatermarkfromSquare = Scramble.MergeSegmentedWatermark(InversedMappingSquare);
+
+                //TextWriter tw = new StreamWriter("EXTRACTED_WATERMARK.txt");
+                //tw.WriteLine("Total Scrambled Data: " + ScrambledWatermarkfromTriangle.Count);
+                ////for (int i = 0; i < detectedWatermark.GetLength(0); i++)
+                ////{
+                ////    for (int j = 0; j < detectedWatermark[0].Length; j++)
+                ////    {
+                ////        tw.Write(detectedWatermark[i][j]);
+                ////    }
+                ////    tw.WriteLine();
+                ////}
+                //foreach (double i in ScrambledWatermarkfromTriangle)
+                //    tw.WriteLine(i);
+                //tw.Close();
 
                 GUIEnd("HMM Model Trained and detected!", 0, 0, 0);
                 MessageBox.Show("Training and Detecting HMM Model Succeed!", "Succeed", MessageBoxButtons.OK);
@@ -862,6 +878,20 @@ namespace TugasAkhir1
                 List<int> inverseDSSS = Scramble.InverseDSSS(ScrambledWatermarkfromTriangle, PNSeq);
                 Bitmap bmp = ImageProcessing.ConvertListToWatermark(inverseDSSS, height, width);
                 watermarkImage.Image = bmp;
+
+                TextWriter tw = new StreamWriter("EXTRACTED_WATERMARK.txt");
+                tw.WriteLine("Total Scrambled Data: " + inverseDSSS.Count);
+                //for (int i = 0; i < detectedWatermark.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < detectedWatermark[0].Length; j++)
+                //    {
+                //        tw.Write(detectedWatermark[i][j]);
+                //    }
+                //    tw.WriteLine();
+                //}
+                foreach (double i in inverseDSSS)
+                    tw.WriteLine(i);
+                tw.Close();
 
                 GUIEnd("Watermark Extracted!", 0, 0, 0);
             }

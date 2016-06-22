@@ -23,7 +23,7 @@ namespace TugasAkhir1
     public class Scramble
     {
         //Global Variables
-        static int[] pnseed = new int[4];
+        static int[] pnseed = new int[5];
 
         #region 1. ConvertToVectorMatrix
         //Convert to 1 Dimensional Matrix fill with black and white value
@@ -139,7 +139,7 @@ namespace TugasAkhir1
             int k = 0;
             for (int i = 0; i < mc.Count; i++) //Looping for input data
             {
-                while(k < (i+1)*4) // Looping for PN sequence, each bit in input data is attach to 4 PN bit sequence
+                while(k < (i+1)*5) // Looping for PN sequence, each bit in input data is attach to 5 PN bit sequence
                 {
                     if (mc[i] == 0)
                     {
@@ -164,7 +164,7 @@ namespace TugasAkhir1
             List<int> pnseq = new List<int>();
 
             //Initialize shift register with the pn_seed
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < seed.Length; i++)
             {
                 pnseed[i] = (int)Char.GetNumericValue(seed[i]);
             }
@@ -174,13 +174,13 @@ namespace TugasAkhir1
             for (int i = 0; i < length; i++)
             {
                 int new_bit = 0;
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     if ((int)Char.GetNumericValue(mask[j]) == 1)
                         new_bit = new_bit ^ key[j];
                 }
 
-                pnseq.Add(key[4 - 1]);
+                pnseq.Add(key[5 - 1]);
                 key = Roll(key);
                 key[0] = new_bit;
             }
@@ -365,7 +365,7 @@ namespace TugasAkhir1
                 xorList.Add(sWatermark[i] ^ PNSeq[i]);
             }
 
-            List<List<int>> segmentedXOR = SplitList(xorList, 4);
+            List<List<int>> segmentedXOR = SplitList(xorList, 5);
             for(int i = 0; i < segmentedXOR.Count; i++)
             {
                 RealWatermark.Add(ReturnMaxItem(segmentedXOR[i]));

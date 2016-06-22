@@ -97,7 +97,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region Detection using Baum-Welch Learning Paremeter Estimation
+        #region Detection using Baum-Welch Learning Paremeter Estimation(Univariate)
         public static double[][] BaumWelchDetection(double[,] coeffs, Image watermarkedImage, int NumOfTrees /*, double[] rootpmf, double[,] transition, double[,] variances*/)
         {
             /// detectedWatermark will be divide by 3, each will be taken as much as tree/segmented Watermark before embedding
