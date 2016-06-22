@@ -98,13 +98,13 @@ namespace TugasAkhir1
         #endregion
 
         #region Detection using Baum-Welch Learning Paremeter Estimation(Univariate)
-        public static double[][] BaumWelchDetection(double[,] coeffs, Image watermarkedImage, int NumOfTrees /*, double[] rootpmf, double[,] transition, double[,] variances*/)
+        public static double[][] BaumWelchDetection(double[,] coeffs, Image watermarkedImage, int NumOfScale2, int NumOfTrees/*, double[] rootpmf, double[,] transition, double[,] variances*/)
         {
             /// detectedWatermark will be divide by 3, each will be taken as much as tree/segmented Watermark before embedding
             /// Segmented Watermark for android watermark segmented become 6480 tree each subband. Each subband will be taken 6480 tree
             /// So total row of tree in detected watermark will be 6480 * 3.
             /// in each 6480, the same tree in the same index will be concat become 15 digit watermark, and will be reverse to 5 according to mapping rule.
-            double[][] detectedWatermark = new double[49152][]; //49152 total of tree, will be known in input
+            double[][] detectedWatermark = new double[NumOfScale2][]; //49152 total of tree, will be known in input
 
             double[][] listOfTrees = GetSequenceParameter(coeffs, watermarkedImage).Item1;
             // Real TreeOfWatermark where the watermark is embedded

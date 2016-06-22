@@ -1,3 +1,6 @@
+Size of Host Image:
+512
+512
 Size of Watermark: 
 90
 90
@@ -7,6 +10,7 @@ PN Sequence:
 0
 0
 0
+0
 1
 1
 1
@@ -40502,5 +40506,4 @@ PN Sequence:
 1
 0
 0
-1
 1

@@ -322,6 +322,7 @@ namespace TugasAkhir1
                 List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
                 List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage, PNSeq);
                 //Save into .txt file (PN Sequence and size)
+                Bitmap hostbmp = new Bitmap(hostImage.Image);
                 string hostfilename = HostImageLocationTxt.Text;
                 string watermarkfilename = WatermarkImageLocationTxt.Text;
                 string hostName = Path.GetFileNameWithoutExtension(hostfilename);
@@ -331,6 +332,9 @@ namespace TugasAkhir1
                 //TextWriter tw = new StreamWriter(name);
                 using (TextWriter tw = File.CreateText(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key\" + name))
                 {
+                    tw.WriteLine("Size of Host Image:");
+                    tw.WriteLine(hostbmp.Height);
+                    tw.WriteLine(hostbmp.Width);
                     tw.WriteLine("Size of Watermark: ");
                     tw.WriteLine(bmp.Height);
                     tw.WriteLine(bmp.Width);
@@ -348,11 +352,11 @@ namespace TugasAkhir1
                 MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);
 
 
-                TextWriter tw2 = new StreamWriter("WATERMARK_BEFORE_SCRAMBLING.txt");
-                tw2.WriteLine("Total Watermark: " + BinaryVectorImage.Count);
-                foreach (int i in BinaryVectorImage)
-                    tw2.WriteLine(i);
-                tw2.Close();
+                //TextWriter tw2 = new StreamWriter("WATERMARK_BEFORE_SCRAMBLING.txt");
+                //tw2.WriteLine("Total Watermark: " + BinaryVectorImage.Count);
+                //foreach (int i in BinaryVectorImage)
+                //    tw2.WriteLine(i);
+                //tw2.Close();
 
 
             }
@@ -785,7 +789,9 @@ namespace TugasAkhir1
             {
                 StreamReader objstream = new StreamReader(ofd.FileName);
                 string[] lines = objstream.ReadToEnd().Split(new char[] { '\n' });
-                int NumOfTrees = Convert.ToInt32(lines[4]);
+                int hostheight = Convert.ToInt32(lines[1]);
+                int hostwidth = Convert.ToInt32(lines[2]);
+                int NumOfTrees = Convert.ToInt32(lines[7]);
                 KeyFileName = ofd.FileName;
 
                 GUIStart("Training HMM Model...");
@@ -805,8 +811,8 @@ namespace TugasAkhir1
                 //rootpmf = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item1;
                 //transition = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item2;
                 //variances = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item3;
-
-                detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfTrees/*, rootpmf, transition, variances*/);
+                int NumOfScale2 = ((hostheight*hostwidth)/16)*3;
+                detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees /*, rootpmf, transition, variances*/);
                 treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, NumOfTrees);
                 CombinedTree = Extract.CombineTrees(treeOfWatermark);
                 //Inverse mapping
@@ -867,10 +873,10 @@ namespace TugasAkhir1
 
                 StreamReader objstream = new StreamReader(KeyFileName);
                 string[] lines = objstream.ReadToEnd().Split(new char[] { '\n' });
-                int height = Convert.ToInt32(lines[1]);
-                int width = Convert.ToInt32(lines[2]);
-                int NumOfTrees = Convert.ToInt32(lines[4]);
-                for (int i = 6; i < lines.Length - 1; i++)
+                int height = Convert.ToInt32(lines[4]);
+                int width = Convert.ToInt32(lines[5]);
+                int NumOfTrees = Convert.ToInt32(lines[7]);
+                for (int i = 9; i < lines.Length - 1; i++)
                 {
                     PNSeq.Add(Convert.ToInt32(lines[i]));
                 }
