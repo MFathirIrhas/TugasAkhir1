@@ -39,6 +39,22 @@ namespace TugasAkhir1
         public double[,] transition = new double[2, 2];
         public double[,] variances = new double[2, 5];
 
+        //HMM Detection
+        double[][] detectedWatermark;
+        double[][] treeOfWatermark;
+        double[][] CombinedTree;
+        //Inverse mapping
+        double[,] InversedMappingTriangle;
+        double[,] InversedMappingCircle;
+        double[,] InversedMappingSquare;
+
+        //Merge segmented watermark for each pattern.
+        List<double> ScrambledWatermarkfromTriangle;
+        List<double> ScrambledWatermarkfromCircle;
+        List<double> ScrambledWatermarkfromSquare;
+
+
+
 
         Stopwatch time = new Stopwatch();
         public Form1()
@@ -296,10 +312,41 @@ namespace TugasAkhir1
                 Bitmap b = ImageProcessing.ConvertToBinary(bmp);
                 List<int> VectorImage = Scramble.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
                 List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
-                List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage);
+
+                int pnlength = BinaryVectorImage.Count * 4;
+                string pn_seed = "1000"; 
+                string pn_mask = "1010";
+                int pn_length = pnlength;
+                List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
+                //Save into .txt file (PN Sequence and size)
+                string hostfilename = HostImageLocationTxt.Text;
+                string watermarkfilename = WatermarkImageLocationTxt.Text;
+                string hostName = Path.GetFileNameWithoutExtension(hostfilename);
+                string watermarkName = Path.GetFileNameWithoutExtension(watermarkfilename);
+                string name = hostName +"_"+ watermarkName +"_Key.txt";
+                //TextWriter tw = new StreamWriter(name);
+                using (TextWriter tw = File.CreateText(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key\" + name))
+                {
+                    tw.WriteLine("Size of Watermark: ");
+                    tw.WriteLine(bmp.Height);
+                    tw.WriteLine(bmp.Width);
+                    tw.WriteLine("PN Sequence: ");
+                    foreach (int i in PNSeq)
+                    {
+                        tw.WriteLine(i);
+                    }
+                }
+                List <int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage,PNSeq);
+
+                //TextWriter tw = new StreamWriter("DSSS_ScrambledWatermark.txt");
+                //tw.WriteLine("Total Scrambled Data: " + scrambled_Watermark.Count);
+                //foreach (int i in scrambled_Watermark)
+                //    tw.WriteLine(i);
+                //tw.Close();
+
                 Scrambled_Watermark = scrambled_Watermark;
                 GUIEnd("Scramble Succeed!", 0, 0, 0);
-                MessageBox.Show("Watermark is Succeed. \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);  
+                MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);  
             }
             
 
@@ -309,73 +356,73 @@ namespace TugasAkhir1
         #region TESTING BUTTON
         private void button6_Click(object sender, EventArgs e) //Testing button
         {
-            Bitmap hostImg = new Bitmap(hostImage.Image);
+            //Bitmap hostImg = new Bitmap(hostImage.Image);
 
-            #region GUI Processing
-            StatusPanel.BackColor = Color.Gray;
-            StatusTxt.BackColor = Color.Gray;
-            StatusTxt.Text = "Processing...";
-            StatusTxt.ForeColor = Color.Red;
-            StatusTxt.BackColor = Color.Gray;
-            label4.BackColor = Color.Gray;
-            label5.BackColor = Color.Gray;
-            TimeExecTxt.BackColor = Color.Gray;
-            PSNRlbl.BackColor = Color.Gray;
-            BERlbl.BackColor = Color.Gray;
-            BERValue.BackColor = Color.Gray;
-            PSNRValue.BackColor = Color.Gray;
-            TimeExecTxt.Text = "0";
-            BERValue.Text = "0";
-            PSNRValue.Text = "0";
-            StatusTxt.Refresh();
-            label4.Refresh();
-            label5.Refresh();
-            PSNRlbl.Refresh();
-            BERlbl.Refresh();
-            PSNRValue.Refresh();
-            BERValue.Refresh();
-            TimeExecTxt.Refresh();
-            #endregion
-
-
-            var time = Stopwatch.StartNew();
-            ImageProcessing ip = new ImageProcessing();
-            Bitmap bmp = new Bitmap(hostImage.Image);
-            //transformedImage.Image = ip.ConvertToBinary(bmp);
-            List<int> a = Scramble.ConvertToVectorMatrix(ImageProcessing.ConvertToBinary(bmp));
-            List<int> b = Scramble.ConvertToBinaryVectorMatrix(a);
-            List<int> c = Scramble.ConvolutionCode(b);
-            List<int> d = Scramble.DSSS(c);
-            List<int> ee = Scramble.Interleaving(d);
-            List<List<int>> totaloftree = Scramble.Segment(ee);
-            time.Stop();
-            var elapsedTime = time.ElapsedMilliseconds / 1000;
+            //#region GUI Processing
+            //StatusPanel.BackColor = Color.Gray;
+            //StatusTxt.BackColor = Color.Gray;
+            //StatusTxt.Text = "Processing...";
+            //StatusTxt.ForeColor = Color.Red;
+            //StatusTxt.BackColor = Color.Gray;
+            //label4.BackColor = Color.Gray;
+            //label5.BackColor = Color.Gray;
+            //TimeExecTxt.BackColor = Color.Gray;
+            //PSNRlbl.BackColor = Color.Gray;
+            //BERlbl.BackColor = Color.Gray;
+            //BERValue.BackColor = Color.Gray;
+            //PSNRValue.BackColor = Color.Gray;
+            //TimeExecTxt.Text = "0";
+            //BERValue.Text = "0";
+            //PSNRValue.Text = "0";
+            //StatusTxt.Refresh();
+            //label4.Refresh();
+            //label5.Refresh();
+            //PSNRlbl.Refresh();
+            //BERlbl.Refresh();
+            //PSNRValue.Refresh();
+            //BERValue.Refresh();
+            //TimeExecTxt.Refresh();
+            //#endregion
 
 
-            #region End of GUI Processing
-            StatusPanel.BackColor = Color.LightSkyBlue;
-            StatusTxt.BackColor = Color.LightSkyBlue;
-            StatusTxt.Text = "Ready";
-            StatusTxt.ForeColor = Color.DarkGreen;
-            label4.BackColor = Color.LightSkyBlue;
-            label5.BackColor = Color.LightSkyBlue;
-            TimeExecTxt.BackColor = Color.LightSkyBlue;
-            TimeExecTxt.Text = " " + elapsedTime.ToString() + " Second(s)";
-            int totalOriginalImage = hostImg.Height * hostImg.Width;
-            PSNRValue.Text = totalOriginalImage.ToString();
-            BERValue.Text = totaloftree[13247].Count.ToString();
-            PSNRlbl.BackColor = Color.LightSkyBlue;
-            BERlbl.BackColor = Color.LightSkyBlue;
-            BERValue.BackColor = Color.LightSkyBlue;
-            PSNRValue.BackColor = Color.LightSkyBlue;
-            #endregion
+            //var time = Stopwatch.StartNew();
+            //ImageProcessing ip = new ImageProcessing();
+            //Bitmap bmp = new Bitmap(hostImage.Image);
+            ////transformedImage.Image = ip.ConvertToBinary(bmp);
+            ////List<int> a = Scramble.ConvertToVectorMatrix(ImageProcessing.ConvertToBinary(bmp));
+            ////List<int> b = Scramble.ConvertToBinaryVectorMatrix(a);
+            ////List<int> c = Scramble.ConvolutionCode(b);
+            ////List<int> d = Scramble.DSSS(c);
+            ////List<int> ee = Scramble.Interleaving(d);
+            ////List<List<int>> totaloftree = Scramble.Segment(ee);
+            //time.Stop();
+            //var elapsedTime = time.ElapsedMilliseconds / 1000;
 
-            //Write Result of Scrambling to Txt.
-            TextWriter tw = new StreamWriter("Scrambled_Data.txt");
-            tw.WriteLine("Total Scrambled Data: " + ee.Count);
-            foreach (int i in totaloftree[13247])
-                tw.WriteLine(i);
-            tw.Close();
+
+            //#region End of GUI Processing
+            //StatusPanel.BackColor = Color.LightSkyBlue;
+            //StatusTxt.BackColor = Color.LightSkyBlue;
+            //StatusTxt.Text = "Ready";
+            //StatusTxt.ForeColor = Color.DarkGreen;
+            //label4.BackColor = Color.LightSkyBlue;
+            //label5.BackColor = Color.LightSkyBlue;
+            //TimeExecTxt.BackColor = Color.LightSkyBlue;
+            //TimeExecTxt.Text = " " + elapsedTime.ToString() + " Second(s)";
+            //int totalOriginalImage = hostImg.Height * hostImg.Width;
+            //PSNRValue.Text = totalOriginalImage.ToString();
+            //BERValue.Text = totaloftree[13247].Count.ToString();
+            //PSNRlbl.BackColor = Color.LightSkyBlue;
+            //BERlbl.BackColor = Color.LightSkyBlue;
+            //BERValue.BackColor = Color.LightSkyBlue;
+            //PSNRValue.BackColor = Color.LightSkyBlue;
+            //#endregion
+
+            ////Write Result of Scrambling to Txt.
+            //TextWriter tw = new StreamWriter("Scrambled_Data.txt");
+            //tw.WriteLine("Total Scrambled Data: " + ee.Count);
+            //foreach (int i in totaloftree[13247])
+            //    tw.WriteLine(i);
+            //tw.Close();
 
             //Bitmap bmp = new Bitmap(transformedImage.Image);
             //var p = bmp.GetPixel(400, 400);
@@ -760,9 +807,26 @@ namespace TugasAkhir1
 
             double[,] ArrayImage = IMatrixG; //Embedding in Green 
             Watermarked_Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
-            rootpmf = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item1;
-            transition = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item2;
-            variances = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item3;
+            //rootpmf = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item1;
+            //transition = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item2;
+            //variances = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item3;
+
+            /// Detection
+            //double[][] detection = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients,transformedImage.Image ,rootpmf, transition, variances);
+            //double[][] detectedWatermark = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients, transformedImage.Image, rootpmf, transition, variances);
+            detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image/*, rootpmf, transition, variances*/);
+            treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, 6480);
+            CombinedTree = Extract.CombineTrees(treeOfWatermark);
+            //Inverse mapping
+            InversedMappingTriangle = Extract.InverseMapping(CombinedTree).Item1;
+            InversedMappingCircle = Extract.InverseMapping(CombinedTree).Item2;
+            InversedMappingSquare = Extract.InverseMapping(CombinedTree).Item3;
+
+            //Merge segmented watermark for each pattern.
+            ScrambledWatermarkfromTriangle = Scramble.MergeSegmentedWatermark(InversedMappingTriangle);
+            ScrambledWatermarkfromCircle = Scramble.MergeSegmentedWatermark(InversedMappingCircle);
+            ScrambledWatermarkfromSquare = Scramble.MergeSegmentedWatermark(InversedMappingSquare);
+
             GUIEnd("HMM Model Trained!",0,0,0);
             MessageBox.Show("Training HMM Model Succeed!", "Succeed", MessageBoxButtons.OK);
 
@@ -782,16 +846,54 @@ namespace TugasAkhir1
 
         private void button17_Click(object sender, EventArgs e)
         {
-            //double[][] detection = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients,transformedImage.Image ,rootpmf, transition, variances);
-            double[][] detectedWatermark = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients, transformedImage.Image, rootpmf, transition, variances);
-            double[][] treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, 6480);
-            double[][] CombinedTree = Extract.CombineTrees(treeOfWatermark);
-            //Inverse mapping
-            double[,] InverseMappingTriangle = Extract.InverseMapping(CombinedTree).Item1;
-            double[,] InverseMappingCircle = Extract.InverseMapping(CombinedTree).Item2;
-            double[,] InverseMappingSquare = Extract.InverseMapping(CombinedTree).Item3;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select a key accordingly";
+            ofd.InitialDirectory = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key";
+            List<int> PNSeq = new List<int>();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                StreamReader objstream = new StreamReader(ofd.FileName);
+                string[] lines = objstream.ReadToEnd().Split(new char[] { '\n' });
+                int height =Convert.ToInt32(lines[1]);
+                int width = Convert.ToInt32(lines[2]);
+                for(int i = 4; i < lines.Length - 1; i++)
+                {
+                    PNSeq.Add(Convert.ToInt32(lines[i]));
+                }
 
-            MessageBox.Show("Likelihood Value: " , "Result", MessageBoxButtons.OK);
+                List<int> inverseDSSS = Scramble.InverseDSSS(ScrambledWatermarkfromTriangle, PNSeq);
+                Bitmap bmp = ImageProcessing.ConvertListToWatermark(inverseDSSS, height, width);
+                watermarkImage.Image = bmp;
+
+                //HostImageLocationTxt.Text = ofd.FileName;
+                //hostImage.Image = new Bitmap(ofd.FileName);
+            }else
+            {
+                MessageBox.Show("Select Key before extracting", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+
+
+            //Scrambled_Watermark
+            //List<double> scrambledWatermark = Scrambled_Watermark.Select<int, double>(i => i).ToList();
+            //int c = 0;
+            //for(int i=0;i< scrambledWatermark.Count; i++)
+            //{
+            //    if(ScrambledWatermarkfromCircle[i] == scrambledWatermark[i])
+            //    {
+            //        c++;
+            //    }
+            //}
+            //double akurasi = (((double)c) / ((double)scrambledWatermark.Count)) * (double)100;
+
+            //TextWriter tw = new StreamWriter("Extracted_FromSquare.txt");
+            //tw.WriteLine("Total Scrambled Data: " + ScrambledWatermarkfromSquare.Count);
+            //foreach (double i in ScrambledWatermarkfromCircle)
+            //    tw.WriteLine(i);
+            //tw.Close();
+            //Inverse DSSS
+            /// TO DO
+
+            MessageBox.Show("Acuration: "+ ScrambledWatermarkfromTriangle.Count, "Result", MessageBoxButtons.OK);
         }
 
         ///END

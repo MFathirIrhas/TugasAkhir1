@@ -170,3 +170,13 @@ The detail coefficients in scale 1 have pattern like :(doubt)
 
 --------
 We use PDF F(w) for each wavelet coefficients if the wavelet coefficients are independent each other.
+
+--------
+Using manual HMM parameter estimation -> pathetic accuration
+using Baum-Welch HMM parameter estimation and detection -> accuration for lena baboon around 50.8 %(before inverse DSSS)
+
+--------
+Things to be saved in Key:
+	- PN Sequence
+	- size of watermark m x n
+

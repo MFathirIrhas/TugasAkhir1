@@ -126,18 +126,18 @@ namespace TugasAkhir1
          * 3. PN Sequence is generated using a key
          * 4. The result will be a sequence contain values 1 and -1 with length = input bit length * PN Sequence length
          * */
-        public static List<int> DSSS(List<int> mc)
+        public static List<int> DSSS(List<int> mc, List<int> PNSeq)
         {
             List<int> dsss = new List<int>();
-            int pnlength = mc.Count * 4;
-            //List<int> PNSeq = PNSeqGenerate(pnlength); //Pseudonoise sequence generated randomly using pseudorandom sequence
-            string pn_seed = "1000"; //Secret Key K
-            string pn_mask = "1010";
-            int pn_length = pnlength;
-            List<int> PNSeq = PNSeqLFSR(pn_seed, pn_mask, pn_length);
+            //int pnlength = mc.Count * 4;
+            ////List<int> PNSeq = PNSeqGenerate(pnlength); //Pseudonoise sequence generated randomly using pseudorandom sequence
+            //string pn_seed = "1000"; //Secret Key K
+            //string pn_mask = "1010";
+            //int pn_length = pnlength;
+            //List<int> PNSeq = PNSeqLFSR(pn_seed, pn_mask, pn_length);
 
             int k = 0;
-            for (int i = 0; i < mc.Count; i++) //Looping for input data, result of 1/3 convolution code
+            for (int i = 0; i < mc.Count; i++) //Looping for input data
             {
                 while(k < (i+1)*4) // Looping for PN sequence, each bit in input data is attach to 4 PN bit sequence
                 {
@@ -334,6 +334,11 @@ namespace TugasAkhir1
         #endregion
 
         #region 8. Inverse
+        /// <summary>
+        /// Merge the 5-segment watermark. 
+        /// </summary>
+        /// <param name="inversedMapping"></param>
+        /// <returns></returns>
         public static List<double> MergeSegmentedWatermark(double[,] inversedMapping)
         {
             List<double> ScrambledWatermark = new List<double>();
@@ -347,12 +352,49 @@ namespace TugasAkhir1
             return ScrambledWatermark;
         }
 
-        public static List<double> InverseDSSS(List<double> ScrambledWatermark)
+        public static List<int> InverseDSSS(List<double> ScrambledWatermark, List<int> PNSeq)
         {
-            List<double> InversedDSSS = new List<double> ();
+            List<int> InversedDSSS = new List<int>();
+            List<int> sWatermark = ScrambledWatermark.ConvertAll(Convert.ToInt32); //Convert list of double into list of integers
+            List<int> xorList = new List<int>();
 
-            return InversedDSSS;
+            List<int> RealWatermark = new List<int>();
+    
+            for(int i = 0; i < sWatermark.Count; i++)
+            {
+                xorList.Add(sWatermark[i] ^ PNSeq[i]);
+            }
+
+            List<List<int>> segmentedXOR = SplitList(xorList, 4);
+            for(int i = 0; i < segmentedXOR.Count; i++)
+            {
+                RealWatermark.Add(ReturnMaxItem(segmentedXOR[i]));
+            }
+
+            return RealWatermark;
         }
+
+        public static List<List<int>> SplitList(List<int> inputlist, int nSize)
+        {
+            var list = new List<List<int>>();
+
+            for (int i = 0; i < inputlist.Count; i += nSize)
+            {
+                list.Add(inputlist.GetRange(i, Math.Min(nSize, inputlist.Count - i)));
+            }
+
+            return list;
+        }
+
+        public static int ReturnMaxItem(List<int> list)
+        {
+            int maxRepeated = list.GroupBy(s => s)
+                         .OrderByDescending(s => s.Count())
+                         .First().Key;
+
+            return maxRepeated;
+        }
+
         #endregion
 
 

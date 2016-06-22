@@ -71,6 +71,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button17 = new System.Windows.Forms.Button();
             this.jpegencoderBtn = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -78,7 +79,6 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
-            this.button17 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -579,6 +579,20 @@
             this.panel4.Size = new System.Drawing.Size(97, 656);
             this.panel4.TabIndex = 13;
             // 
+            // button17
+            // 
+            this.button17.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button17.FlatAppearance.BorderSize = 0;
+            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button17.Location = new System.Drawing.Point(4, 412);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(90, 23);
+            this.button17.TabIndex = 19;
+            this.button17.TabStop = false;
+            this.button17.Text = "Extract";
+            this.button17.UseVisualStyleBackColor = false;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
             // jpegencoderBtn
             // 
             this.jpegencoderBtn.BackColor = System.Drawing.Color.SlateGray;
@@ -600,10 +614,10 @@
             this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button13.Location = new System.Drawing.Point(4, 367);
             this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(90, 23);
+            this.button13.Size = new System.Drawing.Size(90, 39);
             this.button13.TabIndex = 15;
             this.button13.TabStop = false;
-            this.button13.Text = "Train HMM";
+            this.button13.Text = "Train and Detect";
             this.button13.UseVisualStyleBackColor = false;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
@@ -672,20 +686,6 @@
             this.histeqBtn.Text = "HistEq";
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
-            // 
-            // button17
-            // 
-            this.button17.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button17.FlatAppearance.BorderSize = 0;
-            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button17.Location = new System.Drawing.Point(4, 397);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(90, 23);
-            this.button17.TabIndex = 19;
-            this.button17.TabStop = false;
-            this.button17.Text = "Extract";
-            this.button17.UseVisualStyleBackColor = false;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // Form1
             // 

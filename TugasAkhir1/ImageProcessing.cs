@@ -51,6 +51,42 @@ namespace TugasAkhir1
 
             return b;
         }
+        
+        // Convert inversed list of extracted watermark back into bitmap
+        public static Bitmap ConvertListToWatermark(List<int> InverseDSSS, int height, int widht)
+        {
+            int size = (int)Math.Sqrt(InverseDSSS.Count);
+            int[,] pixel = new int[height,widht];
+            Bitmap bmp = new Bitmap(pixel.GetLength(0), pixel.GetLength(1));
+            int c = 0;
+            for(int i = 0; i < pixel.GetLength(0); i++)
+            {
+                for(int j = 0; j < pixel.GetLength(1); j++)
+                {
+                    if(InverseDSSS[c] == 1)
+                    {
+                        pixel[i, j] = 254;
+                        c++;
+                    }else
+                    {
+                        pixel[i, j] = 0;
+                        c++;
+                    }
+                }
+            }
+
+            
+            for(int y = 0; y < bmp.Height; y++)
+            {
+                for(int x = 0; x < bmp.Width; x++)
+                {
+                    Color clr = Color.FromArgb(pixel[y, x], pixel[y, x], pixel[y, x]);
+                    bmp.SetPixel(x, y, clr);
+                }
+            }
+
+            return bmp;
+        }
 
         public static Bitmap ConvertToGray(Bitmap b)
         {

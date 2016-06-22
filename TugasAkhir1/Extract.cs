@@ -9,11 +9,14 @@ using System.IO;
 using Accord.Statistics;
 using Accord.Statistics.Distributions.Univariate;
 using Accord.Statistics.Models.Markov;
+using Accord.Statistics.Models.Markov.Learning;
+using Accord.Statistics.Models.Markov.Topology;
 
 namespace TugasAkhir1
 {
     public class Extract
     {
+        #region Detection using Manual Parameter Estimation
         /// <summary>
         /// Detect Watermark using Log Likelihood 
         /// </summary>
@@ -92,7 +95,73 @@ namespace TugasAkhir1
 
             return detectedWatermark;
         }
+        #endregion
 
+        #region Detection using Baum-Welch Learning Paremeter Estimation
+        public static double[][] BaumWelchDetection(double[,] coeffs, Image watermarkedImage /*, double[] rootpmf, double[,] transition, double[,] variances*/)
+        {
+            /// detectedWatermark will be divide by 3, each will be taken as much as tree/segmented Watermark before embedding
+            /// Segmented Watermark for android watermark segmented become 6480 tree each subband. Each subband will be taken 6480 tree
+            /// So total row of tree in detected watermark will be 6480 * 3.
+            /// in each 6480, the same tree in the same index will be concat become 15 digit watermark, and will be reverse to 5 according to mapping rule.
+            double[][] detectedWatermark = new double[49152][]; //49152 total of tree, will be known in input
+
+            double[][] listOfTrees = GetSequenceParameter(coeffs, watermarkedImage).Item1;
+            // Real TreeOfWatermark where the watermark is embedded
+            double[][] WatermarkTrees = TreeOfWatermark(listOfTrees, 6480);
+            double[][] watermarkPermutation = GetSequenceParameter(coeffs, watermarkedImage).Item2;
+            double[,] hvs = GetSequenceParameter(coeffs, watermarkedImage).Item3;
+
+            #region Baum-Welch Estimation and Learning
+            // Specify a initial normal distribution for the samples.
+            NormalDistribution density = new NormalDistribution();
+
+            // Creates a continuous hidden Markov Model with two states organized in a forward
+            //  topology and an underlying univariate Normal distribution as probability density.
+            var model = new HiddenMarkovModel<NormalDistribution>(new Ergodic(2), density);
+
+            // Configure the learning algorithms to train the sequence classifier until the
+            // difference in the average log-likelihood changes only by as little as 0.0001
+            var teacher = new BaumWelchLearning<NormalDistribution>(model)
+            {
+                Tolerance = 0.001,
+                Iterations = 0,
+            };
+
+            // Fit the model
+            double likelihood = teacher.Run(WatermarkTrees);
+            #endregion
+
+            
+
+            for (int i = 0; i < detectedWatermark.GetLength(0); i++) //Looping each tree = 49152
+            {
+                List<double> listOfLikelihood = new List<double>();
+                double[,] V = CalculateVi(i, watermarkPermutation, hvs);
+                for (int j = 0; j < watermarkPermutation.GetLength(0); j++) //Looping each permutation of watermark possibility in a tree = 32
+                {
+                    double[] T = new double[5];
+                    for (int k = 0; k < 5; k++) // Looping each node in tree (5 nodes)
+                    {
+                        T[k] = (double)listOfTrees[i][k] - (double)V[j, k];
+                    }
+
+                    double loglikelihood = model.Evaluate(T); //Calculate loglikelihood P(W|hmm)
+                    listOfLikelihood.Add(loglikelihood);
+                }
+
+                int maxindex = MaxValueIndex(listOfLikelihood); // Look for maximum value in list of loglikelihood for detection result
+                detectedWatermark[i] = watermarkPermutation[maxindex];
+            }
+
+
+            return detectedWatermark;
+        }
+
+
+        #endregion
+
+        #region Process Watermark using Manual HMM Model Estimation
         /// Get the tree where watermark inserted
         /// Total tree per subband : 6480
         public static double[][] TreeOfWatermark(double[][] detectedWatermark, int NumOfTree) // NumOfTree = 6480
@@ -190,6 +259,7 @@ namespace TugasAkhir1
             hl.CopyTo(z, lh.Length + hh.Length);
             return z;
         }
+        #endregion
 
         /// Inverse mapping mapped tree
         /// Convert 15 node tree to 5 node tree based on mapping strategy
@@ -243,6 +313,7 @@ namespace TugasAkhir1
                 }
             }
 
+            // These return values should be same.
             return new Tuple<double[,], double[,], double[,]>(triangle, circle, square);
         }
 
