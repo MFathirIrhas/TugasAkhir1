@@ -182,7 +182,7 @@
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(479, 628);
+            this.button16.Location = new System.Drawing.Point(374, 628);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(75, 23);
             this.button16.TabIndex = 17;
@@ -363,12 +363,12 @@
             this.button6.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(7, 636);
+            this.button6.Location = new System.Drawing.Point(7, 617);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(80, 23);
+            this.button6.Size = new System.Drawing.Size(80, 42);
             this.button6.TabIndex = 7;
             this.button6.TabStop = false;
-            this.button6.Text = "TEST";
+            this.button6.Text = "Save Watermark";
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
@@ -544,7 +544,7 @@
             this.button8.FlatAppearance.BorderSize = 0;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(7, 584);
+            this.button8.Location = new System.Drawing.Point(7, 565);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(80, 46);
             this.button8.TabIndex = 11;
