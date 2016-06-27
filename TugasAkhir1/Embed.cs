@@ -13,23 +13,23 @@ namespace TugasAkhir1
         public static double[,] Embedding(double[,] Wavelet_coefficients, double[,] MappedWatermark, double[,] HVSValues)
         {
             double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
-            double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
+            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark);
             double embedding_Strength = 0.3;
 
             for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
             {
                 for (int j = 0; j < Wavelet_coefficients.GetLength(1); j++)
                 {
-                    Embedded_Watermark[i, j] = Wavelet_coefficients[i, j] + (Trained_Watermark[i, j] * embedding_Strength * HVSValues[i,j]);
+                    Embedded_Watermark[i, j] = Wavelet_coefficients[i, j] + (Trained_Watermark[i, j] * embedding_Strength * HVSValues[i, j]);
                 }
             }
 
             return Embedded_Watermark;
         }
 
+        #region Train Watermark from Mapped Watermark
         public static double[,] TrainMappedWatermark(double[,] WC, double[,] MW)
         {
-
             double[,] TrainedWatermark = new double[WC.GetLength(0), WC.GetLength(1)];
             int sizeOfLvl2 = (TrainedWatermark.GetLength(0) / 2) * (TrainedWatermark.GetLength(1) / 2);
             ///LH1
@@ -103,7 +103,7 @@ namespace TugasAkhir1
                 }
             }
 
-            
+
             ///LH2
             //int iLH2 = 0;
             //for (int i = 0; i < (TrainedWatermark.GetLength(0) / 4); i += 2)
@@ -120,7 +120,7 @@ namespace TugasAkhir1
             int iLH2 = 0;
             for (int i = 0; i < (TrainedWatermark.GetLength(0) / 2); i += 2)
             {
-                for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1) ; j += 2)
+                for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1); j += 2)
                 {
                     if (iLH2 < MW.GetLength(0))
                     {
@@ -137,7 +137,7 @@ namespace TugasAkhir1
                         TrainedWatermark[i + 1, j] = 0;
                         TrainedWatermark[i + 1, j + 1] = 0;
                     }
-                    
+
                 }
             }
 
@@ -194,7 +194,7 @@ namespace TugasAkhir1
                         TrainedWatermark[i + 1, j] = 0;
                         TrainedWatermark[i + 1, j + 1] = 0;
                     }
-                    
+
                 }
             }
 
@@ -250,13 +250,101 @@ namespace TugasAkhir1
                         TrainedWatermark[i + 1, j] = 0;
                         TrainedWatermark[i + 1, j + 1] = 0;
                     }
-                    
+
                 }
             }
 
             return TrainedWatermark;
         }
+        #endregion
 
 
+        #region Train Watermark without mapping watermark
+        public static double[,] TrainMappedWatermark2(double[,] WC, double[,] MW)
+        {
+            double[,] TrainedWatermark = new double[WC.GetLength(0), WC.GetLength(1)];
+            int sizeOfLvl2 = (TrainedWatermark.GetLength(0) / 2) * (TrainedWatermark.GetLength(1) / 2);
+            ///LH1
+            double[] LH1 = new double[MW.GetLength(0)];
+            int countLH1 = 0;
+            for (int i = 0; i < LH1.Length; i++)
+            {
+                LH1[i] = MW[i, 0];
+            }
+
+            double[,] LH2 = new double[MW.GetLength(0), 4];
+            for (int i = 0; i < LH2.GetLength(0); i++)
+            {
+                LH2[i, 0] = MW[i, 1];
+                LH2[i, 1] = MW[i, 2];
+                LH2[i, 2] = MW[i, 3];
+                LH2[i, 3] = MW[i, 4];
+            }
+
+
+            ///Mapping MappedWatermark through wavelet domain
+            ///LH1
+            int iLH1 = 0;
+            for (int i = 0; i < TrainedWatermark.GetLength(0) / 4; i++)
+            {
+                for (int j = TrainedWatermark.GetLength(1) / 4; j < TrainedWatermark.GetLength(1) / 2; j++)
+                {
+                    if (iLH1 < MW.GetLength(0)) //Check if counter smaller than total of tree provided compared to all coefficients in the subband.
+                    {
+                        TrainedWatermark[i, j] = LH1[iLH1];
+                        iLH1++;
+                    }
+                    else
+                    {
+                        TrainedWatermark[i, j] = 0;
+                    }
+
+                }
+            }
+
+
+            ///LH2
+            //int iLH2 = 0;
+            //for (int i = 0; i < (TrainedWatermark.GetLength(0) / 4); i += 2)
+            //{
+            //    for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1) * 0.75; j += 2)
+            //    {
+            //        TrainedWatermark[i, j] = LH2[iLH2, 0];
+            //        TrainedWatermark[i, j + 1] = LH2[iLH2, 1];
+            //        TrainedWatermark[i + 1, j] = LH2[iLH2, 2];
+            //        TrainedWatermark[i + 1, j + 1] = LH2[iLH2, 3];
+            //        iLH2++;
+            //    }
+            //}
+            int iLH2 = 0;
+            for (int i = 0; i < (TrainedWatermark.GetLength(0) / 2); i += 2)
+            {
+                for (int j = TrainedWatermark.GetLength(1) / 2; j < TrainedWatermark.GetLength(1); j += 2)
+                {
+                    if (iLH2 < MW.GetLength(0))
+                    {
+                        TrainedWatermark[i, j] = LH2[iLH2, 0];
+                        TrainedWatermark[i, j + 1] = LH2[iLH2, 1];
+                        TrainedWatermark[i + 1, j] = LH2[iLH2, 2];
+                        TrainedWatermark[i + 1, j + 1] = LH2[iLH2, 3];
+                        iLH2++;
+                    }
+                    else
+                    {
+                        TrainedWatermark[i, j] = 0;
+                        TrainedWatermark[i, j + 1] = 0;
+                        TrainedWatermark[i + 1, j] = 0;
+                        TrainedWatermark[i + 1, j + 1] = 0;
+                    }
+
+                }
+            }
+
+            return TrainedWatermark;
+        }
+        #endregion
+
+
+        //End
     }
 }

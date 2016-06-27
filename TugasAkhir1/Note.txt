@@ -180,3 +180,21 @@ Things to be saved in Key:
 	- PN Sequence
 	- size of watermark m x n
 
+--------
+To Do:
+	- Normalize wavelet coefficients -> Training
+	- While detecting -> Normalize (wavelet coefficients - table of watermark permutation)
+	- calculate likelihood from (normalized extracted watermark - table of watermark permutation) given model
+	  -> Result : High BER(BAD)
+
+--------
+To Do:
+	- After scrambled into W x 5 Scrambled watermark
+	- Watermark is then set into subband LH1 and LH2 as tree
+	Done!
+
+--------
+To Do:
+	- Create function that return 2 patterns possibility embedded in to watermark based on PNSeq.
+	Done!
+	Result: Acuration: 61.962962962963

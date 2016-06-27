@@ -43,6 +43,7 @@ namespace TugasAkhir1
         double[][] detectedWatermark;
         double[][] treeOfWatermark;
         double[][] CombinedTree;
+        double[] ExtractedWatermark;
         //Inverse mapping
         double[,] InversedMappingTriangle;
         double[,] InversedMappingCircle;
@@ -53,10 +54,17 @@ namespace TugasAkhir1
         List<double> ScrambledWatermarkfromCircle;
         List<double> ScrambledWatermarkfromSquare;
 
+        List<double> ScrambledWatermark;
+
         // Extraction Key
         string KeyFileName;
 
 
+        /// Addition Mapped Watermark
+        double[,] Mapped_Watermark;
+        List<int> Real_Watermark;
+        
+        
         Stopwatch time = new Stopwatch();
         public Form1()
         {
@@ -281,8 +289,22 @@ namespace TugasAkhir1
                 Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
                 resultLbl.Text = "Decomposed Host Image";
                 GUIEnd("FDWT Succeed!", 0, 0, 0);
-                
-                
+
+                /// Test 
+                //int c = 1;
+                //TextWriter tw2 = new StreamWriter("WaveletCoefficientsBeforeEmbedding.txt");
+                //tw2.WriteLine("Total Watermark ");
+                //for (int i = 0; i < Wavelet_Coefficients.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < Wavelet_Coefficients.GetLength(1); j++)
+                //    {
+                //        tw2.Write("["+c+"]"+Wavelet_Coefficients[i,j]+" - ");
+                //        c++;
+                //    }
+                //    tw2.WriteLine();
+                //}
+                //tw2.Close();
+
             }
             else
             {
@@ -314,6 +336,7 @@ namespace TugasAkhir1
                 Bitmap b = ImageProcessing.ConvertToBinary(bmp);
                 List<int> VectorImage = Scramble.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
                 List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
+                Real_Watermark = BinaryVectorImage;
 
                 int pnlength = BinaryVectorImage.Count * 5;
                 string pn_seed = "10000"; 
@@ -321,7 +344,8 @@ namespace TugasAkhir1
                 int pn_length = pnlength;
                 List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
                 List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage, PNSeq);
-                //Save into .txt file (PN Sequence and size)
+
+                /// Save into .txt file (PN Sequence and size)
                 Bitmap hostbmp = new Bitmap(hostImage.Image);
                 string hostfilename = HostImageLocationTxt.Text;
                 string watermarkfilename = WatermarkImageLocationTxt.Text;
@@ -347,16 +371,29 @@ namespace TugasAkhir1
                     }
                 }
 
+                //List<int> oneminusone = Scramble.ConvertTo1minus1(scrambled_Watermark);
                 Scrambled_Watermark = scrambled_Watermark;
+                //Scrambled_Watermark = oneminusone;
                 GUIEnd("Scramble Succeed!", 0, 0, 0);
-                MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count, "Succeed", MessageBoxButtons.OK);
+                MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count + "\n PN Sequence: " + PNSeq.Count, "Succeed", MessageBoxButtons.OK);
 
-
-                //TextWriter tw2 = new StreamWriter("WATERMARK_BEFORE_SCRAMBLING.txt");
-                //tw2.WriteLine("Total Watermark: " + BinaryVectorImage.Count);
+                //TextWriter tw1 = new StreamWriter("REAL_WATERMARK.txt");
+                //tw1.WriteLine("Total Real Watermark: " + BinaryVectorImage.Count);
                 //foreach (int i in BinaryVectorImage)
+                //    tw1.WriteLine(i);
+                //tw1.Close();
+
+                //TextWriter tw2 = new StreamWriter("SCRAMBLED_WATERMARK.txt");
+                //tw2.WriteLine("Total Scrambled Watermark: " + Scrambled_Watermark.Count);
+                //foreach (int i in Scrambled_Watermark)
                 //    tw2.WriteLine(i);
                 //tw2.Close();
+
+                //TextWriter tw3 = new StreamWriter("PN_Sequence.txt");
+                //tw3.WriteLine("Total PN Sequence Watermark: " + PNSeq.Count);
+                //foreach (int i in PNSeq)
+                //    tw3.WriteLine(i);
+                //tw3.Close();
 
 
             }
@@ -468,7 +505,10 @@ namespace TugasAkhir1
             {
                 GUIStart("Processing.....!");
                 List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
-                double[,] MappedWatermark = Scramble.Mapping(Segmented);
+                //double[,] MappedWatermark = Scramble.Mapping(Segmented);
+                double[,] MappedWatermark = Scramble.Mapping2(Segmented);
+                Mapped_Watermark = MappedWatermark;
+
                 double[,] HVSValues = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
                 if (transformedImage.Image == null)
                 {
@@ -674,6 +714,7 @@ namespace TugasAkhir1
                 + "\n HL1: " + meanHL1+"  "+mode,"Succeed", MessageBoxButtons.OK);
         }
 
+        #region Attack Image
         private void button12_Click(object sender, EventArgs e) //Histogram Equilization Attack
         {
             if (transformedImage.Image != null)
@@ -740,6 +781,8 @@ namespace TugasAkhir1
             }
         }
 
+        #endregion
+
         private void button14_Click_1(object sender, EventArgs e)
         {
             double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
@@ -777,11 +820,9 @@ namespace TugasAkhir1
             MessageBox.Show("Count 1: " + count1 + "\n Count2: " + count2+"\n Sum:  "+summation,"Succeed", MessageBoxButtons.OK);
         }
 
-        private void button13_Click(object sender, EventArgs e) //Train HMM
+        private void button13_Click(object sender, EventArgs e) //Train HMM and detect Watermark
         {           
-            /// Detection
-            //double[][] detection = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients,transformedImage.Image ,rootpmf, transition, variances);
-            //double[][] detectedWatermark = Extract.DetectWatermark(Watermarked_Wavelet_Coefficients, transformedImage.Image, rootpmf, transition, variances);
+            /// Detection            
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Select a key accordingly";
             ofd.InitialDirectory = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key";
@@ -794,6 +835,13 @@ namespace TugasAkhir1
                 int NumOfTrees = Convert.ToInt32(lines[7]);
                 KeyFileName = ofd.FileName;
 
+                /// Get PNSeq
+                List<int> PNSeq = new List<int>();
+                for (int i = 9; i < lines.Length - 1; i++)
+                {
+                    PNSeq.Add(Convert.ToInt32(lines[i]));
+                }
+
                 GUIStart("Training HMM Model...");
                 //transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
 
@@ -802,42 +850,30 @@ namespace TugasAkhir1
                 IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
                 IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
                 IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
-                //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
-                //Test
-                //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
-
+                
                 double[,] ArrayImage = IMatrixG; //Embedding in Green 
-                Watermarked_Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
-                //rootpmf = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item1;
-                //transition = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item2;
-                //variances = HMM.CreateHMMModel(Watermarked_Wavelet_Coefficients).Item3;
+                Watermarked_Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);                
                 int NumOfScale2 = ((hostheight*hostwidth)/16)*3;
-                detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees /*, rootpmf, transition, variances*/);
-                treeOfWatermark = Extract.TreeOfWatermark(detectedWatermark, NumOfTrees);
-                CombinedTree = Extract.CombineTrees(treeOfWatermark);
-                //Inverse mapping
-                InversedMappingTriangle = Extract.InverseMapping(CombinedTree).Item1;
-                InversedMappingCircle = Extract.InverseMapping(CombinedTree).Item2;
-                InversedMappingSquare = Extract.InverseMapping(CombinedTree).Item3;
 
-                //Merge segmented watermark for each pattern.
-                ScrambledWatermarkfromTriangle = Scramble.MergeSegmentedWatermark(InversedMappingTriangle);
-                ScrambledWatermarkfromCircle = Scramble.MergeSegmentedWatermark(InversedMappingCircle);
-                ScrambledWatermarkfromSquare = Scramble.MergeSegmentedWatermark(InversedMappingSquare);
+                
+                ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
+                //detectedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
 
-                //TextWriter tw = new StreamWriter("EXTRACTED_WATERMARK.txt");
-                //tw.WriteLine("Total Scrambled Data: " + ScrambledWatermarkfromTriangle.Count);
-                ////for (int i = 0; i < detectedWatermark.GetLength(0); i++)
+                /// Test
+                //TextWriter tw1 = new StreamWriter("DetectedRealWatermark.txt");
+                //tw1.WriteLine("Total Watermark: " + ExtractedWatermark.GetLength(0));
+                ////for(int i = 0; i < ExtractedWatermark.GetLength(0); i++)
                 ////{
-                ////    for (int j = 0; j < detectedWatermark[0].Length; j++)
+                ////    for(int j = 0; j < detectedWatermark[i].Length; j++)
                 ////    {
-                ////        tw.Write(detectedWatermark[i][j]);
+                ////        tw1.WriteLine(detectedWatermark[i][j]);
                 ////    }
-                ////    tw.WriteLine();
-                ////}
-                //foreach (double i in ScrambledWatermarkfromTriangle)
-                //    tw.WriteLine(i);
-                //tw.Close();
+                ////}                   
+                //foreach(double i in ExtractedWatermark)
+                //{
+                //    tw1.WriteLine(i);
+                //}
+                //tw1.Close();
 
                 GUIEnd("HMM Model Trained and detected!", 0, 0, 0);
                 MessageBox.Show("Training and Detecting HMM Model Succeed!", "Succeed", MessageBoxButtons.OK);
@@ -880,62 +916,28 @@ namespace TugasAkhir1
                 {
                     PNSeq.Add(Convert.ToInt32(lines[i]));
                 }
-
-                List<int> inverseDSSS = Scramble.InverseDSSS(ScrambledWatermarkfromTriangle, PNSeq);
-                Bitmap bmp = ImageProcessing.ConvertListToWatermark(inverseDSSS, height, width);
+                
+                Bitmap bmp = ImageProcessing.ConvertListToWatermark2(ExtractedWatermark, height, width);
                 watermarkImage.Image = bmp;
 
-                TextWriter tw = new StreamWriter("EXTRACTED_WATERMARK.txt");
-                tw.WriteLine("Total Scrambled Data: " + inverseDSSS.Count);
-                //for (int i = 0; i < detectedWatermark.GetLength(0); i++)
-                //{
-                //    for (int j = 0; j < detectedWatermark[0].Length; j++)
-                //    {
-                //        tw.Write(detectedWatermark[i][j]);
-                //    }
-                //    tw.WriteLine();
-                //}
-                foreach (double i in inverseDSSS)
-                    tw.WriteLine(i);
-                tw.Close();
+                /// Test
+                int counter = 0;
+                for (int i = 0; i < ExtractedWatermark.Length; i++)
+                {
+                    if(ExtractedWatermark[i] == Real_Watermark[i])
+                    {
+                        counter++;
+                    }
+                }
+                double akurasi = ((double)counter/(double)ExtractedWatermark.Length)*100;
+                MessageBox.Show("Akurasi: " + akurasi, "Succeed!", MessageBoxButtons.OK);
 
                 GUIEnd("Watermark Extracted!", 0, 0, 0);
             }
             else
             {
                 MessageBox.Show("Train and Detect Watermark first!", "Incomplete Procedure Detected", MessageBoxButtons.OK);
-            }
-            
-
-                //HostImageLocationTxt.Text = ofd.FileName;
-                //hostImage.Image = new Bitmap(ofd.FileName);
-            //}else
-            //{
-            //    MessageBox.Show("Select Key before extracting", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
-            //}
-
-
-            //Scrambled_Watermark
-            //List<double> scrambledWatermark = Scrambled_Watermark.Select<int, double>(i => i).ToList();
-            //int c = 0;
-            //for(int i=0;i< scrambledWatermark.Count; i++)
-            //{
-            //    if(ScrambledWatermarkfromCircle[i] == scrambledWatermark[i])
-            //    {
-            //        c++;
-            //    }
-            //}
-            //double akurasi = (((double)c) / ((double)scrambledWatermark.Count)) * (double)100;
-
-            //TextWriter tw = new StreamWriter("Extracted_FromSquare.txt");
-            //tw.WriteLine("Total Scrambled Data: " + ScrambledWatermarkfromSquare.Count);
-            //foreach (double i in ScrambledWatermarkfromCircle)
-            //    tw.WriteLine(i);
-            //tw.Close();
-            //Inverse DSSS
-            /// TO DO
-
-            //MessageBox.Show("Acuration: "+ ScrambledWatermarkfromTriangle.Count, "Result", MessageBoxButtons.OK);
+            }                
         }
 
         ///END

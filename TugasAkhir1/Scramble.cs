@@ -333,6 +333,21 @@ namespace TugasAkhir1
 
         #endregion
 
+        #region Mapping2 the scrambled watermark
+        public static double[,] Mapping2(List<List<int>> SegmentedWatermark)
+        {
+            double[,] MappedWatermark = new double[SegmentedWatermark.Count, 5];
+            for(int i = 0; i < MappedWatermark.GetLength(0); i++)
+            {
+                for(int j = 0; j < MappedWatermark.GetLength(1); j++)
+                {
+                    MappedWatermark[i, j] = SegmentedWatermark[i][j];
+                }
+            }
+            return MappedWatermark;
+        }
+        #endregion
+
         #region 8. Inverse
         /// <summary>
         /// Merge the 5-segment watermark. 
@@ -347,6 +362,19 @@ namespace TugasAkhir1
                 for(int j = 0; j < inversedMapping.GetLength(1); j++)
                 {
                     ScrambledWatermark.Add(inversedMapping[i, j]);
+                }
+            }
+            return ScrambledWatermark;
+        }
+
+        public static List<double> MergeSegmentedWatermark2(double[][] inversedMapping)
+        {
+            List<double> ScrambledWatermark = new List<double>();
+            for (int i = 0; i < inversedMapping.GetLength(0); i++)
+            {
+                for (int j = 0; j < inversedMapping[i].Length; j++)
+                {
+                    ScrambledWatermark.Add(inversedMapping[i][j]);
                 }
             }
             return ScrambledWatermark;
@@ -397,6 +425,26 @@ namespace TugasAkhir1
 
         #endregion
 
+        #region Convert to 1 and -1 watermark value
+        public static List<int> ConvertTo1minus1(List<int> BinaryVectorImage)
+        {
+            List<int> oneminusone = new List<int>();
+            for(int i = 0; i < BinaryVectorImage.Count; i++)
+            {
+                if (BinaryVectorImage[i] == 1)
+                {
+                    oneminusone.Add(1);
+                }else
+                {
+                    oneminusone.Add(-1);
+                }
+            }
+
+            return oneminusone;
+        }
+
+      
+        #endregion
 
     }
 }

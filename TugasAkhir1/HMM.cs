@@ -1226,9 +1226,9 @@ namespace TugasAkhir1
                 double[] row = new double[5];
                 for(int j = 0; j < treesOfCoeffs.GetLength(1); j++)
                 {
-                    row[j] = treesOfCoeffs[i, j];
-                    Data[i] = row;
+                    row[j] = treesOfCoeffs[i, j];                   
                 }
+                Data[i] = row;
             }
             return Data;
         }

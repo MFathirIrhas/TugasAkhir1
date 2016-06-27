@@ -88,6 +88,42 @@ namespace TugasAkhir1
             return bmp;
         }
 
+        public static Bitmap ConvertListToWatermark2(double[] InverseDSSS, int height, int widht)
+        {
+            int size = (int)Math.Sqrt(InverseDSSS.Length);
+            int[,] pixel = new int[height, widht];
+            Bitmap bmp = new Bitmap(pixel.GetLength(0), pixel.GetLength(1));
+            int c = 0;
+            for (int i = 0; i < pixel.GetLength(0); i++)
+            {
+                for (int j = 0; j < pixel.GetLength(1); j++)
+                {
+                    if (InverseDSSS[c] == 1)
+                    {
+                        pixel[i, j] = 254;
+                        c++;
+                    }
+                    else
+                    {
+                        pixel[i, j] = 0;
+                        c++;
+                    }
+                }
+            }
+
+
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color clr = Color.FromArgb(pixel[y, x], pixel[y, x], pixel[y, x]);
+                    bmp.SetPixel(x, y, clr);
+                }
+            }
+
+            return bmp;
+        }
+
         public static Bitmap ConvertToGray(Bitmap b)
         {
 
