@@ -63,6 +63,7 @@ namespace TugasAkhir1
         /// Addition Mapped Watermark
         double[,] Mapped_Watermark;
         List<int> Real_Watermark;
+        double[,] EMBEDDED_WATERMARK_For_Extraction;
         
         
         Stopwatch time = new Stopwatch();
@@ -292,13 +293,13 @@ namespace TugasAkhir1
 
                 /// Test 
                 //int c = 1;
-                //TextWriter tw2 = new StreamWriter("WaveletCoefficientsBeforeEmbedding.txt");
+                //TextWriter tw2 = new StreamWriter("GreenPixels.txt");
                 //tw2.WriteLine("Total Watermark ");
-                //for (int i = 0; i < Wavelet_Coefficients.GetLength(0); i++)
+                //for (int i = 0; i < IMatrixG.GetLength(0); i++)
                 //{
-                //    for (int j = 0; j < Wavelet_Coefficients.GetLength(1); j++)
+                //    for (int j = 0; j < IMatrixG.GetLength(1); j++)
                 //    {
-                //        tw2.Write("["+c+"]"+Wavelet_Coefficients[i,j]+" - ");
+                //        tw2.Write("[" + c + "]" + IMatrixG[i, j] + " - ");
                 //        c++;
                 //    }
                 //    tw2.WriteLine();
@@ -457,33 +458,240 @@ namespace TugasAkhir1
 
         private void button9_Click(object sender, EventArgs e)
         {
-            //double akurasi = Statistic.Akurasi(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-            //Print(akurasi.ToString());
-            List<double> coeff1D = new List<double>();
-            for(int i = 0; i < Wavelet_Coefficients.GetLength(0); i++)
+            int c = 0;
+            double[,] listOfCoeffs = DWT.ListOfCoeffs(Wavelet_Coefficients);
+            //double[] scale2 = DWT.Scale2To1DCoeff(Wavelet_Coefficients);
+            //double[,] scale1 = DWT.Scale1To1DCoeff(Wavelet_Coefficients);
+            TextWriter tw1 = new StreamWriter("List Of Wavelet trees.txt");
+            tw1.WriteLine("Total Real Watermark: " + listOfCoeffs.GetLength(0));
+            for (int i = 0; i < listOfCoeffs.GetLength(0); i++)
             {
-                for(int j = 0; j < Wavelet_Coefficients.GetLength(1); j++)
+                for (int j = 0; j < listOfCoeffs.GetLength(1); j++)
                 {
-                    coeff1D.Add(Wavelet_Coefficients[i,j]);
+                    tw1.Write("["+j+"]"+ listOfCoeffs[i, j]);
                 }
+                tw1.WriteLine();
             }
-            double mean = HMM.Threshold(coeff1D).Item1;
-            double mode = HMM.Threshold(coeff1D).Item2;
-            double max = HMM.Threshold(coeff1D).Item3;
-            MessageBox.Show("Mean: " + mean + "\n Mode: " + mode + " \n Max: " + max + "\n First Coeff: "+Wavelet_Coefficients[0,0], "Result", MessageBoxButtons.OK);
+            //foreach (double i in scale2)
+            //    tw1.WriteLine(i);
+            tw1.Close();
+
+            double[][] nestedArray = HMM.ConvertToNestedArray(Wavelet_Coefficients);
+            TextWriter tw2 = new StreamWriter("List Of Nested Wavelet trees.txt");
+            tw2.WriteLine("Total Real Watermark: " + listOfCoeffs.GetLength(0));
+            for (int i = 0; i < listOfCoeffs.GetLength(0); i++)
+            {
+                for (int j = 0; j < listOfCoeffs.GetLength(1); j++)
+                {
+                    tw2.Write("[" + j + "]" + nestedArray[i][j]);
+                }
+                tw2.WriteLine();
+            }
+            tw2.Close();
+
+            double[][] TreeOfWatermark = Extract.TreeOfWatermark2(nestedArray, 8100);
+            TextWriter tw3 = new StreamWriter("List Of Real Watermark Wavelet trees.txt");
+            tw3.WriteLine("Total Real Watermark: " + TreeOfWatermark.GetLength(0));
+            for (int i = 0; i < TreeOfWatermark.GetLength(0); i++)
+            {
+                for (int j = 0; j < TreeOfWatermark[i].Length; j++)
+                {
+                    tw3.Write("[" + j + "]" + TreeOfWatermark[i][j]);
+                }
+                tw3.WriteLine();
+            }
+            tw3.Close();
+
 
         }
 
-        
 
-       
 
-        private void button8_Click(object sender, EventArgs e)
+
+
+        private void button8_Click(object sender, EventArgs e) /// Do Embedding Process at once
         {
-            var mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(watermarkImage.Image));
-            var psnr = Statistic.PSNR(new Bitmap(watermarkImage.Image), mse);
-            var ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(watermarkImage.Image));
-            MessageBox.Show("MSE: " + mse + "\n" + "PSNR: " + psnr + "\n" + "BER: " + ber, "succeed", MessageBoxButtons.OK);
+            //var mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(watermarkImage.Image));
+            //var psnr = Statistic.PSNR(new Bitmap(watermarkImage.Image), mse);
+            //var ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(watermarkImage.Image));
+            //MessageBox.Show("MSE: " + mse + "\n" + "PSNR: " + psnr + "\n" + "BER: " + ber, "succeed", MessageBoxButtons.OK);
+
+            GUIStart("Processing.....!");
+
+            #region Decompose Image into 2 level Haar DWT
+            Bitmap TransormedImage = DWT.TransformDWT(true, false, 2, new Bitmap(hostImage.Image));
+            Bitmap b = new Bitmap(hostImage.Image);
+            IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+            IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+            IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+            //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+            //Test
+            //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+
+            double[,] ArrayImage = IMatrixG; //Embedding in Green 
+            double[,] coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+            #endregion
+
+            #region Watermark Scrambling
+            Bitmap bmp = new Bitmap(watermarkImage.Image);
+            Scramble m = new Scramble();
+            Bitmap b2 = ImageProcessing.ConvertToBinary(bmp);
+            List<int> VectorImage = Scramble.ConvertToVectorMatrix(b2); //Include integer values between 255 or 0
+            List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
+                                                                                             //Real_Watermark = BinaryVectorImage;
+
+            #region Save key into TXT
+            int pnlength = BinaryVectorImage.Count * 5;
+            string pn_seed = "10000";
+            string pn_mask = "10100";
+            int pn_length = pnlength;
+            List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
+            List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage, PNSeq);
+
+            /// Save into .txt file (PN Sequence and size)
+            Bitmap hostbmp = new Bitmap(hostImage.Image);
+            string hostfilename = HostImageLocationTxt.Text;
+            string watermarkfilename = WatermarkImageLocationTxt.Text;
+            string hostName = Path.GetFileNameWithoutExtension(hostfilename);
+            string watermarkName = Path.GetFileNameWithoutExtension(watermarkfilename);
+            string name = hostName + "_" + watermarkName + "_Key.txt";
+            int NumOfTrees = pnlength / 5; // Restult in total of tree from segmented watermark , i.e 6480
+                                           //TextWriter tw = new StreamWriter(name);
+            using (TextWriter tw = File.CreateText(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key\" + name))
+            {
+                tw.WriteLine("Size of Host Image:");
+                tw.WriteLine(hostbmp.Height);
+                tw.WriteLine(hostbmp.Width);
+                tw.WriteLine("Size of Watermark: ");
+                tw.WriteLine(bmp.Height);
+                tw.WriteLine(bmp.Width);
+                tw.WriteLine("Number of Trees: ");
+                tw.WriteLine(NumOfTrees);
+                tw.WriteLine("PN Sequence: ");
+                foreach (int i in PNSeq)
+                {
+                    tw.WriteLine(i);
+                }
+            }
+            #endregion
+
+            //List<int> oneminusone = Scramble.ConvertTo1minus1(scrambled_Watermark);
+            List<int> dsssWatermark = scrambled_Watermark;
+            #endregion
+
+            #region Embed Watermark into decomposed host Image
+            List<List<int>> Segmented = Scramble.Segment(dsssWatermark);
+            //double[,] MappedWatermark = Scramble.Mapping(Segmented);
+            double[,] MappedWatermark = Scramble.Mapping2(Segmented);
+            Mapped_Watermark = MappedWatermark;
+
+            double[,] HVSValues = new double[coefficients.GetLength(0), coefficients.GetLength(1)];
+            if (TransormedImage == null)
+            {
+                MessageBox.Show("Do Forward Transform First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(TransormedImage));
+                HVSValues = ImageProcessing.HVS(EdgyImage);
+            }
+            double[,] EmbeddedWatermark = Embed.Embedding(coefficients, MappedWatermark, HVSValues);
+            double[,] embedded_coefficients = EmbeddedWatermark;
+            #endregion
+
+            #region Inverse DWT
+            double[,] InverseDWT = DWT.WaveletCoeff(embedded_coefficients, false, 2);
+
+            /// Round all elements in InverseDWT
+            //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
+
+            //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+            transformedImage.Image = ImageProcessing.ConvertToBitmap2(IMatrixR, InverseDWT, IMatrixB);
+            double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+            double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            #endregion
+
+            GUIEnd("IDWT Succeed!", mse, psnr, ber);
+
+            #region Update UI
+            ///Activate Attack Button
+            histeqBtn.Enabled = true;
+            histeqBtn.BackColor = Color.DeepSkyBlue;
+            meanFilterBtn.Enabled = true;
+            meanFilterBtn.BackColor = Color.DeepSkyBlue;
+            medianFilterBtn.Enabled = true;
+            medianFilterBtn.BackColor = Color.DeepSkyBlue;
+            modusFilterBtn.Enabled = true;
+            modusFilterBtn.BackColor = Color.DeepSkyBlue;
+
+            resultLbl.Text = "Watermarked Host Image";
+            WatermarkedImage = new Bitmap(transformedImage.Image);
+            #endregion
+        }
+
+        private void button18_Click(object sender, EventArgs e) /// Extract Watermark At Once
+        {
+            GUIStart("Extracting Watermark...");
+
+            #region Training HMM and Detection
+            /// Detection            
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select a key accordingly";
+            ofd.InitialDirectory = @"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                StreamReader objstream = new StreamReader(ofd.FileName);
+                string[] lines = objstream.ReadToEnd().Split(new char[] { '\n' });
+                int hostheight = Convert.ToInt32(lines[1]);
+                int hostwidth = Convert.ToInt32(lines[2]);
+                int NumOfTrees = Convert.ToInt32(lines[7]);
+                KeyFileName = ofd.FileName;
+
+                /// Get PNSeq
+                List<int> PNSeq = new List<int>();
+                for (int i = 9; i < lines.Length - 1; i++)
+                {
+                    PNSeq.Add(Convert.ToInt32(lines[i]));
+                }
+
+                
+                //transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
+
+                ///For Wavelet Coefficients Extraction
+                Bitmap b = new Bitmap(transformedImage.Image);
+                IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+                IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+                IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+
+                double[,] ArrayImage = IMatrixG; //Embedding in Green 
+                Watermarked_Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+                int NumOfScale2 = ((hostheight * hostwidth) / 16) * 3;
+                ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
+            }else
+            {
+                MessageBox.Show("Select Key First!", "Incomplete Procedure Detected", MessageBoxButtons.OK);
+            }
+            #endregion
+
+            #region Extraction
+            List<int> PNSeq2 = new List<int>();
+
+            StreamReader objstream2 = new StreamReader(KeyFileName);
+            string[] lines2 = objstream2.ReadToEnd().Split(new char[] { '\n' });
+            int height = Convert.ToInt32(lines2[4]);
+            int width = Convert.ToInt32(lines2[5]);
+            int NumOfTrees2 = Convert.ToInt32(lines2[7]);
+            for (int i = 9; i < lines2.Length - 1; i++)
+            {
+                PNSeq2.Add(Convert.ToInt32(lines2[i]));
+            }
+
+            Bitmap bmp = ImageProcessing.ConvertListToWatermark2(ExtractedWatermark, height, width);
+            watermarkImage.Image = bmp;
+            #endregion
+
+            GUIEnd("Watermark Extracted!", 0, 0, 0);
         }
 
         /// <summary>
@@ -521,6 +729,27 @@ namespace TugasAkhir1
                 }
                 double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark,HVSValues);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
+
+                //EMBEDDED_WATERMARK_For_Extraction = Embedded_Wavelet_Coefficients;
+                /// Test
+                //int h = 1;
+                //TextWriter tw1 = new StreamWriter("WaveletCoefficientsAfterEmbedding.txt");
+                //tw1.WriteLine("Total Watermark: " + EmbeddedWatermark.GetLength(0));
+                //for (int i = 0; i < EmbeddedWatermark.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < EmbeddedWatermark.GetLength(1); j++)
+                //    {
+                //        tw1.Write("[" + h + "]" + EmbeddedWatermark[i,j] + " # ");
+                //        h++;
+                //    }
+                //    tw1.WriteLine();
+                //}
+                ////foreach (double i in ExtractedWatermark)
+                ////{
+                ////    tw1.WriteLine(i);
+                ////}
+                //tw1.Close();
+
                 GUIEnd("Embedding Succeed!", 0, 0, 0);
                 MessageBox.Show("Embedding Succeed!", "Embedding Process : "+Segmented.Count, MessageBoxButtons.OK);
             }
@@ -543,6 +772,10 @@ namespace TugasAkhir1
                 GUIStart("Processing.....!");
                 //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
                 double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
+
+                /// Round all elements in InverseDWT
+                //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
+
                 //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
                 transformedImage.Image = ImageProcessing.ConvertToBitmap2(IMatrixR, InverseDWT, IMatrixB);
                 double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
@@ -550,6 +783,26 @@ namespace TugasAkhir1
                 double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
                 GUIEnd("IDWT Succeed!",mse,psnr,ber);
 
+                /// Test
+                //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
+                /// Test
+                //int h = 1;
+                //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
+                //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
+                //for (int i = 0; i < InverseDWT.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
+                //    {
+                //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
+                //        h++;
+                //    }
+                //    tw1.WriteLine();
+                //}
+                ////foreach (double i in ExtractedWatermark)
+                ////{
+                ////    tw1.WriteLine(i);
+                ////}
+                //tw1.Close();
 
                 ///Activate Attack Button
                 histeqBtn.Enabled = true;
@@ -856,23 +1109,27 @@ namespace TugasAkhir1
                 int NumOfScale2 = ((hostheight*hostwidth)/16)*3;
 
                 
+
                 ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
+                //ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Embedded_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
                 //detectedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
 
                 /// Test
-                //TextWriter tw1 = new StreamWriter("DetectedRealWatermark.txt");
-                //tw1.WriteLine("Total Watermark: " + ExtractedWatermark.GetLength(0));
-                ////for(int i = 0; i < ExtractedWatermark.GetLength(0); i++)
-                ////{
-                ////    for(int j = 0; j < detectedWatermark[i].Length; j++)
-                ////    {
-                ////        tw1.WriteLine(detectedWatermark[i][j]);
-                ////    }
-                ////}                   
-                //foreach(double i in ExtractedWatermark)
+                //int f = 1;
+                //double[][] Nested = HMM.ConvertToNestedArray(Watermarked_Wavelet_Coefficients);
+                //TextWriter tw1 = new StreamWriter("Watermarked_Wavelet_Coefficients.txt");
+                //tw1.WriteLine("Total Watermark: " + Watermarked_Wavelet_Coefficients.GetLength(0));
+                //for (int i = 0; i < Watermarked_Wavelet_Coefficients.GetLength(0); i++)
                 //{
-                //    tw1.WriteLine(i);
+                //    for (int j = 0; j < Watermarked_Wavelet_Coefficients.GetLength(1); j++)
+                //    {
+                //        tw1.WriteLine("["+f+"]"+Watermarked_Wavelet_Coefficients[i,j]);
+                //    }
                 //}
+                ////foreach (double i in ExtractedWatermark)
+                ////{
+                ////    tw1.WriteLine(i);
+                ////}
                 //tw1.Close();
 
                 GUIEnd("HMM Model Trained and detected!", 0, 0, 0);
@@ -939,6 +1196,8 @@ namespace TugasAkhir1
                 MessageBox.Show("Train and Detect Watermark first!", "Incomplete Procedure Detected", MessageBoxButtons.OK);
             }                
         }
+
+        
 
         ///END
     }

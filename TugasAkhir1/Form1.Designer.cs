@@ -79,6 +79,7 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
+            this.button18 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -542,14 +543,13 @@
             // 
             this.button8.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.button8.FlatAppearance.BorderSize = 0;
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button8.Location = new System.Drawing.Point(7, 565);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(80, 46);
             this.button8.TabIndex = 11;
             this.button8.TabStop = false;
-            this.button8.Text = "Extract Watermark";
+            this.button8.Text = "INSERTION";
             this.button8.UseVisualStyleBackColor = false;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
@@ -565,6 +565,7 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.button18);
             this.panel4.Controls.Add(this.button17);
             this.panel4.Controls.Add(this.jpegencoderBtn);
             this.panel4.Controls.Add(this.button13);
@@ -687,6 +688,20 @@
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
             // 
+            // button18
+            // 
+            this.button18.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button18.FlatAppearance.BorderSize = 0;
+            this.button18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button18.Location = new System.Drawing.Point(3, 455);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(91, 46);
+            this.button18.TabIndex = 14;
+            this.button18.TabStop = false;
+            this.button18.Text = "EXTRACTION";
+            this.button18.UseVisualStyleBackColor = false;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -780,6 +795,7 @@
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button18;
     }
 }
 

@@ -142,5 +142,21 @@ namespace TugasAkhir1
         #endregion
 
 
+        #region Round all elements in double 2 dimensional array
+        public static double[,] RoundAll(double[,] coeffs)
+        {
+            double[,] round = new double[coeffs.GetLength(0),coeffs.GetLength(0)];
+            for(int i = 0; i < round.GetLength(0); i++)
+            {
+                for(int j = 0; j < round.GetLength(1); j++)
+                {
+                    round[i, j] = Math.Round(coeffs[i, j]);
+                }
+            }
+
+            return round;
+        }
+        #endregion
+
     }
 }

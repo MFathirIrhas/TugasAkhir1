@@ -363,6 +363,22 @@ namespace TugasAkhir1
             // Get the trees of watermark where the actual watermark was embedded
             double[][] WaveletTrees = TreeOfWatermark2(listOfTrees, NumOfTrees);
 
+            /// Test
+            //TextWriter tw1 = new StreamWriter("LIST_OF_WAVELET_TREES.txt");
+            //tw1.WriteLine("Total Watermark: " + WaveletTrees.GetLength(0));
+            //for (int i = 0; i < WaveletTrees.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < WaveletTrees[i].Length; j++)
+            //    {
+            //        tw1.Write("["+j+"]"+ WaveletTrees[i][j] + " # ");
+            //    }
+            //    tw1.WriteLine();
+            //}
+            //foreach (double i in ExtractedWatermark)
+            //{
+            //    tw1.WriteLine(i);
+            //}
+            //tw1.Close();
 
             double[][] watermarkPermutation = GetSequenceParameter(coeffs, watermarkedImage).Item2;
             double[,] hvs = GetSequenceParameter(coeffs, watermarkedImage).Item3;

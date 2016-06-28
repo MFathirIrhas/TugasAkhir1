@@ -198,3 +198,7 @@ To Do:
 	- Create function that return 2 patterns possibility embedded in to watermark based on PNSeq.
 	Done!
 	Result: Acuration: 61.962962962963
+
+--------
+Penyebab berbeda wavelet coefficients antara pre-Inversed dan embedded adalah karena angkat berkoma yang di convert ke integer menjadi selalu floor
+ Solusi -> Round all element in InverseDWT 
