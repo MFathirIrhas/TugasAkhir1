@@ -136,7 +136,8 @@ namespace TugasAkhir1
                 }
             }
             double sumup = check.Sum();
-            double ber = (sumup / (double)check.Count) * 100;
+            double error = check.Count - sumup;
+            double ber = (error / (double)check.Count) * 100;
             return ber;
         }
         #endregion
@@ -158,5 +159,27 @@ namespace TugasAkhir1
         }
         #endregion
 
+
+        #region Calculate Variance of Image
+        public static double VarianceOfImage(Bitmap bmp)
+        {
+            List<int> m = new List<int>();
+            int width = bmp.Width;
+            int height = bmp.Height;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    int p = c.G;//(c.R + c.G + c.B) / 3;
+                    m.Add(p);
+                }
+            }
+
+            int[] pixels = m.ToArray();
+            double Variance = Accord.Statistics.Tools.Variance(pixels);
+            return Variance;
+        }
+        #endregion
     }
 }
