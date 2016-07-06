@@ -181,5 +181,44 @@ namespace TugasAkhir1
             return Variance;
         }
         #endregion
+
+        public static int[,] ExtractGreen(Bitmap bmp)
+        {
+            int[,] m = new int[bmp.Height,bmp.Width];
+            int width = bmp.Width;
+            int height = bmp.Height;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    int p = c.G;//(c.R + c.G + c.B) / 3;
+                    m[y, x] = p;
+                }
+            }
+            return m;
+        }
+
+        public static int MaxPixel(Bitmap bmp)
+        {
+            List<int> m = new List<int>();
+            int width = bmp.Width;
+            int height = bmp.Height;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    int p = c.G;//(c.R + c.G + c.B) / 3;
+                    m.Add(p);
+                }
+            }
+
+            int[] pixels = m.ToArray();
+            int maxpixel = pixels.Max();
+            return maxpixel;
+        }
+
+
     }
 }

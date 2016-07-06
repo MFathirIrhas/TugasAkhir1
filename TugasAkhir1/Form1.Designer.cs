@@ -54,6 +54,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StatusPanel = new System.Windows.Forms.Panel();
+            this.button19 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
             this.MSEValue = new System.Windows.Forms.Label();
@@ -71,6 +72,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button18 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
             this.jpegencoderBtn = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
@@ -79,7 +81,7 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
-            this.button18 = new System.Windows.Forms.Button();
+            this.button20 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -385,6 +387,8 @@
             // StatusPanel
             // 
             this.StatusPanel.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.StatusPanel.Controls.Add(this.button20);
+            this.StatusPanel.Controls.Add(this.button19);
             this.StatusPanel.Controls.Add(this.button15);
             this.StatusPanel.Controls.Add(this.button14);
             this.StatusPanel.Controls.Add(this.MSEValue);
@@ -404,6 +408,16 @@
             this.StatusPanel.Name = "StatusPanel";
             this.StatusPanel.Size = new System.Drawing.Size(1132, 31);
             this.StatusPanel.TabIndex = 9;
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(370, 3);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(107, 23);
+            this.button19.TabIndex = 17;
+            this.button19.Text = "Host Variance";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
             // 
             // button15
             // 
@@ -580,6 +594,20 @@
             this.panel4.Size = new System.Drawing.Size(97, 656);
             this.panel4.TabIndex = 13;
             // 
+            // button18
+            // 
+            this.button18.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button18.FlatAppearance.BorderSize = 0;
+            this.button18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button18.Location = new System.Drawing.Point(3, 455);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(91, 46);
+            this.button18.TabIndex = 14;
+            this.button18.TabStop = false;
+            this.button18.Text = "EXTRACTION";
+            this.button18.UseVisualStyleBackColor = false;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
             // button17
             // 
             this.button17.BackColor = System.Drawing.SystemColors.MenuHighlight;
@@ -688,19 +716,15 @@
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
             // 
-            // button18
+            // button20
             // 
-            this.button18.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button18.FlatAppearance.BorderSize = 0;
-            this.button18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button18.Location = new System.Drawing.Point(3, 455);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(91, 46);
-            this.button18.TabIndex = 14;
-            this.button18.TabStop = false;
-            this.button18.Text = "EXTRACTION";
-            this.button18.UseVisualStyleBackColor = false;
-            this.button18.Click += new System.EventHandler(this.button18_Click);
+            this.button20.Location = new System.Drawing.Point(295, 3);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(75, 23);
+            this.button20.TabIndex = 18;
+            this.button20.Text = "Green";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
             // 
             // Form1
             // 
@@ -796,6 +820,8 @@
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
         private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Button button20;
     }
 }
 

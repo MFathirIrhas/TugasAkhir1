@@ -59,9 +59,9 @@ namespace TugasAkhir1
             int[,] pixel = new int[height,widht];
             Bitmap bmp = new Bitmap(pixel.GetLength(0), pixel.GetLength(1));
             int c = 0;
-            for(int i = 0; i < pixel.GetLength(0); i++)
+            for(int i = 0; i < bmp.Height; i++)
             {
-                for(int j = 0; j < pixel.GetLength(1); j++)
+                for(int j = 0; j < bmp.Width; j++)
                 {
                     if(InverseDSSS[c] == 1)
                     {
@@ -229,24 +229,24 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < ICoeffs.GetLength(1); j++)
                 {
-                    //if (ICoeffs[i, j] < 0)
-                    //{
-                    //    Color c = Color.FromArgb((int)IMatrixR[i, j], 0, (int)IMatrixB[i, j]);
-                    //    bmp.SetPixel(j, i, c);
-                    //}
-                    //else if (ICoeffs[i, j] > 254)
-                    //{
-                    //    Color c = Color.FromArgb((int)IMatrixR[i, j], 254, (int)IMatrixB[i, j]);
-                    //    bmp.SetPixel(j, i, c);
-                    //}
-                    //else
-                    //{
-                    //    Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
-                    //    bmp.SetPixel(j, i, c);
-                    //}
+                    if (ICoeffs[i, j] < 0)
+                    {
+                        Color c = Color.FromArgb((int)IMatrixR[i, j], 0, (int)IMatrixB[i, j]);
+                        bmp.SetPixel(j, i, c);
+                    }
+                    else if (ICoeffs[i, j] > 255)
+                    {
+                        Color c = Color.FromArgb((int)IMatrixR[i, j], 255, (int)IMatrixB[i, j]);
+                        bmp.SetPixel(j, i, c);
+                    }
+                    else
+                    {
+                        Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
+                        bmp.SetPixel(j, i, c);
+                    }
 
-                    Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
-                    bmp.SetPixel(j, i, c);
+                    //Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
+                    //bmp.SetPixel(j, i, c);
                 }
             }
             return bmp;
@@ -263,23 +263,23 @@ namespace TugasAkhir1
                 {
                     if (IMatrix[i, j] <= 51)
                     {
-                        HVSValues[i, j] = 0.1;
+                        HVSValues[i, j] = 2;//0.1;
                     }
                     else if (IMatrix[i, j] > 51 && IMatrix[i, j] <= 102)
                     {
-                        HVSValues[i,j] = 0.2;
+                        HVSValues[i, j] = 4;//0.2;
                     }
                     else if (IMatrix[i, j] > 102 && IMatrix[i, j] <= 153)
                     {
-                        HVSValues[i, j] = 0.3;
+                        HVSValues[i, j] = 6;//0.3;
                     }
                     else if (IMatrix[i, j] > 153 && IMatrix[i, j] <= 204)
                     {
-                        HVSValues[i, j] = 0.4;
+                        HVSValues[i, j] = 8;//0.4;
                     }
                     else if (IMatrix[i, j] > 204 && IMatrix[i, j] <= 255)
                     {
-                        HVSValues[i, j] = 0.5;
+                        HVSValues[i, j] = 10;//0.5;
                     }
                 }
             }

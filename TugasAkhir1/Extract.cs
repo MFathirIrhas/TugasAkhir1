@@ -12,6 +12,8 @@ using Accord.Statistics.Distributions.Multivariate;
 using Accord.Statistics.Models.Markov;
 using Accord.Statistics.Models.Markov.Learning;
 using Accord.Statistics.Models.Markov.Topology;
+using Accord.Statistics.Distributions.Fitting;
+
 
 namespace TugasAkhir1
 {
@@ -100,8 +102,8 @@ namespace TugasAkhir1
 
 
         //-------------------Used-----------------------
-        #region Detection using Baum-Welch Learning Paremeter Estimation(Univariate)
-        public static double[][] BaumWelchDetection(double[,] coeffs, Image watermarkedImage, int NumOfScale2, int NumOfTrees/*, double[] rootpmf, double[,] transition, double[,] variances*/)
+        #region Detection using Baum-Welch Learning Paremeter Estimation(Univariate) Using 15-bit mapping
+        public static double[][] BaumWelchDetection(double[,] coeffs, Image watermarkedImage, int NumOfScale2, int NumOfTrees, List<int> PNSeq/*, double[] rootpmf, double[,] transition, double[,] variances*/)
         {
             /// detectedWatermark will be divide by 3, each will be taken as much as tree/segmented Watermark before embedding
             /// Segmented Watermark for android watermark segmented become 6480 tree each subband. Each subband will be taken 6480 tree
@@ -140,8 +142,10 @@ namespace TugasAkhir1
             for (int i = 0; i < detectedWatermark.GetLength(0); i++) //Looping each tree = 49152
             {
                 List<double> listOfLikelihood = new List<double>();
-                double[,] V = CalculateVi(i, watermarkPermutation, hvs);
-                for (int j = 0; j < watermarkPermutation.GetLength(0); j++) //Looping each permutation of watermark possibility in a tree = 32
+                //double[,] V = CalculateVi(i, watermarkPermutation, hvs);
+                double[][] pattern = WatermarkPattern(i, PNSeq);
+                double[,] V = CalculateVi2(i, pattern, hvs);
+                for (int j = 0; j < 2/*watermarkPermutation.GetLength(0)*/; j++) //Looping each permutation of watermark possibility in a tree = 32
                 {
                     double[] T = new double[5];
                     for (int k = 0; k < 5; k++) // Looping each node in tree (5 nodes)
@@ -154,7 +158,8 @@ namespace TugasAkhir1
                 }
 
                 int maxindex = MaxValueIndex(listOfLikelihood); // Look for maximum value in list of loglikelihood for detection result
-                detectedWatermark[i] = watermarkPermutation[maxindex];
+                detectedWatermark[i] = pattern[maxindex];
+
             }
 
 
@@ -292,7 +297,7 @@ namespace TugasAkhir1
             double[][] listOfTrees = GetSequenceParameter(coeffs, watermarkedImage).Item1; 
 
             // Get the trees of watermark where the actual watermark was embedded
-            double[][] WatermarkTrees = TreeOfWatermark2(listOfTrees, NumOfTrees);
+            double[][] WatermarkTrees = TreeOfWatermark2(listOfTrees, NumOfTrees, "lh");
 
             
             double[][] watermarkPermutation = GetSequenceParameter(coeffs, watermarkedImage).Item2;
@@ -361,7 +366,7 @@ namespace TugasAkhir1
             double[][] listOfTrees = GetSequenceParameter(coeffs, watermarkedImage).Item1;
 
             // Get the trees of watermark where the actual watermark was embedded
-            double[][] WaveletTrees = TreeOfWatermark2(listOfTrees, NumOfTrees);
+            double[][] WaveletTrees = TreeOfWatermark2(listOfTrees, NumOfTrees, "lh");
 
             /// Test
             //TextWriter tw1 = new StreamWriter("LIST_OF_WAVELET_TREES.txt");
@@ -403,6 +408,11 @@ namespace TugasAkhir1
             {
                 Tolerance = 0.001,
                 Iterations = 0,
+
+                //FittingOptions = new NormalOptions()
+                //{
+                //    Regularization = 1e-5 // specify a regularization constant
+                //}
             };
 
             // Fit the model
@@ -737,7 +747,13 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < Vi.GetLength(1); j++)
                 {
-                    Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.3;
+                    //Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.3;
+                    //Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 1;
+                    Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.002;//0.001;
+
+                    //Vi[i, j] = pattern[i][j] * 10;
+                    //Vi[i, j] = pattern[i][j] * 1;
+                    //Vi[i, j] = pattern[i][j] * 4;
                 }
             }
             return Vi;
@@ -804,28 +820,62 @@ namespace TugasAkhir1
 
         #endregion
 
-        #region For LH Trees only
-        public static double[][] TreeOfWatermark2(double[][] detectedWatermark, int NumOfTree) // NumOfTree = 6480
+        #region For LH, HH, or HL Trees only
+        public static double[][] TreeOfWatermark2(double[][] detectedWatermark, int NumOfTree, string subband) // NumOfTree = 6480
         {
             int subbandsize = detectedWatermark.GetLength(0) / 3;
-            double[][] LH = new double[subbandsize][];            
+            double[][] LH = new double[subbandsize][];
+            double[][] HH = new double[subbandsize][];
+            double[][] HL = new double[subbandsize][];            
             int totalTree = NumOfTree;
             double[][] tree = new double[totalTree][];
 
-            // LH
-            for (int i = 0; i < subbandsize; i++)
+            if (subband == "lh")
             {
-                LH[i] = detectedWatermark[i];
-            }
+                // LH
+                for (int i = 0; i < subbandsize; i++)
+                {
+                    LH[i] = detectedWatermark[i];
+                }
 
-            //-----------------------------------
-            // LH where watermarks are inserted
-            for (int l = 0; l < NumOfTree; l++)
+                //-----------------------------------
+                // LH where watermarks are inserted
+                for (int l = 0; l < NumOfTree; l++)
+                {
+                    tree[l] = LH[l];
+                }
+                return tree;
+            }
+            else if(subband == "hh")
             {
-                tree[l] = LH[l];
-            }
+                // HH
+                for (int j = 0; j < subbandsize; j++)
+                {
+                    HH[j] = detectedWatermark[j + subbandsize];
+                }
 
-            return tree;
+                // HH
+                for (int m = 0; m < NumOfTree; m++)
+                {
+                    tree[m] = HH[m];
+                }
+                return tree;
+            }
+            else
+            {
+                // HL
+                for (int k = 0; k < subbandsize; k++)
+                {
+                    HL[k] = detectedWatermark[k + subbandsize + subbandsize];
+                }
+
+                // HL
+                for (int n = 0; n < NumOfTree; n++)
+                {
+                    tree[n] = HL[n];
+                }
+                return tree;
+            }           
         }
         #endregion
 

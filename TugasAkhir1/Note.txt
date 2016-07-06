@@ -201,4 +201,50 @@ To Do:
 
 --------
 Penyebab berbeda wavelet coefficients antara pre-Inversed dan embedded adalah karena angkat berkoma yang di convert ke integer menjadi selalu floor
- Solusi -> Round all element in InverseDWT 
+ Solusi -> Round all element in InverseDWT
+
+--------
+Jika menggunakan nilai pixel sebagai nilai HVS, PSNR citra rendah dan gambar terdistorsi
+
+--------
+Hal yang mempengaruhi kualitas ekstraksi adalah nilai embed strength dan hvs(jika digunakan), untuk beberapa gambar kualitas ekstraksi bagus jika embed strength rendah, 
+dan beberapa gambar kualitas ekstraksi bagus jika embed strength tinggi
+
+--------
+Semakin tinggi intensitas green pixel pada gambar host, maka semakin tinggi nilai embed strength.
+Semakin rendah intensitas green pixel pada gambar host, maka semakin rendah nilai embed strength.
+
+Note: Lebih susah mengekstrak watermark pada busy region dibanding pada flat region.
+Textural: 
+	- Semakin flat texture pada gambar:
+		- Embed strength tinggi : psnr rendah , ekstraksi bagus.
+		- Embed strength rendah : psnr tinggi , ekstraksi bagus.
+	- Semakin tidak flat texture pada gambar:
+		- Embed strength tinggi : psnr rendah , ekstraksi bagus.
+		- Embed strength rendah : psnr tinggi , ekstraksi jelek.
+	
+	Example: gambar lena -> Embed strength tinggi agar ekstraksi bagus.
+			 gambar asssassin's creed -> Embed strength rendah agar psnr tinggi dan ekstraksi bagus.
+
+	3 Tipe image :
+		- High-Frequence(Busy) image   : Citra yang memiliki variansi nilai pixel yang tinggi. e.g Lena, Mandrill
+			-> High embed strength is not a problem because busy image won't cause visibility problem for watermark.
+			-> Low embed strength is good, but will result in bad extraction result.
+			-> Thus we take high embed strength to get better result in extraction.
+			-> Embed strength and hvs value tend to be high in order to get better extraction result.
+		- Low-Frequence(Flat) image   : Citra yang memiliki variansi nilai pixel rendah. e.g news
+			-> High embed strength is very bad for image visibility.
+			-> Low embed strength is good for image visibility and will result in good extraction result.
+			-> Embed strength and hvs value tend to be low in order to get high psnr and better extraction result.
+
+--------
+Next Goals: How to determine best HVS system to embed the watermark.
+
+
+--------
+Experimenting with different subband:
+	- LH -> extraction good, bad psnr
+	- HH -> extraction good, good psnr
+	- HL -> extraction bad, bad psnr
+-> Embedding and extraction process better in HH subband.
+

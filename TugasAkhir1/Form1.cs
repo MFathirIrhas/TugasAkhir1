@@ -376,7 +376,7 @@ namespace TugasAkhir1
                 Scrambled_Watermark = scrambled_Watermark;
                 //Scrambled_Watermark = oneminusone;
                 GUIEnd("Scramble Succeed!", 0, 0, 0);
-                MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count + "\n PN Sequence: " + PNSeq.Count, "Succeed", MessageBoxButtons.OK);
+                //MessageBox.Show("Watermark is Succeed. File Was Saved \n Original Watermark: " + BinaryVectorImage.Count + "\n Scrambled Watermark: " + scrambled_Watermark.Count + "\n PN Sequence: " + PNSeq.Count, "Succeed", MessageBoxButtons.OK);
 
                 //TextWriter tw1 = new StreamWriter("REAL_WATERMARK.txt");
                 //tw1.WriteLine("Total Real Watermark: " + BinaryVectorImage.Count);
@@ -458,50 +458,63 @@ namespace TugasAkhir1
 
         private void button9_Click(object sender, EventArgs e)
         {
-            int c = 0;
-            double[,] listOfCoeffs = DWT.ListOfCoeffs(Wavelet_Coefficients);
-            //double[] scale2 = DWT.Scale2To1DCoeff(Wavelet_Coefficients);
-            //double[,] scale1 = DWT.Scale1To1DCoeff(Wavelet_Coefficients);
-            TextWriter tw1 = new StreamWriter("List Of Wavelet trees.txt");
-            tw1.WriteLine("Total Real Watermark: " + listOfCoeffs.GetLength(0));
-            for (int i = 0; i < listOfCoeffs.GetLength(0); i++)
-            {
-                for (int j = 0; j < listOfCoeffs.GetLength(1); j++)
-                {
-                    tw1.Write("["+j+"]"+ listOfCoeffs[i, j]);
-                }
-                tw1.WriteLine();
-            }
-            //foreach (double i in scale2)
-            //    tw1.WriteLine(i);
-            tw1.Close();
+            //int c = 0;
+            //double[,] listOfCoeffs = DWT.ListOfCoeffs(Wavelet_Coefficients);
+            ////double[] scale2 = DWT.Scale2To1DCoeff(Wavelet_Coefficients);
+            ////double[,] scale1 = DWT.Scale1To1DCoeff(Wavelet_Coefficients);
+            //TextWriter tw1 = new StreamWriter("List Of Wavelet trees.txt");
+            //tw1.WriteLine("Total Real Watermark: " + listOfCoeffs.GetLength(0));
+            //for (int i = 0; i < listOfCoeffs.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < listOfCoeffs.GetLength(1); j++)
+            //    {
+            //        tw1.Write("["+j+"]"+ listOfCoeffs[i, j]);
+            //    }
+            //    tw1.WriteLine();
+            //}
+            ////foreach (double i in scale2)
+            ////    tw1.WriteLine(i);
+            //tw1.Close();
 
-            double[][] nestedArray = HMM.ConvertToNestedArray(Wavelet_Coefficients);
-            TextWriter tw2 = new StreamWriter("List Of Nested Wavelet trees.txt");
-            tw2.WriteLine("Total Real Watermark: " + listOfCoeffs.GetLength(0));
-            for (int i = 0; i < listOfCoeffs.GetLength(0); i++)
-            {
-                for (int j = 0; j < listOfCoeffs.GetLength(1); j++)
-                {
-                    tw2.Write("[" + j + "]" + nestedArray[i][j]);
-                }
-                tw2.WriteLine();
-            }
-            tw2.Close();
+            //double[][] nestedArray = HMM.ConvertToNestedArray(Wavelet_Coefficients);
+            //TextWriter tw2 = new StreamWriter("List Of Nested Wavelet trees.txt");
+            //tw2.WriteLine("Total Real Watermark: " + listOfCoeffs.GetLength(0));
+            //for (int i = 0; i < listOfCoeffs.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < listOfCoeffs.GetLength(1); j++)
+            //    {
+            //        tw2.Write("[" + j + "]" + nestedArray[i][j]);
+            //    }
+            //    tw2.WriteLine();
+            //}
+            //tw2.Close();
 
-            double[][] TreeOfWatermark = Extract.TreeOfWatermark2(nestedArray, 8100);
-            TextWriter tw3 = new StreamWriter("List Of Real Watermark Wavelet trees.txt");
-            tw3.WriteLine("Total Real Watermark: " + TreeOfWatermark.GetLength(0));
-            for (int i = 0; i < TreeOfWatermark.GetLength(0); i++)
+            //double[][] TreeOfWatermark = Extract.TreeOfWatermark2(nestedArray, 8100);
+            //TextWriter tw3 = new StreamWriter("List Of Real Watermark Wavelet trees.txt");
+            //tw3.WriteLine("Total Real Watermark: " + TreeOfWatermark.GetLength(0));
+            //for (int i = 0; i < TreeOfWatermark.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < TreeOfWatermark[i].Length; j++)
+            //    {
+            //        tw3.Write("[" + j + "]" + TreeOfWatermark[i][j]);
+            //    }
+            //    tw3.WriteLine();
+            //}
+            //tw3.Close();
+
+            Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+            double[,] hvs = ImageProcessing.HVS(EdgyImage);
+            TextWriter tw3 = new StreamWriter("HVS VALUES2.txt");
+            //tw3.WriteLine("Total Real Watermark: " + hvs.GetLength(0));
+            for (int i = 0; i < hvs.GetLength(0); i++)
             {
-                for (int j = 0; j < TreeOfWatermark[i].Length; j++)
+                for (int j = 0; j < hvs.GetLength(1); j++)
                 {
-                    tw3.Write("[" + j + "]" + TreeOfWatermark[i][j]);
+                    tw3.Write(hvs[i,j]+"#");
                 }
                 tw3.WriteLine();
             }
             tw3.Close();
-
 
         }
 
@@ -624,6 +637,8 @@ namespace TugasAkhir1
             medianFilterBtn.BackColor = Color.DeepSkyBlue;
             modusFilterBtn.Enabled = true;
             modusFilterBtn.BackColor = Color.DeepSkyBlue;
+            jpegencoderBtn.Enabled = true;
+            jpegencoderBtn.BackColor = Color.DeepSkyBlue;
 
             resultLbl.Text = "Watermarked Host Image";
             WatermarkedImage = new Bitmap(transformedImage.Image);
@@ -713,8 +728,8 @@ namespace TugasAkhir1
             {
                 GUIStart("Processing.....!");
                 List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
-                //double[,] MappedWatermark = Scramble.Mapping(Segmented);
-                double[,] MappedWatermark = Scramble.Mapping2(Segmented);
+                //double[,] MappedWatermark = Scramble.Mapping(Segmented); // Use mapping into 15 bit each 5 segment of scrambled watermark
+                double[,] MappedWatermark = Scramble.Mapping2(Segmented);  // Don't Use mapping 
                 Mapped_Watermark = MappedWatermark;
 
                 double[,] HVSValues = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
@@ -727,7 +742,11 @@ namespace TugasAkhir1
                     Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
                     HVSValues = ImageProcessing.HVS(EdgyImage);
                 }
-                double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark,HVSValues);
+
+                double[,] AdaptiveHVS = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients);
+
+                double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark, AdaptiveHVS);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
 
                 //EMBEDDED_WATERMARK_For_Extraction = Embedded_Wavelet_Coefficients;
@@ -751,7 +770,7 @@ namespace TugasAkhir1
                 //tw1.Close();
 
                 GUIEnd("Embedding Succeed!", 0, 0, 0);
-                MessageBox.Show("Embedding Succeed!", "Embedding Process : "+Segmented.Count, MessageBoxButtons.OK);
+                //MessageBox.Show("Embedding Succeed!", "Embedding Process : "+Segmented.Count, MessageBoxButtons.OK);
             }
         }
 
@@ -813,6 +832,8 @@ namespace TugasAkhir1
                 medianFilterBtn.BackColor = Color.DeepSkyBlue;
                 modusFilterBtn.Enabled = true;
                 modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                jpegencoderBtn.Enabled = true;
+                jpegencoderBtn.BackColor = Color.DeepSkyBlue;
 
                 resultLbl.Text = "Watermarked Host Image";
                 WatermarkedImage = new Bitmap(transformedImage.Image);
@@ -1024,7 +1045,7 @@ namespace TugasAkhir1
         {
             if(transformedImage.Image != null)
             {
-                transformedImage.Image = ImageAttack.JpegCompress(this.transformedImage.Image, 20, "CompressedImage20.jpg");
+                transformedImage.Image = ImageAttack.JpegCompress(WatermarkedImage, 20, "CompressedImage20.jpg");
                 MessageBox.Show("Image Successfully Compressed!", "Success", MessageBoxButtons.OK);
                 resultLbl.Text = "Compressed Image";
             }
@@ -1038,17 +1059,25 @@ namespace TugasAkhir1
 
         private void button14_Click_1(object sender, EventArgs e)
         {
-            double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
-            double threshold = HMM.Threshold2(Wavelet_Coefficients);
-            double probm1 = HMM.StateProbability2(hiddenstates, 1, 1);
-            double probm2 = HMM.StateProbability2(hiddenstates, 1, 2);
-            double prob = probm1 + probm2; //Summation of the probability should be 1
-            //MessageBox.Show("Prob m = 1(High): " + probm1 + "\n Prob m = 2(Low): " + probm2 + "\n Sum: " + prob + "\n Threshold: " + threshold, "Succeed", MessageBoxButtons.OK);
-            HMM.TransitionProbability(Wavelet_Coefficients, 1, 1);
+            //double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
+            //double threshold = HMM.Threshold2(Wavelet_Coefficients);
+            //double probm1 = HMM.StateProbability2(hiddenstates, 1, 1);
+            //double probm2 = HMM.StateProbability2(hiddenstates, 1, 2);
+            //double prob = probm1 + probm2; //Summation of the probability should be 1
+            ////MessageBox.Show("Prob m = 1(High): " + probm1 + "\n Prob m = 2(Low): " + probm2 + "\n Sum: " + prob + "\n Threshold: " + threshold, "Succeed", MessageBoxButtons.OK);
+            //HMM.TransitionProbability(Wavelet_Coefficients, 1, 1);
 
-            //MessageBox.Show("256: " + Wavelet_Coefficients[0, 256] + "\n 257: " + Wavelet_Coefficients[0, 257] + "\n 768:" + Wavelet_Coefficients[1, 256] + "\n 769:" + Wavelet_Coefficients[1, 257]);
-            //double mean = HMM.Threshold2(Wavelet_Coefficients);
-            //MessageBox.Show("Mean: " + mean, "Succeed!", MessageBoxButtons.OK);
+            ////MessageBox.Show("256: " + Wavelet_Coefficients[0, 256] + "\n 257: " + Wavelet_Coefficients[0, 257] + "\n 768:" + Wavelet_Coefficients[1, 256] + "\n 769:" + Wavelet_Coefficients[1, 257]);
+            ////double mean = HMM.Threshold2(Wavelet_Coefficients);
+            ////MessageBox.Show("Mean: " + mean, "Succeed!", MessageBoxButtons.OK);
+
+            //double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(hostImage.Image)).Item2;
+            //double[,] coeffs = DWT.WaveletCoeff(pixels,true,2);
+
+            Bitmap laplaceEdge = ImageProcessing.LaplaceEdge(new Bitmap(hostImage.Image));
+            transformedImage.Image = laplaceEdge;
+
+
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -1108,11 +1137,10 @@ namespace TugasAkhir1
                 Watermarked_Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);                
                 int NumOfScale2 = ((hostheight*hostwidth)/16)*3;
 
-                
+
 
                 ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
-                //ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Embedded_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
-                //detectedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
+                //detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
 
                 /// Test
                 //int f = 1;
@@ -1133,7 +1161,7 @@ namespace TugasAkhir1
                 //tw1.Close();
 
                 GUIEnd("HMM Model Trained and detected!", 0, 0, 0);
-                MessageBox.Show("Training and Detecting HMM Model Succeed!", "Succeed", MessageBoxButtons.OK);
+                //MessageBox.Show("Training and Detecting HMM Model Succeed!", "Succeed", MessageBoxButtons.OK);
 
             }
             else
@@ -1173,7 +1201,17 @@ namespace TugasAkhir1
                 {
                     PNSeq.Add(Convert.ToInt32(lines[i]));
                 }
-                
+
+                /// Using 15 bit mapping
+                //CombinedTree = Extract.CombineTrees(detectedWatermark);
+                //InversedMappingTriangle = Extract.InverseMapping(CombinedTree).Item1;
+                //InversedMappingCircle = Extract.InverseMapping(CombinedTree).Item2;
+                //InversedMappingSquare = Extract.InverseMapping(CombinedTree).Item3;
+                //List<double> Merged = Scramble.MergeSegmentedWatermark(InversedMappingTriangle);
+                //List<int> InversedDSSS = Scramble.InverseDSSS(Merged, PNSeq);
+                //Bitmap bmp = ImageProcessing.ConvertListToWatermark(InversedDSSS, height, width);
+
+                ///Not using 15 bit mapping
                 Bitmap bmp = ImageProcessing.ConvertListToWatermark2(ExtractedWatermark, height, width);
                 watermarkImage.Image = bmp;
 
@@ -1197,7 +1235,27 @@ namespace TugasAkhir1
             }                
         }
 
-        
+        private void button19_Click(object sender, EventArgs e)
+        {
+            double variance = Statistic.VarianceOfImage(new Bitmap(hostImage.Image));
+            //double variance = Statistic.MaxPixel(new Bitmap(hostImage.Image));
+            MessageBox.Show("Variance: " + variance, "Variance Valculation", MessageBoxButtons.OK);
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            int[,] green = Statistic.ExtractGreen(new Bitmap(hostImage.Image));
+            TextWriter tw1 = new StreamWriter("DecomposedNewsGreenPixel.txt");
+            //tw1.WriteLine("Total Watermark: " + green.GetLength(0));
+            for (int i = 0; i < green.GetLength(0); i++)
+            {
+                for (int j = 0; j < green.GetLength(1); j++)
+                {
+                    tw1.WriteLine(green[i, j]+"#");
+                }
+            }
+            tw1.Close();
+        }
 
         ///END
     }
