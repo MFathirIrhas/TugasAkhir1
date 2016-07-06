@@ -302,7 +302,7 @@ namespace TugasAkhir1
         }
 
 
-        #region FOR GRAYSCALE HOST IMAGE
+        #region FOR GRAYSCALE and COLOR HOST IMAGE
         public static double[,] WaveletCoeff(double[,] pixels, bool forward, int level)
         {
             double[,] p = pixels;
