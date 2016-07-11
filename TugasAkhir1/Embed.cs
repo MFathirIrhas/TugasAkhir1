@@ -5,6 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Accord.Statistics;
+using Accord.Statistics.Distributions.Univariate;
+using Accord.Statistics.Distributions.Multivariate;
+using Accord.Statistics.Models.Markov;
+using Accord.Statistics.Models.Markov.Learning;
+using Accord.Statistics.Models.Markov.Topology;
+using Accord.Statistics.Distributions.Fitting;
 
 namespace TugasAkhir1
 {
@@ -14,8 +21,8 @@ namespace TugasAkhir1
         {
             double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
             //double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
-            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark,"lh");
-            double embedding_Strength = 0.002;//0.001;
+            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark,"hh");
+            double embedding_Strength =0.2;//0.0001;//0.01;//0.16111;
 
             for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
             {
@@ -523,13 +530,13 @@ namespace TugasAkhir1
         /// </summary>
         /// <param name="coeffs"></param>
         /// <returns></returns>
-        public static double[,] AdaptiveHVS(double[,] coeffs)
+        public static double[,] AdaptiveHVS(double[,] coeffs, double[,] pixels)
         {
-            double[,] hvs = new double[coeffs.GetLength(0),coeffs.GetLength(1)];
+            double[,] hvs = new double[pixels.GetLength(0), pixels.GetLength(1)];
 
-            double[,] frequency = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
-            double[,] luminance = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
-            double[,] texture   = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
+            double[,] frequency = new double[pixels.GetLength(0), pixels.GetLength(1)];
+            double[,] luminance = new double[pixels.GetLength(0), pixels.GetLength(1)];
+            double[,] texture   = new double[pixels.GetLength(0), pixels.GetLength(1)];
 
             #region Frequency
             /// LL 2
@@ -604,10 +611,10 @@ namespace TugasAkhir1
                 {
                     if(coeffs[i,j] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i, j];
+                        luminance[i, j] = 1 - pixels[i, j];
                     }else
                     {
-                        luminance[i, j] = coeffs[i, j];
+                        luminance[i, j] = pixels[i, j];
                     }
                 }
             }
@@ -617,12 +624,12 @@ namespace TugasAkhir1
             {
                 for (int j = luminance.GetLength(1) / 4; j < luminance.GetLength(1) / 2; j++)
                 {
-                    if(coeffs[i,j-(luminance.GetLength(1) / 4)] < 0.5)
+                    if(pixels[i,j-(luminance.GetLength(1) / 4)] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i, j - (luminance.GetLength(1) / 4)];
+                        luminance[i, j] = 1 - pixels[i, j - (luminance.GetLength(1) / 4)];
                     }else
                     {
-                        luminance[i, j] = coeffs[i, j - (luminance.GetLength(1) / 4)];
+                        luminance[i, j] = pixels[i, j - (luminance.GetLength(1) / 4)];
                     }
                 }
             }
@@ -632,13 +639,13 @@ namespace TugasAkhir1
             {
                 for (int j = luminance.GetLength(1) / 4; j < luminance.GetLength(1) / 2; j++)
                 {
-                    if (coeffs[i - (luminance.GetLength(0) / 4), j - (luminance.GetLength(1) / 4)] < 0.5)
+                    if (pixels[i - (luminance.GetLength(0) / 4), j - (luminance.GetLength(1) / 4)] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i - (luminance.GetLength(0) / 4), j - (luminance.GetLength(1) / 4)];
+                        luminance[i, j] = 1 - pixels[i - (luminance.GetLength(0) / 4), j - (luminance.GetLength(1) / 4)];
                     }
                     else
                     {
-                        luminance[i, j] = coeffs[i - (luminance.GetLength(0) / 4), j - (luminance.GetLength(1) / 4)];
+                        luminance[i, j] = pixels[i - (luminance.GetLength(0) / 4), j - (luminance.GetLength(1) / 4)];
                     }
                 }
             }
@@ -648,13 +655,13 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < luminance.GetLength(1) / 4; j++)
                 {
-                    if (coeffs[i - (luminance.GetLength(0) / 4), j] < 0.5)
+                    if (pixels[i - (luminance.GetLength(0) / 4), j] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i - (luminance.GetLength(0) / 4), j];
+                        luminance[i, j] = 1 - pixels[i - (luminance.GetLength(0) / 4), j];
                     }
                     else
                     {
-                        luminance[i, j] = coeffs[i - (luminance.GetLength(0) / 4), j];
+                        luminance[i, j] = pixels[i - (luminance.GetLength(0) / 4), j];
                     }
                 }
             }
@@ -664,12 +671,12 @@ namespace TugasAkhir1
             {
                 for (int j = luminance.GetLength(1) / 2; j < luminance.GetLength(1); j++)
                 {
-                    if(coeffs[i,j-(luminance.GetLength(1) / 2)] < 0.5)
+                    if(pixels[i,j-(luminance.GetLength(1) / 2)] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i, j - (luminance.GetLength(1) / 2)];
+                        luminance[i, j] = 1 - pixels[i, j - (luminance.GetLength(1) / 2)];
                     }else
                     {
-                        luminance[i, j] = coeffs[i, j - (luminance.GetLength(1) / 2)];
+                        luminance[i, j] = pixels[i, j - (luminance.GetLength(1) / 2)];
                     }
                 }
             }
@@ -679,13 +686,13 @@ namespace TugasAkhir1
             {
                 for (int j = luminance.GetLength(1) / 2; j < luminance.GetLength(1); j++)
                 {
-                    if (coeffs[i-(luminance.GetLength(0) / 2), j - (luminance.GetLength(1) / 2)] < 0.5)
+                    if (pixels[i-(luminance.GetLength(0) / 2), j - (luminance.GetLength(1) / 2)] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i - (luminance.GetLength(0) / 2), j - (luminance.GetLength(1) / 2)];
+                        luminance[i, j] = 1 - pixels[i - (luminance.GetLength(0) / 2), j - (luminance.GetLength(1) / 2)];
                     }
                     else
                     {
-                        luminance[i, j] = coeffs[i - (luminance.GetLength(0) / 2), j - (luminance.GetLength(1) / 2)];
+                        luminance[i, j] = pixels[i - (luminance.GetLength(0) / 2), j - (luminance.GetLength(1) / 2)];
                     }
                 }
             }
@@ -695,13 +702,13 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < luminance.GetLength(1) / 2; j++)
                 {
-                    if (coeffs[i - (luminance.GetLength(0) / 2), j] < 0.5)
+                    if (pixels[i - (luminance.GetLength(0) / 2), j] < 0.5)
                     {
-                        luminance[i, j] = 1 - coeffs[i - (luminance.GetLength(0) / 2), j];
+                        luminance[i, j] = 1 - pixels[i - (luminance.GetLength(0) / 2), j];
                     }
                     else
                     {
-                        luminance[i, j] = coeffs[i - (luminance.GetLength(0) / 2), j];
+                        luminance[i, j] = pixels[i - (luminance.GetLength(0) / 2), j];
                     }
                 }
             }
@@ -746,7 +753,7 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < texture.GetLength(1) / 4; j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i, j + (texture.GetLength(1) / 4)], 2) + Math.Pow(coeffs[i + (texture.GetLength(0) / 4), j + (texture.GetLength(1) / 4)], 2) + Math.Pow(coeffs[i + (texture.GetLength(0) / 4), j], 2))) / 3) * varApprox2;
+                    texture[i, j] = (((Math.Pow(pixels[i, j + (texture.GetLength(1) / 4)], 2) + Math.Pow(pixels[i + (texture.GetLength(0) / 4), j + (texture.GetLength(1) / 4)], 2) + Math.Pow(pixels[i + (texture.GetLength(0) / 4), j], 2))) / 3) * varApprox2;
                 }
             }
 
@@ -755,7 +762,8 @@ namespace TugasAkhir1
             {
                 for (int j = texture.GetLength(1) / 4; j < texture.GetLength(1) / 2; j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i, j], 2) + Math.Pow(coeffs[i + (texture.GetLength(0) / 4), j], 2) + Math.Pow(coeffs[i + (texture.GetLength(0) / 4), j - (texture.GetLength(1) / 4)], 2))) / 3) * varApprox2;
+                    texture[i, j] = (((Math.Pow(pixels[i, j], 2) + Math.Pow(pixels[i + (texture.GetLength(0) / 4), j], 2) + Math.Pow(pixels[i + (texture.GetLength(0) / 4), j - (texture.GetLength(1) / 4)], 2))) / 3) * varApprox2;
+                    //texture[i, j] = ((Math.Pow(pixels[i, j], 2)) / 3) * varApprox2;
                 }
             }
 
@@ -764,7 +772,8 @@ namespace TugasAkhir1
             {
                 for (int j = texture.GetLength(1) / 4; j < texture.GetLength(1) / 2; j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i-(texture.GetLength(0) / 4), j], 2) + Math.Pow(coeffs[i, j], 2) + Math.Pow(coeffs[i, j-(texture.GetLength(1) / 4)], 2))) / 3) * varApprox2;
+                    texture[i, j] = (((Math.Pow(pixels[i - (texture.GetLength(0) / 4), j], 2) + Math.Pow(pixels[i, j], 2) + Math.Pow(pixels[i, j - (texture.GetLength(1) / 4)], 2))) / 3) * varApprox2;
+                    //texture[i, j] = (Math.Pow(coeffs[i, j], 2) / 3) * varApprox2;
                 }
             }
 
@@ -773,7 +782,7 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < texture.GetLength(1) / 4; j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i - (texture.GetLength(0) / 4), j + (texture.GetLength(1) / 4)], 2) + Math.Pow(coeffs[i, j + (texture.GetLength(1) / 4)], 2) + Math.Pow(coeffs[i, j], 2))) / 3) * varApprox2;
+                    texture[i, j] = (((Math.Pow(pixels[i - (texture.GetLength(0) / 4), j + (texture.GetLength(1) / 4)], 2) + Math.Pow(pixels[i, j + (texture.GetLength(1) / 4)], 2) + Math.Pow(pixels[i, j], 2))) / 3) * varApprox2;
                 }
             }
 
@@ -782,7 +791,7 @@ namespace TugasAkhir1
             {
                 for (int j = texture.GetLength(1) / 2; j < texture.GetLength(1); j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i, j], 2) + Math.Pow(coeffs[i + (texture.GetLength(0) / 2), j], 2) + Math.Pow(coeffs[i + (texture.GetLength(0) / 2), j-(texture.GetLength(1) / 2)], 2))) / 3) * varApprox1;
+                    texture[i, j] = (((Math.Pow(pixels[i, j], 2) + Math.Pow(pixels[i + (texture.GetLength(0) / 2), j], 2) + Math.Pow(pixels[i + (texture.GetLength(0) / 2), j-(texture.GetLength(1) / 2)], 2))) / 3) * varApprox1;
                 }
             }
 
@@ -791,7 +800,7 @@ namespace TugasAkhir1
             {
                 for (int j = texture.GetLength(1) / 2; j < texture.GetLength(1); j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i-(texture.GetLength(0) / 2), j], 2) + Math.Pow(coeffs[i, j], 2) + Math.Pow(coeffs[i, j - (texture.GetLength(1) / 2)], 2))) / 3) * varApprox1;
+                    texture[i, j] = (((Math.Pow(pixels[i-(texture.GetLength(0) / 2), j], 2) + Math.Pow(pixels[i, j], 2) + Math.Pow(pixels[i, j - (texture.GetLength(1) / 2)], 2))) / 3) * varApprox1;
                 }
             }
 
@@ -800,7 +809,7 @@ namespace TugasAkhir1
             {
                 for (int j = 0; j < texture.GetLength(1) / 2; j++)
                 {
-                    texture[i, j] = (((Math.Pow(coeffs[i - (texture.GetLength(0) / 2), j + (texture.GetLength(1) / 2)], 2) + Math.Pow(coeffs[i, j + (texture.GetLength(1) / 2)], 2) + Math.Pow(coeffs[i, j], 2))) / 3) * varApprox1;
+                    texture[i, j] = (((Math.Pow(pixels[i - (texture.GetLength(0) / 2), j + (texture.GetLength(1) / 2)], 2) + Math.Pow(pixels[i, j + (texture.GetLength(1) / 2)], 2) + Math.Pow(pixels[i, j], 2))) / 3) * varApprox1;
                 }
             }
             #endregion
@@ -810,15 +819,154 @@ namespace TugasAkhir1
             {
                 for(int n = 0;n < hvs.GetLength(1); n++)
                 {
-                    hvs[m, n] = frequency[m, n] * luminance[m, n] * texture[m, n];
+                    hvs[m, n] = frequency[m, n] * Math.Pow(luminance[m, n],0.2) * Math.Pow(texture[m, n],0.2);  
                 }
             }
             #endregion
 
+            //List<double> list = new List<double>();
+            //for (int o = 0; o < hvs.GetLength(0); o++)
+            //{
+            //    for (int p = 0; p < hvs.GetLength(1); p++)
+            //    {
+            //        list.Add(hvs[o, p]);
+            //    }
+            //}
+
+            //for (int q = 0; q < hvs.GetLength(0); q++)
+            //{
+            //    for (int r = 0; r < hvs.GetLength(1); r++)
+            //    {
+            //        hvs[q, r] = hvs[q, r] + list.Min();
+            //    }
+            //}
+
             return hvs;
+        }
+
+
+        #endregion
+
+        #region Proposed HVS Calculation
+        public static double[,] AdaptiveHVS2(double[,] coeffs, int NumOfTree)
+        {
+            double[,] HH2 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
+            double[,] HH1 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
+            double[,] hvs = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
+            for(int i = 0; i < HH2.GetLength(0); i++)
+            {
+                for(int j = 0; j < HH2.GetLength(1); j++)
+                {
+                    HH2[i, j] = ((coeffs[i, j] * VarianceOfHH2(coeffs,NumOfTree))/4) + 0.01;
+                }
+            }
+
+            
+            for(int k = hvs.GetLength(0)/4; k < hvs.GetLength(0)/2; k++)
+            {
+                for(int l = hvs.GetLength(1)/4; l < hvs.GetLength(1)/2; l++)
+                {
+                    hvs[k, l] = HH2[k - (hvs.GetLength(0) / 4), l - (hvs.GetLength(1) / 4)];
+                }
+            }
+
+            for(int m = hvs.GetLength(0) / 2; m < hvs.GetLength(0); m++)
+            {
+                for(int n = hvs.GetLength(1) / 2; n < hvs.GetLength(1); n++)
+                {
+                    hvs[m, n] = 0.01;//HH2[m - (hvs.GetLength(0) / 2), n - (hvs.GetLength(1) / 2)];
+                }
+            }
+
+            return hvs;
+        }
+
+        public static double VarianceOfHH2(double[,] coeffs,int NumOfTree)
+        {
+            List<double> list = new List<double>();
+            List<double> returnList = new List<double>();
+            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            {
+                for(int j=coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    list.Add(coeffs[i, j]);
+                }
+            }
+
+            for(int k = 0; k < NumOfTree; k++)
+            {
+                returnList.Add(list[k]);
+            }
+
+            double[] listHH2 = returnList.ToArray();
+            double varianceHH2 = Tools.Variance(listHH2);
+            return varianceHH2;
+        }
+
+        public static double VarianceOfLH2(double[,] coeffs, int NumOfTree)
+        {
+            List<double> list = new List<double>();
+            List<double> returnList = new List<double>();
+            for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            {
+                for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                {
+                    list.Add(coeffs[i, j]);
+                }
+            }
+
+            for (int k = 0; k < NumOfTree; k++)
+            {
+                returnList.Add(list[k]);
+            }
+
+            double[] listLH2 = returnList.ToArray();
+            double varianceLH2 = Tools.Variance(listLH2);
+            return varianceLH2;
+        }
+
+        double VarianceOfHH1(double[,] coeffs, int NumOfTree)
+        {
+            List<double> list = new List<double>();
+            List<double> returnList = new List<double>();
+            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
+            {
+                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j++)
+                {
+                    list.Add(coeffs[i, j]);
+                }
+            }
+
+            for (int k = 0; k < NumOfTree*2; k++)
+            {
+                returnList.Add(list[k]);
+            }
+
+            double[] listHH1 = returnList.ToArray();
+            double varianceHH1 = Tools.Variance(listHH1);
+            return varianceHH1;
         }
         #endregion
 
+        //public static double[,] HVS2(double[,] coeffs, int NumOfTree)
+        //{
+        //    double[,] HVSValues = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
+        //    for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
+        //    {
+        //        for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+        //        {
+        //            HVSValues[i, j] = (coeffs[i, j - (coeffs.GetLength(1) / 4)] / 255) * (coeffs[i, j] / 255) * VarianceOfHH2(coeffs, NumOfTree);
+        //        }
+        //    }
+
+        //    for(int l = 0; l < coeffs.GetLength(0) / 2; l+=2)
+        //    {
+        //        for(int m= coeffs.GetLength(1)/2; m< coeffs.GetLength(1); m += 2)
+        //        {
+        //            HVSValues[l,m] = (coeffs[l,m-()])
+        //        }
+        //    }
+        //}
         //End
     }
 }

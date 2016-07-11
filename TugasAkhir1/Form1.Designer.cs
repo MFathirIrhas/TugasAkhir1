@@ -54,6 +54,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StatusPanel = new System.Windows.Forms.Panel();
+            this.button20 = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
@@ -81,7 +82,6 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
-            this.button20 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -315,7 +315,7 @@
             this.watermarkImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("watermarkImage.InitialImage")));
             this.watermarkImage.Location = new System.Drawing.Point(3, 3);
             this.watermarkImage.Name = "watermarkImage";
-            this.watermarkImage.Size = new System.Drawing.Size(276, 236);
+            this.watermarkImage.Size = new System.Drawing.Size(125, 120);
             this.watermarkImage.TabIndex = 0;
             this.watermarkImage.TabStop = false;
             // 
@@ -408,6 +408,16 @@
             this.StatusPanel.Name = "StatusPanel";
             this.StatusPanel.Size = new System.Drawing.Size(1132, 31);
             this.StatusPanel.TabIndex = 9;
+            // 
+            // button20
+            // 
+            this.button20.Location = new System.Drawing.Point(295, 3);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(75, 23);
+            this.button20.TabIndex = 18;
+            this.button20.Text = "Green";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
             // 
             // button19
             // 
@@ -715,16 +725,6 @@
             this.histeqBtn.Text = "HistEq";
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
-            // 
-            // button20
-            // 
-            this.button20.Location = new System.Drawing.Point(295, 3);
-            this.button20.Name = "button20";
-            this.button20.Size = new System.Drawing.Size(75, 23);
-            this.button20.TabIndex = 18;
-            this.button20.Text = "Green";
-            this.button20.UseVisualStyleBackColor = true;
-            this.button20.Click += new System.EventHandler(this.button20_Click);
             // 
             // Form1
             // 

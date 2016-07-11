@@ -744,7 +744,12 @@ namespace TugasAkhir1
                 }
 
                 double[,] AdaptiveHVS = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
-                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients);
+                double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(transformedImage.Image)).Item2;
+                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients,pixels);
+
+                //double[,] AdaptiveHVS2 = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                //int NumOfTree = (Scrambled_Watermark.Count / 5);
+                //AdaptiveHVS2 = Embed.AdaptiveHVS2(Wavelet_Coefficients,NumOfTree);
 
                 double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients,MappedWatermark, AdaptiveHVS);
                 Embedded_Wavelet_Coefficients = EmbeddedWatermark;
@@ -1074,9 +1079,12 @@ namespace TugasAkhir1
             //double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(hostImage.Image)).Item2;
             //double[,] coeffs = DWT.WaveletCoeff(pixels,true,2);
 
-            Bitmap laplaceEdge = ImageProcessing.LaplaceEdge(new Bitmap(hostImage.Image));
-            transformedImage.Image = laplaceEdge;
+            //Bitmap laplaceEdge = ImageProcessing.LaplaceEdge(new Bitmap(hostImage.Image));
+            //transformedImage.Image = laplaceEdge;
 
+            double varianceLH = Embed.VarianceOfLH2(Wavelet_Coefficients, Scrambled_Watermark.Count / 5);
+            double varianceHH = Embed.VarianceOfHH2(Wavelet_Coefficients, Scrambled_Watermark.Count / 5);
+            MessageBox.Show("LH: " + varianceLH + "\n" + "HH: " + varianceHH, "Variances", MessageBoxButtons.OK);
 
         }
 
@@ -1237,9 +1245,11 @@ namespace TugasAkhir1
 
         private void button19_Click(object sender, EventArgs e)
         {
-            double variance = Statistic.VarianceOfImage(new Bitmap(hostImage.Image));
+            double variance1 = Statistic.VarianceOfImage(new Bitmap(hostImage.Image));
+            double variance2 = Statistic.VarianceOfImage(new Bitmap(transformedImage.Image));
             //double variance = Statistic.MaxPixel(new Bitmap(hostImage.Image));
-            MessageBox.Show("Variance: " + variance, "Variance Valculation", MessageBoxButtons.OK);
+            if(variance1>variance2)
+                MessageBox.Show("Result: Variance 1 is bigger than variance 2", "Variance Valculation", MessageBoxButtons.OK);
         }
 
         private void button20_Click(object sender, EventArgs e)

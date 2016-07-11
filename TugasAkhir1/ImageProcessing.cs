@@ -286,6 +286,8 @@ namespace TugasAkhir1
 
             return HVSValues;
         }
+
+        
         public static Bitmap LaplaceEdge(Bitmap DecomposedImage)
         {
             Bitmap GrayDecomposedImage = ConvertToGray(DecomposedImage);

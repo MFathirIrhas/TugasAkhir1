@@ -248,3 +248,10 @@ Experimenting with different subband:
 	- HL -> extraction bad, bad psnr
 -> Embedding and extraction process better in HH subband.
 
+According to pixel green value analysis:
+	- If texture is flat(low variance):
+		- Green Pixel value is low  -> low embed strength and extraction good.
+		- Green Pixel value is high -> a little high embed strength and extraction good.
+	- If texture is busy(high variance):
+		-> embed strength must be high to get good extraction result.
+
