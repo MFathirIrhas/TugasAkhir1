@@ -407,7 +407,7 @@ namespace TugasAkhir1
             var teacher = new BaumWelchLearning<NormalDistribution>(model)
             {
                 Tolerance = 0.001,
-                Iterations = 0,
+                Iterations = 10,
 
                 //FittingOptions = new NormalOptions()
                 //{
@@ -703,7 +703,9 @@ namespace TugasAkhir1
             //double[,] listOfHvs = DWT.ListOfCoeffs(hvs); // item3
 
             double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(watermarkedImage)).Item2;
-            double[,] Hvs = Embed.AdaptiveHVS(coeffs,pixels);
+            Bitmap EdgeImage = ImageProcessing.LaplaceEdge(new Bitmap(watermarkedImage));
+            double[,] pixels2 = ImageProcessing.ConvertToMatrix2(EdgeImage).Item2;
+            double[,] Hvs = Embed.AdaptiveHVS(coeffs, pixels, pixels2, NumOfTree);
             double[,] listOfHvs = DWT.ListOfCoeffs(Hvs);
 
             //double[,] Hvs = Embed.AdaptiveHVS2(coeffs, NumOfTree);
@@ -757,9 +759,9 @@ namespace TugasAkhir1
                 {
                     //Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.3;
                     //Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 1;
-                    Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.2;//0.0001;//0.01;//0.16111;
+                    Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.6;//0.6;
 
-                    //Vi[i, j] = pattern[i][j] * 10;
+                    //Vi[i, j] = pattern[i][j] * 0.3;
                     //Vi[i, j] = pattern[i][j] * 1;
                     //Vi[i, j] = pattern[i][j] * 4;
                 }

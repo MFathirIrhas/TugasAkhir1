@@ -22,7 +22,7 @@ namespace TugasAkhir1
             double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
             //double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
             double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark,"hh");
-            double embedding_Strength =0.2;//0.0001;//0.01;//0.16111;
+            double embedding_Strength = 0.6;//0.6;
 
             for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
             {
@@ -529,8 +529,10 @@ namespace TugasAkhir1
         /// - Texture
         /// </summary>
         /// <param name="coeffs"></param>
+        /// <param name="pixels"></param>
+        /// <param name="pixels2"></param>
         /// <returns></returns>
-        public static double[,] AdaptiveHVS(double[,] coeffs, double[,] pixels)
+        public static double[,] AdaptiveHVS(double[,] coeffs, double[,] pixels, double[,] pixels2, int NumOfTree)
         {
             double[,] hvs = new double[pixels.GetLength(0), pixels.GetLength(1)];
 
@@ -723,7 +725,7 @@ namespace TugasAkhir1
             }
             #endregion
 
-            #region texture
+            #region Texture
             ///Extract low-low subband
             ///level 2
             List<double> approx2 = new List<double>();
@@ -814,12 +816,50 @@ namespace TugasAkhir1
             }
             #endregion
 
+            #region Calculate EmbedStrength
+            double thresholdMean;
+            List<double> spixels = new List<double>();
+            for (int i = 0; i < pixels2.GetLength(0)/4; i++)
+            {
+                for (int j = 0; j < pixels2.GetLength(1)/4; j++)
+                {
+                    spixels.Add(pixels2[i, j]);
+                }
+            }
+
+            double[] pixels1d = new double[NumOfTree];
+            for (int k = 0; k < NumOfTree; k++)
+            {
+                pixels1d[k] = spixels[k];
+            }
+
+            double edgemean = Tools.Mean(pixels1d);
+            if (edgemean < 1)
+            {
+                thresholdMean = 0.001;
+            }else if(edgemean >= 1 && edgemean < 5)
+            {
+                thresholdMean = 0.01;
+            }
+            else if(edgemean >= 1 && edgemean <10)
+            {
+                thresholdMean = 0.1;
+            }else if(edgemean >=10 && edgemean < 20)
+            {
+                thresholdMean = 0.2;
+            }else
+            {
+                thresholdMean = 0.3;
+            }
+            #endregion
+
+
             #region Final Calculation of HVS
-            for(int m = 0; m < hvs.GetLength(0); m++)
+            for (int m = 0; m < hvs.GetLength(0); m++)
             {
                 for(int n = 0;n < hvs.GetLength(1); n++)
                 {
-                    hvs[m, n] = frequency[m, n] * Math.Pow(luminance[m, n],0.2) * Math.Pow(texture[m, n],0.2);  
+                    hvs[m, n] = frequency[m, n] * Math.Pow(luminance[m, n],0.2) * Math.Pow(texture[m, n],0.2) * thresholdMean;  
                 }
             }
             #endregion
@@ -946,27 +986,46 @@ namespace TugasAkhir1
             double varianceHH1 = Tools.Variance(listHH1);
             return varianceHH1;
         }
+        #endregion        
+
+        #region Calculate Embedded strength according to Contrast Value in LL
+        public static double EmbedStrength(double[,] coeffs, double[,] pixels, int NumOfTree)
+        {
+            double[,] embedstrength = new double[pixels.GetLength(0), pixels.GetLength(1)];
+
+            List<double> list = new List<double>();
+            List<double> returnList = new List<double>();
+            for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            {
+                for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
+                {
+                    list.Add(pixels[i, j]);
+                }
+            }
+
+            for (int k = 0; k < NumOfTree; k++)
+            {
+                returnList.Add(list[k]);
+            }
+
+            double[] SelectedPixelValues = returnList.ToArray();
+            double Mean = Tools.Mean(SelectedPixelValues);
+            double Mode = Tools.Mode(SelectedPixelValues);
+            double diff = Math.Abs(Mean - Mode);
+            //if (diff <= 30)
+            //{
+            //    return 0.001;
+            //}
+            //else if (diff > 30 && diff <= 60)
+            //{
+            //    return 0.01;
+            //}else if(diff > 60 && diff < 90)
+            //{
+            //    return 0.1;
+            //}
+
+            return Mean;
+        }
         #endregion
-
-        //public static double[,] HVS2(double[,] coeffs, int NumOfTree)
-        //{
-        //    double[,] HVSValues = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
-        //    for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
-        //    {
-        //        for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
-        //        {
-        //            HVSValues[i, j] = (coeffs[i, j - (coeffs.GetLength(1) / 4)] / 255) * (coeffs[i, j] / 255) * VarianceOfHH2(coeffs, NumOfTree);
-        //        }
-        //    }
-
-        //    for(int l = 0; l < coeffs.GetLength(0) / 2; l+=2)
-        //    {
-        //        for(int m= coeffs.GetLength(1)/2; m< coeffs.GetLength(1); m += 2)
-        //        {
-        //            HVSValues[l,m] = (coeffs[l,m-()])
-        //        }
-        //    }
-        //}
-        //End
     }
 }

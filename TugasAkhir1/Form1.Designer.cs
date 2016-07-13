@@ -82,6 +82,9 @@
             this.medianFilterBtn = new System.Windows.Forms.Button();
             this.meanFilterBtn = new System.Windows.Forms.Button();
             this.histeqBtn = new System.Windows.Forms.Button();
+            this.noiseBtn = new System.Windows.Forms.Button();
+            this.button21 = new System.Windows.Forms.Button();
+            this.button22 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -589,6 +592,9 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.button22);
+            this.panel4.Controls.Add(this.button21);
+            this.panel4.Controls.Add(this.noiseBtn);
             this.panel4.Controls.Add(this.button18);
             this.panel4.Controls.Add(this.button17);
             this.panel4.Controls.Add(this.jpegencoderBtn);
@@ -726,6 +732,48 @@
             this.histeqBtn.UseVisualStyleBackColor = false;
             this.histeqBtn.Click += new System.EventHandler(this.button12_Click);
             // 
+            // noiseBtn
+            // 
+            this.noiseBtn.BackColor = System.Drawing.Color.SlateGray;
+            this.noiseBtn.Enabled = false;
+            this.noiseBtn.FlatAppearance.BorderSize = 0;
+            this.noiseBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.noiseBtn.Location = new System.Drawing.Point(4, 171);
+            this.noiseBtn.Name = "noiseBtn";
+            this.noiseBtn.Size = new System.Drawing.Size(91, 23);
+            this.noiseBtn.TabIndex = 20;
+            this.noiseBtn.Text = "Gaussian Noise";
+            this.noiseBtn.UseVisualStyleBackColor = false;
+            this.noiseBtn.Click += new System.EventHandler(this.noiseBtn_Click);
+            // 
+            // button21
+            // 
+            this.button21.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button21.FlatAppearance.BorderSize = 0;
+            this.button21.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button21.Location = new System.Drawing.Point(4, 200);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(90, 35);
+            this.button21.TabIndex = 21;
+            this.button21.TabStop = false;
+            this.button21.Text = "Salt and Pepper Noise";
+            this.button21.UseVisualStyleBackColor = false;
+            this.button21.Click += new System.EventHandler(this.button21_Click);
+            // 
+            // button22
+            // 
+            this.button22.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button22.FlatAppearance.BorderSize = 0;
+            this.button22.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button22.Location = new System.Drawing.Point(3, 241);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(90, 26);
+            this.button22.TabIndex = 22;
+            this.button22.TabStop = false;
+            this.button22.Text = "Median Cut";
+            this.button22.UseVisualStyleBackColor = false;
+            this.button22.Click += new System.EventHandler(this.button22_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -822,6 +870,9 @@
         private System.Windows.Forms.Button button18;
         private System.Windows.Forms.Button button19;
         private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.Button noiseBtn;
+        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Button button22;
     }
 }
 

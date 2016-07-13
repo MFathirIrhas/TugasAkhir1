@@ -11,9 +11,18 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+#region
 using MathNet.Numerics.Random;
 using MathNet.Numerics.Distributions;
-
+using Accord.Statistics;
+using Accord.Statistics.Distributions.Univariate;
+using Accord.Statistics.Distributions.Multivariate;
+using Accord.Statistics.Models.Markov;
+using Accord.Statistics.Models.Markov.Learning;
+using Accord.Statistics.Models.Markov.Topology;
+using Accord.Statistics.Distributions.Fitting;
+using AForge.Imaging.Filters;
+#endregion
 
 namespace TugasAkhir1
 {
@@ -252,12 +261,14 @@ namespace TugasAkhir1
                 medianFilterBtn.Enabled = true;
                 modusFilterBtn.Enabled = true;
                 jpegencoderBtn.Enabled = true;
+                noiseBtn.Enabled = true;
 
                 histeqBtn.BackColor = Color.DeepSkyBlue;
                 meanFilterBtn.BackColor = Color.DeepSkyBlue;
                 medianFilterBtn.BackColor = Color.DeepSkyBlue;
                 modusFilterBtn.BackColor = Color.DeepSkyBlue;
                 jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+                noiseBtn.BackColor = Color.DeepSkyBlue;
 
             }
         }
@@ -502,19 +513,20 @@ namespace TugasAkhir1
             //}
             //tw3.Close();
 
-            Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+            Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(hostImage.Image));
             double[,] hvs = ImageProcessing.HVS(EdgyImage);
-            TextWriter tw3 = new StreamWriter("HVS VALUES2.txt");
+            hostImage.Image = EdgyImage;
+            //TextWriter tw3 = new StreamWriter("HVS VALUES2.txt");
             //tw3.WriteLine("Total Real Watermark: " + hvs.GetLength(0));
-            for (int i = 0; i < hvs.GetLength(0); i++)
-            {
-                for (int j = 0; j < hvs.GetLength(1); j++)
-                {
-                    tw3.Write(hvs[i,j]+"#");
-                }
-                tw3.WriteLine();
-            }
-            tw3.Close();
+            //for (int i = 0; i < hvs.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < hvs.GetLength(1); j++)
+            //    {
+            //        tw3.Write(hvs[i,j]+"#");
+            //    }
+            //    tw3.WriteLine();
+            //}
+            //tw3.Close();
 
         }
 
@@ -745,7 +757,10 @@ namespace TugasAkhir1
 
                 double[,] AdaptiveHVS = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
                 double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(transformedImage.Image)).Item2;
-                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients,pixels);
+                Bitmap EdgeImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+                double[,] pixels2 = ImageProcessing.ConvertToMatrix2(EdgeImage).Item2;
+                int NumOfTree = Scrambled_Watermark.Count / 5;
+                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients,pixels, pixels2, NumOfTree);
 
                 //double[,] AdaptiveHVS2 = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
                 //int NumOfTree = (Scrambled_Watermark.Count / 5);
@@ -1082,32 +1097,67 @@ namespace TugasAkhir1
             //Bitmap laplaceEdge = ImageProcessing.LaplaceEdge(new Bitmap(hostImage.Image));
             //transformedImage.Image = laplaceEdge;
 
-            double varianceLH = Embed.VarianceOfLH2(Wavelet_Coefficients, Scrambled_Watermark.Count / 5);
-            double varianceHH = Embed.VarianceOfHH2(Wavelet_Coefficients, Scrambled_Watermark.Count / 5);
-            MessageBox.Show("LH: " + varianceLH + "\n" + "HH: " + varianceHH, "Variances", MessageBoxButtons.OK);
+            //double varianceLH = Embed.VarianceOfLH2(Wavelet_Coefficients, Scrambled_Watermark.Count / 5);
+            //double varianceHH = Embed.VarianceOfHH2(Wavelet_Coefficients, Scrambled_Watermark.Count / 5);
+            //MessageBox.Show("LH: " + varianceLH + "\n" + "HH: " + varianceHH, "Variances", MessageBoxButtons.OK);
+
+            double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(hostImage.Image)).Item2;
+            //double diff = Embed.EmbedStrength(Wavelet_Coefficients, pixels, Scrambled_Watermark.Count / 5);
+            List<double> spixels = new List<double>();
+            for(int i = 0; i < pixels.GetLength(0); i++)
+            {
+                for(int j = 0; j < pixels.GetLength(1); j++)
+                {
+                    spixels.Add(pixels[i, j]);
+                }
+            }
+
+            double[] pixels1d = new double[Scrambled_Watermark.Count / 5];
+            for(int k = 0; k < Scrambled_Watermark.Count / 5; k++)
+            {
+                pixels1d[k] = spixels[k];
+            }
+            
+            double mean = Tools.Mean(pixels1d) + 0.01;
+            MessageBox.Show("Selisih: " + mean, "Succeed", MessageBoxButtons.OK);
 
         }
 
         private void button15_Click(object sender, EventArgs e)
         {
-            double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
-            int count1 = 0;
-            int count2 = 0;
-            for(int i = 0; i < hiddenstates.GetLength(0); i++)
-            {
-                for(int j = 0; j < hiddenstates.GetLength(1); j++)
-                {
-                    if(hiddenstates[i,j] == 1)
-                    {
-                        count1++;
-                    }else
-                    {
-                        count2++;
-                    }
-                }
-            }
-            int summation = count1 + count2;
-            MessageBox.Show("Count 1: " + count1 + "\n Count2: " + count2+"\n Sum:  "+summation,"Succeed", MessageBoxButtons.OK);
+            //double[,] hiddenstates = HMM.GetHiddenStateValue(Wavelet_Coefficients);
+            //int count1 = 0;
+            //int count2 = 0;
+            //for(int i = 0; i < hiddenstates.GetLength(0); i++)
+            //{
+            //    for(int j = 0; j < hiddenstates.GetLength(1); j++)
+            //    {
+            //        if(hiddenstates[i,j] == 1)
+            //        {
+            //            count1++;
+            //        }else
+            //        {
+            //            count2++;
+            //        }
+            //    }
+            //}
+            //int summation = count1 + count2;
+            //MessageBox.Show("Count 1: " + count1 + "\n Count2: " + count2+"\n Sum:  "+summation,"Succeed", MessageBoxButtons.OK);
+            Bitmap bmp = new Bitmap(watermarkImage.Image);
+            //Median filter = new Median();
+            ConservativeSmoothing filter = new ConservativeSmoothing();
+            //BinaryErosion3x3 filter = new BinaryErosion3x3();
+
+            //Bitmap newBitmap = new Bitmap(bmp.Width, bmp.Height);
+            //Graphics graphics = Graphics.FromImage(newBitmap);
+            //graphics.DrawImage(bmp, 0, 0);
+
+            //Bitmap a = AForge.Imaging.Image.Clone((newBitmap), PixelFormat.Format8bppIndexed);
+            //AForge.Imaging.Image.SetGrayscalePalette(a);
+
+            filter.ApplyInPlace(bmp);
+            watermarkImage.Image = bmp;
+
         }
 
         private void button13_Click(object sender, EventArgs e) //Train HMM and detect Watermark
@@ -1146,8 +1196,8 @@ namespace TugasAkhir1
                 int NumOfScale2 = ((hostheight*hostwidth)/16)*3;
 
 
-
-                ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
+                Image decomposed = DWT.TransformDWT(true, false, 2, new Bitmap(transformedImage.Image));
+                ExtractedWatermark = Extract.BaumWelchDetectionInLH_2(Watermarked_Wavelet_Coefficients, decomposed, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
                 //detectedWatermark = Extract.BaumWelchDetection(Watermarked_Wavelet_Coefficients, transformedImage.Image, NumOfScale2, NumOfTrees, PNSeq /*, rootpmf, transition, variances*/);
 
                 /// Test
@@ -1219,9 +1269,15 @@ namespace TugasAkhir1
                 //List<int> InversedDSSS = Scramble.InverseDSSS(Merged, PNSeq);
                 //Bitmap bmp = ImageProcessing.ConvertListToWatermark(InversedDSSS, height, width);
 
+                #region Extracting Image
                 ///Not using 15 bit mapping
                 Bitmap bmp = ImageProcessing.ConvertListToWatermark2(ExtractedWatermark, height, width);
+                //watermarkImage.Image = bmp;
+                //Bitmap bmp = new Bitmap(watermarkImage.Image);               
+                ConservativeSmoothing filter = new ConservativeSmoothing();               
+                filter.ApplyInPlace(bmp);
                 watermarkImage.Image = bmp;
+                #endregion
 
                 /// Test
                 int counter = 0;
@@ -1255,7 +1311,7 @@ namespace TugasAkhir1
         private void button20_Click(object sender, EventArgs e)
         {
             int[,] green = Statistic.ExtractGreen(new Bitmap(hostImage.Image));
-            TextWriter tw1 = new StreamWriter("DecomposedNewsGreenPixel.txt");
+            TextWriter tw1 = new StreamWriter("NewsEdgeGreenPixel.txt");
             //tw1.WriteLine("Total Watermark: " + green.GetLength(0));
             for (int i = 0; i < green.GetLength(0); i++)
             {
@@ -1265,6 +1321,21 @@ namespace TugasAkhir1
                 }
             }
             tw1.Close();
+        }
+
+        private void noiseBtn_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.GaussianNoise(transformedImage.Image, 100);
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.SaltAndPepper(new Bitmap(transformedImage.Image), 10);
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.MedianCut(new Bitmap(transformedImage.Image), 20);
         }
 
         ///END
