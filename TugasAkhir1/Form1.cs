@@ -82,6 +82,7 @@ namespace TugasAkhir1
             this.hostImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.transformedImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.watermarkImage.SizeMode = PictureBoxSizeMode.Zoom;
+            this.extractedImage.SizeMode = PictureBoxSizeMode.Zoom;
 
             //GUI Initialize
             HostImageLocationTxt.Text = "Browse Image to be inserted watermark";
@@ -195,8 +196,8 @@ namespace TugasAkhir1
         {
             if (transformedImage.Image != null)
             {
-                //Bitmap bmp = new Bitmap(transformedImage.Image);
-                Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
+                Bitmap bmp = new Bitmap(transformedImage.Image);
+                //Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
 
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Title = "Select Save Location";
@@ -256,19 +257,19 @@ namespace TugasAkhir1
                 WatermarkedImage = new Bitmap(transformedImage.Image);
 
                 //Enable button
-                histeqBtn.Enabled = true;
-                meanFilterBtn.Enabled = true;
-                medianFilterBtn.Enabled = true;
-                modusFilterBtn.Enabled = true;
-                jpegencoderBtn.Enabled = true;
-                noiseBtn.Enabled = true;
+                //histeqBtn.Enabled = true;
+                //meanFilterBtn.Enabled = true;
+                //medianFilterBtn.Enabled = true;
+                //modusFilterBtn.Enabled = true;
+                //jpegencoderBtn.Enabled = true;
+                //noiseBtn.Enabled = true;
 
-                histeqBtn.BackColor = Color.DeepSkyBlue;
-                meanFilterBtn.BackColor = Color.DeepSkyBlue;
-                medianFilterBtn.BackColor = Color.DeepSkyBlue;
-                modusFilterBtn.BackColor = Color.DeepSkyBlue;
-                jpegencoderBtn.BackColor = Color.DeepSkyBlue;
-                noiseBtn.BackColor = Color.DeepSkyBlue;
+                //histeqBtn.BackColor = Color.DeepSkyBlue;
+                //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+                //noiseBtn.BackColor = Color.DeepSkyBlue;
 
             }
         }
@@ -844,16 +845,16 @@ namespace TugasAkhir1
                 //tw1.Close();
 
                 ///Activate Attack Button
-                histeqBtn.Enabled = true;
-                histeqBtn.BackColor = Color.DeepSkyBlue;
-                meanFilterBtn.Enabled = true;
-                meanFilterBtn.BackColor = Color.DeepSkyBlue;
-                medianFilterBtn.Enabled = true;
-                medianFilterBtn.BackColor = Color.DeepSkyBlue;
-                modusFilterBtn.Enabled = true;
-                modusFilterBtn.BackColor = Color.DeepSkyBlue;
-                jpegencoderBtn.Enabled = true;
-                jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+                //histeqBtn.Enabled = true;
+                //histeqBtn.BackColor = Color.DeepSkyBlue;
+                //meanFilterBtn.Enabled = true;
+                //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                //medianFilterBtn.Enabled = true;
+                //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                //modusFilterBtn.Enabled = true;
+                //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                //jpegencoderBtn.Enabled = true;
+                //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
 
                 resultLbl.Text = "Watermarked Host Image";
                 WatermarkedImage = new Bitmap(transformedImage.Image);
@@ -1067,7 +1068,7 @@ namespace TugasAkhir1
             {
                 transformedImage.Image = ImageAttack.JpegCompress(WatermarkedImage, 20, "CompressedImage20.jpg");
                 MessageBox.Show("Image Successfully Compressed!", "Success", MessageBoxButtons.OK);
-                resultLbl.Text = "Compressed Image";
+                resultLbl.Text = "Image Compressed";
             }
             else
             {
@@ -1276,7 +1277,7 @@ namespace TugasAkhir1
                 //Bitmap bmp = new Bitmap(watermarkImage.Image);               
                 ConservativeSmoothing filter = new ConservativeSmoothing();               
                 filter.ApplyInPlace(bmp);
-                watermarkImage.Image = bmp;
+                extractedImage.Image = bmp;
                 #endregion
 
                 /// Test
@@ -1337,6 +1338,48 @@ namespace TugasAkhir1
         {
             transformedImage.Image = ImageAttack.MedianCut(new Bitmap(transformedImage.Image), 20);
         }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Sharpen(new Bitmap(transformedImage.Image));
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.GaussianSharpen(new Bitmap(transformedImage.Image), 11);
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.BurkesColorDithering(new Bitmap(transformedImage.Image), 8);
+        }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.FloydSteinbergColorDithering(new Bitmap(transformedImage.Image), 10);
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.JarvisJudiceNinkeColorDithering(new Bitmap(transformedImage.Image), 10);
+        }
+
+        private void button28_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.SierraColorDithering(new Bitmap(transformedImage.Image));
+        }
+
+        private void button29_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.StuckiColorDithering(new Bitmap(transformedImage.Image), 10);
+        }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.OrderedColorDithering(new Bitmap(transformedImage.Image), 10);
+        }
+
+        
 
         ///END
     }

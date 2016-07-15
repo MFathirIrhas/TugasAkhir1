@@ -16,6 +16,7 @@ using AForge.Imaging.ColorReduction;
 
 
 
+
 namespace TugasAkhir1
 {
     public static class ImageAttack
@@ -402,6 +403,115 @@ namespace TugasAkhir1
             ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
             IColorQuantizer quantizer = new MedianCutQuantizer();
             Bitmap newImage = ciq.ReduceColors(bmp, intensity);
+            return newImage;
+        }
+        #endregion
+
+        #region Sharpen
+        public static Bitmap Sharpen(Bitmap bmp)
+        {
+            Sharpen filter = new Sharpen();
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
+
+        #region Gaussian Sharpen
+        public static Bitmap GaussianSharpen(Bitmap bmp, int value)
+        {
+            GaussianSharpen filter = new GaussianSharpen(value, 11);
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
+
+        #region Burkes Color Dithering
+        public static Bitmap BurkesColorDithering(Bitmap bmp, int value)
+        {
+            // create color image quantization routine
+            ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
+            // create 8 colors table
+            Color[] colorTable = ciq.CalculatePalette(bmp, 8);
+            // create dithering routine
+            BurkesColorDithering dithering = new BurkesColorDithering();
+            dithering.ColorTable = colorTable;
+            // apply the dithering routine
+            Bitmap newImage = dithering.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region FloydSteinberg Color Dithering
+        public static Bitmap FloydSteinbergColorDithering(Bitmap bmp, int value)
+        {
+            // create color image quantization routine
+            ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
+            // create 16 colors table
+            Color[] colorTable = ciq.CalculatePalette(bmp, 16);
+            // create dithering routine
+            FloydSteinbergColorDithering dithering = new FloydSteinbergColorDithering();
+            dithering.ColorTable = colorTable;
+            // apply the dithering routine
+            Bitmap newImage = dithering.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region JarvisJudiceNinke Color Dithering
+        public static Bitmap JarvisJudiceNinkeColorDithering(Bitmap bmp, int value)
+        {
+            // create color image quantization routine
+            ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
+            // create 32 colors table
+            Color[] colorTable = ciq.CalculatePalette(bmp, 32);
+            // create dithering routine
+            JarvisJudiceNinkeColorDithering dithering = new JarvisJudiceNinkeColorDithering();
+            dithering.ColorTable = colorTable;
+            // apply the dithering routine
+            Bitmap newImage = dithering.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region Sierra Color Dithering
+        public static Bitmap SierraColorDithering(Bitmap bmp)
+        {
+            // create dithering routine (use default color table)
+            SierraColorDithering dithering = new SierraColorDithering();
+            // apply the dithering routine
+            Bitmap newImage = dithering.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region Stucki Color Dithering
+        public static Bitmap StuckiColorDithering(Bitmap bmp, int value)
+        {
+            // create color image quantization routine
+            ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
+            // create 64 colors table
+            Color[] colorTable = ciq.CalculatePalette(bmp, 64);
+            // create dithering routine
+            StuckiColorDithering dithering = new StuckiColorDithering();
+            dithering.ColorTable = colorTable;
+            // apply the dithering routine
+            Bitmap newImage = dithering.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region Ordered Color Dithering
+        public static Bitmap OrderedColorDithering(Bitmap bmp, int value)
+        {
+            // create color image quantization routine
+            ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
+            // create 256 colors table
+            Color[] colorTable = ciq.CalculatePalette(bmp, 256);
+            // create dithering routine
+            OrderedColorDithering dithering = new OrderedColorDithering();
+            dithering.ColorTable = colorTable;
+            // apply the dithering routine
+            Bitmap newImage = dithering.Apply(bmp);
             return newImage;
         }
         #endregion
