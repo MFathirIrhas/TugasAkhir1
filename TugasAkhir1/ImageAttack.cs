@@ -156,6 +156,17 @@ namespace TugasAkhir1
         }
         #endregion
 
+        #region Mean Filtering Aforge
+        public static Bitmap Mean(Bitmap bmp)
+        {
+            // create filter
+            Mean filter = new Mean();
+            // apply the filter
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
+
         #region MEDIAN FILTERING
         public static Bitmap MedianFilter(this Bitmap sourceBitmap,int matrixSize)
         {
@@ -163,8 +174,7 @@ namespace TugasAkhir1
                        ImageLockMode.ReadOnly,
                        PixelFormat.Format32bppArgb);
 
-            byte[] pixelBuffer = new byte[sourceData.Stride *
-                                          sourceData.Height];
+            byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
 
             byte[] resultBuffer = new byte[sourceData.Stride *
                                            sourceData.Height];
@@ -237,6 +247,17 @@ namespace TugasAkhir1
             resultBitmap.UnlockBits(resultData);
 
             return resultBitmap;
+        }
+        #endregion
+
+        #region Median Filtering Aforge
+        public static Bitmap Median(Bitmap bmp)
+        {
+            // create filter
+            Median filter = new Median();
+            // apply the filter
+            filter.ApplyInPlace(bmp);
+            return bmp;
         }
         #endregion
 
@@ -347,7 +368,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region Gaussian Noise       
+        #region Noise       
         public static Bitmap GaussianNoise(Image img, int intense)
         {
             Bitmap finalBmp = img as Bitmap;
@@ -417,9 +438,32 @@ namespace TugasAkhir1
         #endregion
 
         #region Gaussian Sharpen
-        public static Bitmap GaussianSharpen(Bitmap bmp, int value)
+        public static Bitmap GaussianSharpen(Bitmap bmp, int value, int kernel)
         {
-            GaussianSharpen filter = new GaussianSharpen(value, 11);
+            GaussianSharpen filter = new GaussianSharpen(value, kernel);
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
+
+        #region Blur
+        public static Bitmap Blur(Bitmap bmp)
+        {
+            // create filter
+            Blur filter = new Blur();
+            // apply the filter
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
+
+        #region Gaussian Blur
+        public static Bitmap GaussianBlur(Bitmap bmp, int value)
+        {
+            // create filter with kernel size equal to 11
+            // and Gaussia sigma value equal to 4.0
+            GaussianBlur filter = new GaussianBlur(value, 11);
+            // apply the filter
             filter.ApplyInPlace(bmp);
             return bmp;
         }
@@ -431,7 +475,7 @@ namespace TugasAkhir1
             // create color image quantization routine
             ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
             // create 8 colors table
-            Color[] colorTable = ciq.CalculatePalette(bmp, 8);
+            Color[] colorTable = ciq.CalculatePalette(bmp, value);
             // create dithering routine
             BurkesColorDithering dithering = new BurkesColorDithering();
             dithering.ColorTable = colorTable;
@@ -447,7 +491,7 @@ namespace TugasAkhir1
             // create color image quantization routine
             ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
             // create 16 colors table
-            Color[] colorTable = ciq.CalculatePalette(bmp, 16);
+            Color[] colorTable = ciq.CalculatePalette(bmp, value);
             // create dithering routine
             FloydSteinbergColorDithering dithering = new FloydSteinbergColorDithering();
             dithering.ColorTable = colorTable;
@@ -463,7 +507,7 @@ namespace TugasAkhir1
             // create color image quantization routine
             ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
             // create 32 colors table
-            Color[] colorTable = ciq.CalculatePalette(bmp, 32);
+            Color[] colorTable = ciq.CalculatePalette(bmp, value);
             // create dithering routine
             JarvisJudiceNinkeColorDithering dithering = new JarvisJudiceNinkeColorDithering();
             dithering.ColorTable = colorTable;
@@ -490,7 +534,7 @@ namespace TugasAkhir1
             // create color image quantization routine
             ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
             // create 64 colors table
-            Color[] colorTable = ciq.CalculatePalette(bmp, 64);
+            Color[] colorTable = ciq.CalculatePalette(bmp, value);
             // create dithering routine
             StuckiColorDithering dithering = new StuckiColorDithering();
             dithering.ColorTable = colorTable;
@@ -506,7 +550,7 @@ namespace TugasAkhir1
             // create color image quantization routine
             ColorImageQuantizer ciq = new ColorImageQuantizer(new MedianCutQuantizer());
             // create 256 colors table
-            Color[] colorTable = ciq.CalculatePalette(bmp, 256);
+            Color[] colorTable = ciq.CalculatePalette(bmp, value);
             // create dithering routine
             OrderedColorDithering dithering = new OrderedColorDithering();
             dithering.ColorTable = colorTable;
@@ -516,7 +560,49 @@ namespace TugasAkhir1
         }
         #endregion
 
+        #region Jitter Attack
+        public static Bitmap Jitter(Bitmap bmp, int value)
+        {
+            // create filter
+            Jitter filter = new Jitter(value);
+            // apply the filter
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
 
+        #region ResizeBilinear
+        public static Bitmap ResizeBilinear(Bitmap bmp, int width, int height)
+        {
+            // create filter
+            ResizeBilinear filter = new ResizeBilinear(width, height);
+            // apply the filter
+            Bitmap newImage = filter.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region Rotate
+        public static Bitmap RotateBilinear(Bitmap bmp, int degree)
+        {
+            // create filter - rotate for 30 degrees keeping original image size
+            RotateBilinear filter = new RotateBilinear(degree, true);
+            // apply the filter
+            Bitmap newImage = filter.Apply(bmp);
+            return newImage;
+        }
+        #endregion
+
+        #region Crop Image
+        public static Bitmap Crop(Bitmap bmp, int x, int y, int x2, int y2)
+        {
+            // create filter
+            Crop filter = new Crop(new Rectangle(x, y, x2, y2));
+            // apply the filter
+            Bitmap newImage = filter.Apply(bmp);
+            return newImage;
+        }
+        #endregion
 
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,18 @@ namespace TugasAkhir1
         
         
         Stopwatch time = new Stopwatch();
+
+        #region DRAW ON WATERMARKED IMAGE
+        bool draw = false;
+
+        int pX = -1;
+        int pY = -1;
+
+        Bitmap drawing;
+        Bitmap Transformed_Image;
+        #endregion
+
+
         public Form1()
         {
             InitializeComponent();
@@ -91,6 +104,11 @@ namespace TugasAkhir1
             WatermarkImageLocationTxt.ForeColor = Color.LightGray;
             WatermarkedImageTxt.Text = "Browse Watermarked Image to be Attacked";
             WatermarkedImageTxt.ForeColor = Color.LightGray;
+
+            ///Draw On Image
+            drawing = new Bitmap(transformedImage.Width, transformedImage.Height, transformedImage.CreateGraphics());
+            Graphics.FromImage(drawing).Clear(Color.Transparent);
+
         }
 
 
@@ -196,8 +214,18 @@ namespace TugasAkhir1
         {
             if (transformedImage.Image != null)
             {
-                Bitmap bmp = new Bitmap(transformedImage.Image);
-                //Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
+                //Bitmap bmp = new Bitmap(transformedImage.Image);
+                Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
+
+                //Bitmap first = new Bitmap(transformedImage.Image);
+                //Bitmap second = drawing;
+                ////Bitmap result = new Bitmap(first.Width, first.Height);
+                ////fix :
+                //Bitmap result = new Bitmap(Math.Max(first.Width, second.Width), Math.Max(first.Height, second.Height));
+                //Graphics g = Graphics.FromImage(result);
+                //g.DrawImageUnscaled(first, 0, 0);
+                //g.DrawImageUnscaled(second, 0, 0);
+                //transformedImage.Image = result;
 
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Title = "Select Save Location";
@@ -255,6 +283,9 @@ namespace TugasAkhir1
                 WatermarkedImageTxt.Text = ofd.FileName;
                 transformedImage.Image = new Bitmap(ofd.FileName);
                 WatermarkedImage = new Bitmap(transformedImage.Image);
+                Transformed_Image = new Bitmap(transformedImage.Image);
+
+                
 
                 //Enable button
                 //histeqBtn.Enabled = true;
@@ -270,6 +301,7 @@ namespace TugasAkhir1
                 //modusFilterBtn.BackColor = Color.DeepSkyBlue;
                 //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
                 //noiseBtn.BackColor = Color.DeepSkyBlue;
+
 
             }
         }
@@ -382,8 +414,10 @@ namespace TugasAkhir1
                     {
                         tw.WriteLine(i);
                     }
-                }
 
+                    tw.Close();
+                }
+                
                 //List<int> oneminusone = Scramble.ConvertTo1minus1(scrambled_Watermark);
                 Scrambled_Watermark = scrambled_Watermark;
                 //Scrambled_Watermark = oneminusone;
@@ -424,9 +458,9 @@ namespace TugasAkhir1
         #region Save Extracted Watermark
         private void button6_Click(object sender, EventArgs e) //Save Watermark
         {
-            if (watermarkImage.Image != null)
+            if (extractedImage.Image != null)
             {
-                Bitmap bmp = new Bitmap(watermarkImage.Image);
+                Bitmap bmp = new Bitmap(extractedImage.Image);
                 //Bitmap bmp = Create8bpp(watermarkImage.Image);
 
                 SaveFileDialog sfd = new SaveFileDialog();
@@ -537,15 +571,13 @@ namespace TugasAkhir1
 
         private void button8_Click(object sender, EventArgs e) /// Do Embedding Process at once
         {
-            //var mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(watermarkImage.Image));
-            //var psnr = Statistic.PSNR(new Bitmap(watermarkImage.Image), mse);
-            //var ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(watermarkImage.Image));
-            //MessageBox.Show("MSE: " + mse + "\n" + "PSNR: " + psnr + "\n" + "BER: " + ber, "succeed", MessageBoxButtons.OK);
+            #region FDWT
+            GUIStart("Processing...!");
+            ///For Visualization
+            OriginalImage = new Bitmap(hostImage.Image);
+            transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
 
-            GUIStart("Processing.....!");
-
-            #region Decompose Image into 2 level Haar DWT
-            Bitmap TransormedImage = DWT.TransformDWT(true, false, 2, new Bitmap(hostImage.Image));
+            ///For Wavelet Coefficients Extraction
             Bitmap b = new Bitmap(hostImage.Image);
             IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
             IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
@@ -555,18 +587,17 @@ namespace TugasAkhir1
             //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
 
             double[,] ArrayImage = IMatrixG; //Embedding in Green 
-            double[,] coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+            Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
             #endregion
 
-            #region Watermark Scrambling
+            #region Scrambling
             Bitmap bmp = new Bitmap(watermarkImage.Image);
             Scramble m = new Scramble();
             Bitmap b2 = ImageProcessing.ConvertToBinary(bmp);
             List<int> VectorImage = Scramble.ConvertToVectorMatrix(b2); //Include integer values between 255 or 0
             List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
-                                                                                             //Real_Watermark = BinaryVectorImage;
+            Real_Watermark = BinaryVectorImage;
 
-            #region Save key into TXT
             int pnlength = BinaryVectorImage.Count * 5;
             string pn_seed = "10000";
             string pn_mask = "10100";
@@ -598,35 +629,48 @@ namespace TugasAkhir1
                 {
                     tw.WriteLine(i);
                 }
+
+                tw.Close();
             }
-            #endregion
 
             //List<int> oneminusone = Scramble.ConvertTo1minus1(scrambled_Watermark);
-            List<int> dsssWatermark = scrambled_Watermark;
+            Scrambled_Watermark = scrambled_Watermark;
             #endregion
 
-            #region Embed Watermark into decomposed host Image
-            List<List<int>> Segmented = Scramble.Segment(dsssWatermark);
-            //double[,] MappedWatermark = Scramble.Mapping(Segmented);
-            double[,] MappedWatermark = Scramble.Mapping2(Segmented);
+            #region embed
+            List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
+            //double[,] MappedWatermark = Scramble.Mapping(Segmented); // Use mapping into 15 bit each 5 segment of scrambled watermark
+            double[,] MappedWatermark = Scramble.Mapping2(Segmented);  // Don't Use mapping 
             Mapped_Watermark = MappedWatermark;
 
-            double[,] HVSValues = new double[coefficients.GetLength(0), coefficients.GetLength(1)];
-            if (TransormedImage == null)
+            double[,] HVSValues = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+            if (transformedImage.Image == null)
             {
                 MessageBox.Show("Do Forward Transform First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
             }
             else
             {
-                Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(TransormedImage));
+                Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
                 HVSValues = ImageProcessing.HVS(EdgyImage);
             }
-            double[,] EmbeddedWatermark = Embed.Embedding(coefficients, MappedWatermark, HVSValues);
-            double[,] embedded_coefficients = EmbeddedWatermark;
+
+            double[,] AdaptiveHVS = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+            double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(transformedImage.Image)).Item2;
+            Bitmap EdgeImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+            double[,] pixels2 = ImageProcessing.ConvertToMatrix2(EdgeImage).Item2;
+            int NumOfTree = Scrambled_Watermark.Count / 5;
+            AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients, pixels, pixels2, NumOfTree);
+
+            //double[,] AdaptiveHVS2 = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+            //int NumOfTree = (Scrambled_Watermark.Count / 5);
+            //AdaptiveHVS2 = Embed.AdaptiveHVS2(Wavelet_Coefficients,NumOfTree);
+
+            double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients, MappedWatermark, AdaptiveHVS);
+            Embedded_Wavelet_Coefficients = EmbeddedWatermark;
             #endregion
 
-            #region Inverse DWT
-            double[,] InverseDWT = DWT.WaveletCoeff(embedded_coefficients, false, 2);
+            #region IDWT
+            double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
 
             /// Round all elements in InverseDWT
             //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
@@ -636,25 +680,46 @@ namespace TugasAkhir1
             double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
             double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
             double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-            #endregion
-
             GUIEnd("IDWT Succeed!", mse, psnr, ber);
 
-            #region Update UI
+            /// Test
+            //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
+            /// Test
+            //int h = 1;
+            //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
+            //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
+            //for (int i = 0; i < InverseDWT.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
+            //    {
+            //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
+            //        h++;
+            //    }
+            //    tw1.WriteLine();
+            //}
+            ////foreach (double i in ExtractedWatermark)
+            ////{
+            ////    tw1.WriteLine(i);
+            ////}
+            //tw1.Close();
+
             ///Activate Attack Button
-            histeqBtn.Enabled = true;
-            histeqBtn.BackColor = Color.DeepSkyBlue;
-            meanFilterBtn.Enabled = true;
-            meanFilterBtn.BackColor = Color.DeepSkyBlue;
-            medianFilterBtn.Enabled = true;
-            medianFilterBtn.BackColor = Color.DeepSkyBlue;
-            modusFilterBtn.Enabled = true;
-            modusFilterBtn.BackColor = Color.DeepSkyBlue;
-            jpegencoderBtn.Enabled = true;
-            jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+            //histeqBtn.Enabled = true;
+            //histeqBtn.BackColor = Color.DeepSkyBlue;
+            //meanFilterBtn.Enabled = true;
+            //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+            //medianFilterBtn.Enabled = true;
+            //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+            //modusFilterBtn.Enabled = true;
+            //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+            //jpegencoderBtn.Enabled = true;
+            //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
 
             resultLbl.Text = "Watermarked Host Image";
             WatermarkedImage = new Bitmap(transformedImage.Image);
+            Transformed_Image = new Bitmap(transformedImage.Image);
+
+            GUIEnd("IDWT Succeed!", mse, psnr, ber);
             #endregion
         }
 
@@ -858,6 +923,9 @@ namespace TugasAkhir1
 
                 resultLbl.Text = "Watermarked Host Image";
                 WatermarkedImage = new Bitmap(transformedImage.Image);
+                Transformed_Image = new Bitmap(transformedImage.Image);
+
+                
                 //test
                 //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
             }
@@ -1027,8 +1095,21 @@ namespace TugasAkhir1
         {
             if (transformedImage.Image != null)
             {
-                transformedImage.Image = ImageAttack.MeanFilter(WatermarkedImage, 1);
-                resultLbl.Text = "Mean Filter of Watermarked Image";
+                if(comboBox1.Text == "3x3")
+                {
+                    transformedImage.Image = ImageAttack.MeanFilter(WatermarkedImage, 1);
+                    resultLbl.Text = "Mean Filter of Watermarked Image";
+                }
+                else if(comboBox1.Text == "5x5")
+                {
+                    transformedImage.Image = ImageAttack.MeanFilter(WatermarkedImage, 2);
+                    resultLbl.Text = "Mean Filter of Watermarked Image";
+                }
+                else
+                {
+                    transformedImage.Image = ImageAttack.MeanFilter(WatermarkedImage, 3);
+                    resultLbl.Text = "Mean Filter of Watermarked Image";
+                } 
             }
             else
             {
@@ -1040,8 +1121,22 @@ namespace TugasAkhir1
         {
             if (transformedImage.Image != null)
             {
-                transformedImage.Image = ImageAttack.MedianFilter(WatermarkedImage, 3);
-                resultLbl.Text = "Median Filter of Watermarked Image";
+                if(comboBox2.Text == "3x3")
+                {
+                    transformedImage.Image = ImageAttack.MedianFilter(WatermarkedImage, 3);
+                    resultLbl.Text = "Median Filter of Watermarked Image";
+                }
+                else if(comboBox2.Text == "5x5")
+                {
+                    transformedImage.Image = ImageAttack.MedianFilter(WatermarkedImage, 5);
+                    resultLbl.Text = "Median Filter of Watermarked Image";
+                }
+                else
+                {
+                    transformedImage.Image = ImageAttack.MedianFilter(WatermarkedImage, 7);
+                    resultLbl.Text = "Median Filter of Watermarked Image";
+                }
+                
             }
             else
             {
@@ -1053,8 +1148,22 @@ namespace TugasAkhir1
         {
             if (transformedImage.Image != null)
             {
-                transformedImage.Image = ImageAttack.ModusFilter(WatermarkedImage, 1);
-                resultLbl.Text = "Modus Filter of Watermarked Image";
+                if(comboBox3.Text == "3x3")
+                {
+                    transformedImage.Image = ImageAttack.ModusFilter(WatermarkedImage, 1);
+                    resultLbl.Text = "Modus Filter of Watermarked Image";
+                }
+                else if(comboBox3.Text == "5x5")
+                {
+                    transformedImage.Image = ImageAttack.ModusFilter(WatermarkedImage, 2);
+                    resultLbl.Text = "Modus Filter of Watermarked Image";
+                }
+                else
+                {
+                    transformedImage.Image = ImageAttack.ModusFilter(WatermarkedImage, 3);
+                    resultLbl.Text = "Modus Filter of Watermarked Image";
+                }
+                
             }
             else
             {
@@ -1066,7 +1175,8 @@ namespace TugasAkhir1
         {
             if(transformedImage.Image != null)
             {
-                transformedImage.Image = ImageAttack.JpegCompress(WatermarkedImage, 20, "CompressedImage20.jpg");
+                int value = Convert.ToInt32(jpegCompressionValue.Text);
+                transformedImage.Image = ImageAttack.JpegCompress(WatermarkedImage, value, "CompressedImage20.jpg");
                 MessageBox.Show("Image Successfully Compressed!", "Success", MessageBoxButtons.OK);
                 resultLbl.Text = "Image Compressed";
             }
@@ -1234,12 +1344,19 @@ namespace TugasAkhir1
 
         private void button16_Click(object sender, EventArgs e)
         {
-            double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-            double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
-            double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-            MSEValue.Text = mse.ToString();
-            PSNRValue.Text = psnr.ToString();
-            BERValue.Text = ber.ToString();
+            //double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            //double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+            //double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+            //MSEValue.Text = mse.ToString();
+            //PSNRValue.Text = psnr.ToString();
+            //BERValue.Text = ber.ToString();
+
+            Bitmap bmp = new Bitmap(transformedImage.Image);
+            Graphics gr = Graphics.FromImage(bmp);
+            Pen p = new Pen(Color.Red);
+            p.Width = 5.0f;
+            gr.DrawRectangle(p, 1, 2, 30, 40);
+            transformedImage.Image = bmp;
 
         }
 
@@ -1275,7 +1392,7 @@ namespace TugasAkhir1
                 Bitmap bmp = ImageProcessing.ConvertListToWatermark2(ExtractedWatermark, height, width);
                 //watermarkImage.Image = bmp;
                 //Bitmap bmp = new Bitmap(watermarkImage.Image);               
-                ConservativeSmoothing filter = new ConservativeSmoothing();               
+                ConservativeSmoothing filter = new ConservativeSmoothing();
                 filter.ApplyInPlace(bmp);
                 extractedImage.Image = bmp;
                 #endregion
@@ -1290,7 +1407,9 @@ namespace TugasAkhir1
                     }
                 }
                 double akurasi = ((double)counter/(double)ExtractedWatermark.Length)*100;
-                MessageBox.Show("Akurasi: " + akurasi, "Succeed!", MessageBoxButtons.OK);
+                double BER = 100 - akurasi;
+                bertxt.Text += Math.Round(BER,2)+"\n";
+                //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
 
                 GUIEnd("Watermark Extracted!", 0, 0, 0);
             }
@@ -1312,74 +1431,754 @@ namespace TugasAkhir1
         private void button20_Click(object sender, EventArgs e)
         {
             int[,] green = Statistic.ExtractGreen(new Bitmap(hostImage.Image));
-            TextWriter tw1 = new StreamWriter("NewsEdgeGreenPixel.txt");
+            TextWriter tw1 = new StreamWriter("LenaGreenPixel.txt");
             //tw1.WriteLine("Total Watermark: " + green.GetLength(0));
             for (int i = 0; i < green.GetLength(0); i++)
             {
                 for (int j = 0; j < green.GetLength(1); j++)
                 {
-                    tw1.WriteLine(green[i, j]+"#");
+                    tw1.WriteLine(green[i, j] + "#");
                 }
             }
             tw1.Close();
+
+            ////transformedImage.Image = drawing;
+            //Bitmap first = new Bitmap(transformedImage.Image);
+            //Bitmap second = drawing;
+            ////Bitmap result = new Bitmap(first.Width, first.Height);
+            ////fix :
+            //Bitmap result = new Bitmap(Math.Max(first.Width, second.Width), Math.Max(first.Height, second.Height));
+            //Graphics g = Graphics.FromImage(result);
+            //g.DrawImageUnscaled(first, 0, 0);
+            //g.DrawImageUnscaled(second, 0, 0);
+            //transformedImage.Image = result;
         }
 
         private void noiseBtn_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.GaussianNoise(transformedImage.Image, 100);
+            int value =Convert.ToInt32(gaussianNoiseValue.Text);
+            transformedImage.Image = ImageAttack.GaussianNoise(WatermarkedImage, value);
         }
 
         private void button21_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.SaltAndPepper(new Bitmap(transformedImage.Image), 10);
+            int value = Convert.ToInt32(saltPepperValue.Text);
+            transformedImage.Image = ImageAttack.SaltAndPepper(WatermarkedImage, value);
         }
 
         private void button22_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.MedianCut(new Bitmap(transformedImage.Image), 20);
+            int value = Convert.ToInt32(medianCutValue.Text);
+            transformedImage.Image = ImageAttack.MedianCut(WatermarkedImage, value);
         }
 
         private void button23_Click(object sender, EventArgs e)
-        {
-            transformedImage.Image = ImageAttack.Sharpen(new Bitmap(transformedImage.Image));
+        {            
+            transformedImage.Image = ImageAttack.Sharpen(WatermarkedImage);
         }
 
-        private void button24_Click(object sender, EventArgs e)
-        {
-            transformedImage.Image = ImageAttack.GaussianSharpen(new Bitmap(transformedImage.Image), 11);
-        }
+        
 
         private void button25_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.BurkesColorDithering(new Bitmap(transformedImage.Image), 8);
+            int value = Convert.ToInt32(burkesValue.Text);
+            transformedImage.Image = ImageAttack.BurkesColorDithering(WatermarkedImage, value);
         }
 
         private void button26_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.FloydSteinbergColorDithering(new Bitmap(transformedImage.Image), 10);
+            int value = Convert.ToInt32(floydSteinbergValue.Text);
+            transformedImage.Image = ImageAttack.FloydSteinbergColorDithering(WatermarkedImage, value);
         }
 
         private void button27_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.JarvisJudiceNinkeColorDithering(new Bitmap(transformedImage.Image), 10);
+            int value = Convert.ToInt32(JJNValue.Text);
+            transformedImage.Image = ImageAttack.JarvisJudiceNinkeColorDithering(WatermarkedImage, value);
         }
 
         private void button28_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.SierraColorDithering(new Bitmap(transformedImage.Image));
+            transformedImage.Image = ImageAttack.SierraColorDithering(WatermarkedImage);
         }
 
         private void button29_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.StuckiColorDithering(new Bitmap(transformedImage.Image), 10);
+            int value = Convert.ToInt32(stuckiValue.Text);
+            transformedImage.Image = ImageAttack.StuckiColorDithering(WatermarkedImage, value);
         }
 
         private void button30_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.OrderedColorDithering(new Bitmap(transformedImage.Image), 10);
+            int value = Convert.ToInt32(orderedValue.Text);
+            transformedImage.Image = ImageAttack.OrderedColorDithering(WatermarkedImage, value);
         }
 
-        
+        #region Scratch On Watermarked Image
+        private void transformedImage_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (draw)
+            {
+                int penWidth = Convert.ToInt32(penWidthValue.Value);
+                if(blackCheck.Checked == true) ///black pen
+                {
+                    Graphics panel = Graphics.FromImage(drawing);
+
+                    Pen pen = new Pen(Color.Black, penWidth);
+
+                    pen.EndCap = LineCap.Round;
+                    pen.StartCap = LineCap.Round;
+
+                    panel.DrawLine(pen, pX, pY, e.X, e.Y);
+
+                    transformedImage.CreateGraphics().DrawImageUnscaled(drawing, new Point(0, 0));                    
+                }
+                else if(redCheck.Checked == true) /// red pen
+                {
+                    Graphics panel = Graphics.FromImage(drawing);
+
+                    Pen pen = new Pen(Color.Red, penWidth);
+
+                    pen.EndCap = LineCap.Round;
+                    pen.StartCap = LineCap.Round;
+
+                    panel.DrawLine(pen, pX, pY, e.X, e.Y);
+
+                    transformedImage.CreateGraphics().DrawImageUnscaled(drawing, new Point(0, 0));
+                }
+                else if(yellowCheck.Checked == true) /// yellow
+                {
+                    Graphics panel = Graphics.FromImage(drawing);
+
+                    Pen pen = new Pen(Color.Yellow, penWidth);
+
+                    pen.EndCap = LineCap.Round;
+                    pen.StartCap = LineCap.Round;
+
+                    panel.DrawLine(pen, pX, pY, e.X, e.Y);
+
+                    transformedImage.CreateGraphics().DrawImageUnscaled(drawing, new Point(0, 0));
+                }
+                else /// green
+                {
+                    Graphics panel = Graphics.FromImage(drawing);
+
+                    Pen pen = new Pen(Color.Green, penWidth);
+
+                    pen.EndCap = LineCap.Round;
+                    pen.StartCap = LineCap.Round;
+
+                    panel.DrawLine(pen, pX, pY, e.X, e.Y);
+
+                    transformedImage.CreateGraphics().DrawImageUnscaled(drawing, new Point(0, 0));
+                }
+                
+            }
+
+            pX = e.X;
+            pY = e.Y;
+        }
+
+        private void transformedImage_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (scratchCheck.Checked == true)
+            {
+                draw = true;
+                pX = e.X;
+                pY = e.Y;
+            }
+        }
+
+        private void transformedImage_MouseUp(object sender, MouseEventArgs e)
+        {
+            draw = false;
+        }
+
+        private void transformedImage_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImageUnscaled(drawing, new Point(0, 0));  
+        }
+
+        private void redCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            blackCheck.Checked = false;
+            yellowCheck.Checked = false;
+            greenCheck.Checked = false;
+        }
+
+        private void blackCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            redCheck.Checked = false;
+            yellowCheck.Checked = false;
+            greenCheck.Checked = false;
+        }
+
+        private void yellowCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            blackCheck.Checked = false;
+            redCheck.Checked = false;
+            greenCheck.Checked = false;
+        }
+
+        private void greenCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            blackCheck.Checked = false;
+            redCheck.Checked = false;
+            yellowCheck.Checked = false;
+        }
+
+        private void scratchCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            //drawing = new Bitmap(transformedImage.Image, Transformed_Image.Width, Transformed_Image.Height);//new Bitmap(transformedImage.Width, transformedImage.Height, transformedImage.CreateGraphics());
+            //Graphics.FromImage(drawing).Clear(Color.Transparent);
+            //transformedImage.Image = drawing;
+            //drawing = new Bitmap(transformedImage.Image);           
+        }
+
+        private void button31_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Blur(WatermarkedImage);
+        }
+
+        private void button32_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.GaussianBlur(WatermarkedImage, 10);
+        }
+
+        private void button33_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Median(WatermarkedImage);
+        }
+
+        private void button34_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Mean(WatermarkedImage);
+        }
+
+        private void button35_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Jitter(WatermarkedImage,4);
+        }
+
+        private void button36_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.ResizeBilinear(WatermarkedImage, 256, 256);
+        }
+
+        private void button37_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.RotateBilinear(WatermarkedImage, 30);
+        }
+
+        private void button38_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 256, 256);
+        }
+
+        private void button39_Click(object sender, EventArgs e)
+        {
+            AForge.Imaging.ImageStatistics stat = new AForge.Imaging.ImageStatistics(WatermarkedImage);
+             //red = stat.Red;
+        }
+
+        private void button40_Click(object sender, EventArgs e)
+        {
+            #region Test embed
+            List<double> psnrlist = new List<double>();
+            List<double> berlist  = new List<double>();
+            double[] strength = new double[] {0.01,
+                                            0.1,
+                                            0.3,
+                                            0.5,
+                                            0.8,
+                                            1,
+                                            1.05,
+                                            1.5,
+                                            1.8,
+                                            2,
+                                            5,
+                                            10,
+                                            15,
+                                            20,
+                                            25,
+                                            30,
+                                            35,
+                                            40
+                                            };
+            #endregion
+
+            //for (int k = 0; k < strength.Length; k++)
+            //{
+                #region FDWT
+                GUIStart("Processing...!");
+                ///For Visualization
+                OriginalImage = new Bitmap(hostImage.Image);
+                transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
+
+                ///For Wavelet Coefficients Extraction
+                Bitmap b = new Bitmap(hostImage.Image);
+                IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+                IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+                IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+                //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+                //Test
+                //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+
+                double[,] ArrayImage = IMatrixG; //Embedding in Green 
+                Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+                resultLbl.Text = "Decomposed Host Image";
+                GUIEnd("FDWT Succeed!", 0, 0, 0);
+
+                /// Test 
+                //int c = 1;
+                //TextWriter tw2 = new StreamWriter("GreenPixels.txt");
+                //tw2.WriteLine("Total Watermark ");
+                //for (int i = 0; i < IMatrixG.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < IMatrixG.GetLength(1); j++)
+                //    {
+                //        tw2.Write("[" + c + "]" + IMatrixG[i, j] + " - ");
+                //        c++;
+                //    }
+                //    tw2.WriteLine();
+                //}
+                //tw2.Close();
+                #endregion
+
+                #region Scrambling Watermar
+                //double[,] coefficients = coeffs;
+                Bitmap bmp = new Bitmap(watermarkImage.Image);
+                Scramble m = new Scramble();
+                Bitmap b2 = ImageProcessing.ConvertToBinary(bmp);
+                List<int> VectorImage = Scramble.ConvertToVectorMatrix(b2); //Include integer values between 255 or 0
+                List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
+                Real_Watermark = BinaryVectorImage;
+
+                int pnlength = BinaryVectorImage.Count * 5;
+                string pn_seed = "10000";
+                string pn_mask = "10100";
+                int pn_length = pnlength;
+                List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
+                List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage, PNSeq);
+
+                /// Save into .txt file (PN Sequence and size)
+                Bitmap hostbmp = new Bitmap(hostImage.Image);
+                string hostfilename = HostImageLocationTxt.Text;
+                string watermarkfilename = WatermarkImageLocationTxt.Text;
+                string hostName = Path.GetFileNameWithoutExtension(hostfilename);
+                string watermarkName = Path.GetFileNameWithoutExtension(watermarkfilename);
+                string name = hostName + "_" + watermarkName + "_Key.txt";
+                int NumOfTrees = pnlength / 5; // Restult in total of tree from segmented watermark , i.e 6480
+                                               //TextWriter tw = new StreamWriter(name);
+                using (TextWriter tw = File.CreateText(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key\" + name))
+                {
+                    tw.WriteLine("Size of Host Image:");
+                    tw.WriteLine(hostbmp.Height);
+                    tw.WriteLine(hostbmp.Width);
+                    tw.WriteLine("Size of Watermark: ");
+                    tw.WriteLine(bmp.Height);
+                    tw.WriteLine(bmp.Width);
+                    tw.WriteLine("Number of Trees: ");
+                    tw.WriteLine(NumOfTrees);
+                    tw.WriteLine("PN Sequence: ");
+                    foreach (int i in PNSeq)
+                    {
+                        tw.WriteLine(i);
+                    }
+                }
+
+                //List<int> oneminusone = Scramble.ConvertTo1minus1(scrambled_Watermark);
+                Scrambled_Watermark = scrambled_Watermark;
+                //Scrambled_Watermark = oneminusone;
+                #endregion
+
+                #region Embed
+                List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
+                //double[,] MappedWatermark = Scramble.Mapping(Segmented); // Use mapping into 15 bit each 5 segment of scrambled watermark
+                double[,] MappedWatermark = Scramble.Mapping2(Segmented);  // Don't Use mapping 
+                Mapped_Watermark = MappedWatermark;
+
+                double[,] HVSValues = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                if (transformedImage.Image == null)
+                {
+                    MessageBox.Show("Do Forward Transform First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+                    HVSValues = ImageProcessing.HVS(EdgyImage);
+                }
+
+                double[,] AdaptiveHVS = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(transformedImage.Image)).Item2;
+                Bitmap EdgeImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+                double[,] pixels2 = ImageProcessing.ConvertToMatrix2(EdgeImage).Item2;
+                int NumOfTree = Scrambled_Watermark.Count / 5;
+                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients, pixels, pixels2, NumOfTree);
+
+            //double[,] AdaptiveHVS2 = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+            //int NumOfTree = (Scrambled_Watermark.Count / 5);
+            //AdaptiveHVS2 = Embed.AdaptiveHVS2(Wavelet_Coefficients,NumOfTree);
+
+            //double[,] EmbeddedWatermark = Embed.Embedding2(Wavelet_Coefficients, MappedWatermark, AdaptiveHVS, strength[k]);
+            double[,] EmbeddedWatermark = Embed.Embedding(Wavelet_Coefficients, MappedWatermark, AdaptiveHVS);
+            Embedded_Wavelet_Coefficients = EmbeddedWatermark;
+                #endregion
+
+                #region IDWT
+                double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
+
+                /// Round all elements in InverseDWT
+                //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
+
+                //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                transformedImage.Image = ImageProcessing.ConvertToBitmap2(IMatrixR, InverseDWT, IMatrixB);
+                double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+                double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+
+
+                /// Test
+                //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
+                /// Test
+                //int h = 1;
+                //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
+                //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
+                //for (int i = 0; i < InverseDWT.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
+                //    {
+                //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
+                //        h++;
+                //    }
+                //    tw1.WriteLine();
+                //}
+                ////foreach (double i in ExtractedWatermark)
+                ////{
+                ////    tw1.WriteLine(i);
+                ////}
+                //tw1.Close();
+
+                ///Activate Attack Button
+                //histeqBtn.Enabled = true;
+                //histeqBtn.BackColor = Color.DeepSkyBlue;
+                //meanFilterBtn.Enabled = true;
+                //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                //medianFilterBtn.Enabled = true;
+                //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                //modusFilterBtn.Enabled = true;
+                //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                //jpegencoderBtn.Enabled = true;
+                //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+
+                resultLbl.Text = "Watermarked Host Image";
+                WatermarkedImage = new Bitmap(transformedImage.Image);
+                Transformed_Image = new Bitmap(transformedImage.Image);
+                #endregion
+
+                int value = Convert.ToInt32(burkesValue.Text);
+                Bitmap burkes = ImageAttack.BurkesColorDithering(WatermarkedImage, value);
+                double ber1 = Statistic.BER(new Bitmap(watermarkImage.Image), burkes);
+
+                int value2 = Convert.ToInt32(floydSteinbergValue.Text);
+                Bitmap floyd = ImageAttack.FloydSteinbergColorDithering(WatermarkedImage, value2);
+                double ber2 = Statistic.BER(new Bitmap(watermarkImage.Image), floyd);
+
+                int value3 = Convert.ToInt32(JJNValue.Text);
+                Bitmap jjn = ImageAttack.JarvisJudiceNinkeColorDithering(WatermarkedImage, value3);
+                double ber3 = Statistic.BER(new Bitmap(watermarkImage.Image), jjn);
+
+                int value4 = Convert.ToInt32(stuckiValue.Text);
+                Bitmap stucki = ImageAttack.StuckiColorDithering(WatermarkedImage, value4);
+                double ber4 = Statistic.BER(new Bitmap(watermarkImage.Image), stucki);
+
+                int value5 = Convert.ToInt32(orderedValue.Text);
+                Bitmap ordered= ImageAttack.OrderedColorDithering(WatermarkedImage, value);
+                double ber5 = Statistic.BER(new Bitmap(watermarkImage.Image), ordered);
+
+
+            berlist.Add(ber1);
+            berlist.Add(ber2);
+            berlist.Add(ber3);
+            berlist.Add(ber4);
+            berlist.Add(ber5);
+
+            //psnrlist.Add(Math.Round(psnr,2));
+            //berlist.Add(Math.Round(ber,2));
+            //}
+
+            for (int l = 0; l < berlist.Count; l++)
+            {
+                //psnrtxt.Text += psnrlist[l] + "\n";
+                bertxt.Text += berlist[l] + "\n";
+            }
+
+        }
+
+        private void button41_Click(object sender, EventArgs e)
+        {
+            List<double> berlist = new List<double>();
+            double[] strength = new double[] {0.01,
+                                            0.1,
+                                            0.3,
+                                            0.5,
+                                            0.8,
+                                            1,
+                                            1.05,
+                                            1.5,
+                                            1.8,
+                                            2,
+                                            5,
+                                            10,
+                                            15,
+                                            20,
+                                            25,
+                                            30,
+                                            35,
+                                            40
+                                            };
+
+            for (int k = 0; k < strength.Length; k++)
+            {
+                #region FDWT
+                GUIStart("Processing...!");
+                ///For Visualization
+                OriginalImage = new Bitmap(hostImage.Image);
+                transformedImage.Image = DWT.TransformDWT(true, false, 2, OriginalImage);
+
+                ///For Wavelet Coefficients Extraction
+                Bitmap b = new Bitmap(hostImage.Image);
+                IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+                IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+                IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+                //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+                //Test
+                //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+
+                double[,] ArrayImage = IMatrixG; //Embedding in Green 
+                Wavelet_Coefficients = DWT.WaveletCoeff(ArrayImage, true, 2);
+                resultLbl.Text = "Decomposed Host Image";
+                GUIEnd("FDWT Succeed!", 0, 0, 0);
+
+                /// Test 
+                //int c = 1;
+                //TextWriter tw2 = new StreamWriter("GreenPixels.txt");
+                //tw2.WriteLine("Total Watermark ");
+                //for (int i = 0; i < IMatrixG.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < IMatrixG.GetLength(1); j++)
+                //    {
+                //        tw2.Write("[" + c + "]" + IMatrixG[i, j] + " - ");
+                //        c++;
+                //    }
+                //    tw2.WriteLine();
+                //}
+                //tw2.Close();
+                #endregion
+
+                #region Scrambling Watermar
+                //double[,] coefficients = coeffs;
+                Bitmap bmp = new Bitmap(watermarkImage.Image);
+                Scramble m = new Scramble();
+                Bitmap b2 = ImageProcessing.ConvertToBinary(bmp);
+                List<int> VectorImage = Scramble.ConvertToVectorMatrix(b2); //Include integer values between 255 or 0
+                List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
+                Real_Watermark = BinaryVectorImage;
+
+                int pnlength = BinaryVectorImage.Count * 5;
+                string pn_seed = "10000";
+                string pn_mask = "10100";
+                int pn_length = pnlength;
+                List<int> PNSeq = Scramble.PNSeqLFSR(pn_seed, pn_mask, pn_length);
+                List<int> scrambled_Watermark = Scramble.DSSS(BinaryVectorImage, PNSeq);
+
+                /// Save into .txt file (PN Sequence and size)
+                Bitmap hostbmp = new Bitmap(hostImage.Image);
+                string hostfilename = HostImageLocationTxt.Text;
+                string watermarkfilename = WatermarkImageLocationTxt.Text;
+                string hostName = Path.GetFileNameWithoutExtension(hostfilename);
+                string watermarkName = Path.GetFileNameWithoutExtension(watermarkfilename);
+                string name = hostName + "_" + watermarkName + "_Key.txt";
+                int NumOfTrees = pnlength / 5; // Restult in total of tree from segmented watermark , i.e 6480
+                                               //TextWriter tw = new StreamWriter(name);
+                using (TextWriter tw = File.CreateText(@"F:\College\Semester 8\TA2\TugasAkhir1\TugasAkhir1\Key\" + name))
+                {
+                    tw.WriteLine("Size of Host Image:");
+                    tw.WriteLine(hostbmp.Height);
+                    tw.WriteLine(hostbmp.Width);
+                    tw.WriteLine("Size of Watermark: ");
+                    tw.WriteLine(bmp.Height);
+                    tw.WriteLine(bmp.Width);
+                    tw.WriteLine("Number of Trees: ");
+                    tw.WriteLine(NumOfTrees);
+                    tw.WriteLine("PN Sequence: ");
+                    foreach (int i in PNSeq)
+                    {
+                        tw.WriteLine(i);
+                    }
+                }
+
+                //List<int> oneminusone = Scramble.ConvertTo1minus1(scrambled_Watermark);
+                Scrambled_Watermark = scrambled_Watermark;
+                //Scrambled_Watermark = oneminusone;
+                #endregion
+
+                #region Embed
+                List<List<int>> Segmented = Scramble.Segment(Scrambled_Watermark);
+                //double[,] MappedWatermark = Scramble.Mapping(Segmented); // Use mapping into 15 bit each 5 segment of scrambled watermark
+                double[,] MappedWatermark = Scramble.Mapping2(Segmented);  // Don't Use mapping 
+                Mapped_Watermark = MappedWatermark;
+
+                double[,] HVSValues = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                if (transformedImage.Image == null)
+                {
+                    MessageBox.Show("Do Forward Transform First!", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    Bitmap EdgyImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+                    HVSValues = ImageProcessing.HVS(EdgyImage);
+                }
+
+                double[,] AdaptiveHVS = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(transformedImage.Image)).Item2;
+                Bitmap EdgeImage = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+                double[,] pixels2 = ImageProcessing.ConvertToMatrix2(EdgeImage).Item2;
+                int NumOfTree = Scrambled_Watermark.Count / 5;
+                AdaptiveHVS = Embed.AdaptiveHVS(Wavelet_Coefficients, pixels, pixels2, NumOfTree);
+
+                //double[,] AdaptiveHVS2 = new double[Wavelet_Coefficients.GetLength(0), Wavelet_Coefficients.GetLength(1)];
+                //int NumOfTree = (Scrambled_Watermark.Count / 5);
+                //AdaptiveHVS2 = Embed.AdaptiveHVS2(Wavelet_Coefficients,NumOfTree);
+
+                double[,] EmbeddedWatermark = Embed.Embedding2(Wavelet_Coefficients, MappedWatermark, AdaptiveHVS, strength[k]);
+                Embedded_Wavelet_Coefficients = EmbeddedWatermark;
+                #endregion
+
+                #region IDWT
+                double[,] InverseDWT = DWT.WaveletCoeff(Embedded_Wavelet_Coefficients, false, 2);
+
+                /// Round all elements in InverseDWT
+                //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
+
+                //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                transformedImage.Image = ImageProcessing.ConvertToBitmap2(IMatrixR, InverseDWT, IMatrixB);
+                double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+                double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+
+
+                /// Test
+                //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
+                /// Test
+                //int h = 1;
+                //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
+                //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
+                //for (int i = 0; i < InverseDWT.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
+                //    {
+                //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
+                //        h++;
+                //    }
+                //    tw1.WriteLine();
+                //}
+                ////foreach (double i in ExtractedWatermark)
+                ////{
+                ////    tw1.WriteLine(i);
+                ////}
+                //tw1.Close();
+
+                ///Activate Attack Button
+                //histeqBtn.Enabled = true;
+                //histeqBtn.BackColor = Color.DeepSkyBlue;
+                //meanFilterBtn.Enabled = true;
+                //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                //medianFilterBtn.Enabled = true;
+                //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                //modusFilterBtn.Enabled = true;
+                //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                //jpegencoderBtn.Enabled = true;
+                //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+
+                resultLbl.Text = "Watermarked Host Image";
+                WatermarkedImage = new Bitmap(transformedImage.Image);
+                Transformed_Image = new Bitmap(transformedImage.Image);
+                #endregion
+
+                #region Extract
+                
+                #endregion
+                berlist.Add(Math.Round(ber, 2));
+            }
+        }
+
+        private void button24_Click_1(object sender, EventArgs e)
+        {           
+            if(comboBox4.Text == "3x3")
+            {
+                transformedImage.Image = ImageAttack.GaussianSharpen(WatermarkedImage, 4, 3);
+            }
+            else if(comboBox4.Text == "5x5")
+            {
+                transformedImage.Image = ImageAttack.GaussianSharpen(WatermarkedImage, 4, 5);
+            }
+            else if(comboBox4.Text == "7x7")
+            {
+                transformedImage.Image = ImageAttack.GaussianSharpen(WatermarkedImage, 4, 7);
+            }
+            else if (comboBox4.Text == "10x10")
+            {
+                transformedImage.Image = ImageAttack.GaussianSharpen(WatermarkedImage, 4, 10);
+            }
+            else if (comboBox4.Text == "15x15")
+            {
+                transformedImage.Image = ImageAttack.GaussianSharpen(WatermarkedImage, 4, 15);
+            }
+            else
+            {
+                transformedImage.Image = ImageAttack.GaussianSharpen(WatermarkedImage, 4, 30);
+            }
+        }
+
+        private void button23_Click_1(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.Sharpen(WatermarkedImage);
+        }
+
+        private void button42_Click(object sender, EventArgs e)
+        {
+            hostImage.Image = null;
+            watermarkImage.Image = null;
+            transformedImage.Image = null;
+            extractedImage.Image = null;
+            Wavelet_Coefficients = null;
+            Scrambled_Watermark = null;
+            Embedded_Wavelet_Coefficients = null;
+
+        }
+
+        private void button43_Click(object sender, EventArgs e)
+        {
+            //transformedImage.Image = drawing;
+            int outputImageWidth = Transformed_Image.Width;
+
+            int outputImageHeight = Transformed_Image.Height;
+
+            Bitmap outputImage = new Bitmap(outputImageWidth, outputImageHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+            using (Graphics graphics = Graphics.FromImage(outputImage))
+            {
+                graphics.DrawImage(Transformed_Image, new Rectangle(new Point(), Transformed_Image.Size),
+                    new Rectangle(new Point(), Transformed_Image.Size), GraphicsUnit.Pixel);
+                graphics.DrawImage(drawing, new Rectangle(new Point(0, Transformed_Image.Height + 1), drawing.Size),
+                    new Rectangle(new Point(), drawing.Size), GraphicsUnit.Pixel);
+            }
+
+            transformedImage.Image = outputImage;
+        }
+
+        #endregion
 
         ///END
     }

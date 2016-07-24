@@ -36,6 +36,25 @@ namespace TugasAkhir1
             return Embedded_Watermark;
         }
 
+        ///For Test
+        public static double[,] Embedding2(double[,] Wavelet_coefficients, double[,] MappedWatermark, double[,] HVSValues, double strength)
+        {
+            double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
+            //double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
+            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark, "lh");
+            double embedding_Strength = strength;//0.6;//0.6;
+
+            for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
+            {
+                for (int j = 0; j < Wavelet_coefficients.GetLength(1); j++)
+                {
+                    //Embedded_Watermark[i, j] = Wavelet_coefficients[i, j] + (Trained_Watermark[i, j] * embedding_Strength * HVSValues[i, j]);
+                    Embedded_Watermark[i, j] = Wavelet_coefficients[i, j] + (Trained_Watermark[i, j] * embedding_Strength);
+                }
+            }
+            return Embedded_Watermark;
+        }
+
         #region Train Watermark from Mapped Watermark
         /// <summary>
         /// Convert list the Mapped watermark(each row is 15 bit) into matrix with the same size with wavelet coefficients

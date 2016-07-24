@@ -409,10 +409,10 @@ namespace TugasAkhir1
                 Tolerance = 0.001,
                 Iterations = 10,
 
-                //FittingOptions = new NormalOptions()
-                //{
-                //    Regularization = 1e-5 // specify a regularization constant
-                //}
+                FittingOptions = new NormalOptions()
+                {
+                    Regularization = 1e-5 // specify a regularization constant
+                }
             };
 
             // Fit the model
@@ -761,7 +761,7 @@ namespace TugasAkhir1
                     //Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 1;
                     Vi[i, j] = pattern[i][j] * listOfHVS[k, j] * 0.6;//0.6;
 
-                    //Vi[i, j] = pattern[i][j] * 0.3;
+                    //Vi[i, j] = pattern[i][j] * 40;
                     //Vi[i, j] = pattern[i][j] * 1;
                     //Vi[i, j] = pattern[i][j] * 4;
                 }
