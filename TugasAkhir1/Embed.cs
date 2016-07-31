@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using Accord.Statistics;
 using Accord.Statistics.Distributions.Univariate;
 using Accord.Statistics.Distributions.Multivariate;
@@ -17,12 +18,12 @@ namespace TugasAkhir1
 {
     public class Embed
     {
-        public static double[,] Embedding(double[,] Wavelet_coefficients, double[,] MappedWatermark, double[,] HVSValues)
+        public static double[,] Embedding(double[,] Wavelet_coefficients, double[,] MappedWatermark, double[,] HVSValues, string subband , double embed_constant)
         {
             double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
             //double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
-            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark,"hh");
-            double embedding_Strength = 0.6;//0.6;
+            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark,subband);
+            double embedding_Strength = embed_constant;//0.6;
 
             for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
             {
@@ -41,7 +42,7 @@ namespace TugasAkhir1
         {
             double[,] Embedded_Watermark = new double[Wavelet_coefficients.GetLength(0), Wavelet_coefficients.GetLength(1)];
             //double[,] Trained_Watermark = TrainMappedWatermark(Wavelet_coefficients, MappedWatermark);
-            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark, "lh");
+            double[,] Trained_Watermark = TrainMappedWatermark2(Wavelet_coefficients, MappedWatermark, "hh");
             double embedding_Strength = strength;//0.6;//0.6;
 
             for (int i = 0; i < Wavelet_coefficients.GetLength(0); i++)
@@ -293,7 +294,11 @@ namespace TugasAkhir1
         #endregion
 
 
-        #region Train Watermark without mapping watermark
+        #region Train Watermark for 1 level embedding Haar
+        //public static double[] 
+        #endregion
+
+        #region Train Watermark for 2 level embedding Haar
         /// <summary>
         /// Convert segmented watermark without mapping strategy
         /// </summary>
@@ -540,7 +545,8 @@ namespace TugasAkhir1
         #endregion
 
 
-        #region Adaptive HVS calculation
+
+        #region Adaptive HVS calculation(Xie Perceptual Model)
         /// <summary>
         /// 3 factors affect eye sensitivity:
         /// - Frequency band
@@ -906,145 +912,95 @@ namespace TugasAkhir1
 
         #endregion
 
-        #region Proposed HVS Calculation
-        public static double[,] AdaptiveHVS2(double[,] coeffs, int NumOfTree)
+
+        #region Edge Detection HVS System
+        public static Tuple<double[,],double[,],double[,]> EdgeBasedHVS(Bitmap DecomposedImage)
         {
-            double[,] HH2 = new double[coeffs.GetLength(0) / 4, coeffs.GetLength(1) / 4];
-            double[,] HH1 = new double[coeffs.GetLength(0) / 2, coeffs.GetLength(1) / 2];
-            double[,] hvs = new double[coeffs.GetLength(0), coeffs.GetLength(1)];
-            for(int i = 0; i < HH2.GetLength(0); i++)
+            Bitmap Edge = ImageProcessing.LaplaceEdge(DecomposedImage);
+            double[,] RedPixel = ImageProcessing.ConvertToMatrix2(Edge).Item1;
+            double[,] GreenPixel = ImageProcessing.ConvertToMatrix2(Edge).Item2;
+            double[,] BluePixel = ImageProcessing.ConvertToMatrix2(Edge).Item3;
+
+            double[,] RedHVS = new double[RedPixel.GetLength(0),RedPixel.GetLength(1)];
+            double[,] GreenHVS = new double[GreenPixel.GetLength(0), GreenPixel.GetLength(1)];
+            double[,] BlueHVS = new double[BluePixel.GetLength(0), BluePixel.GetLength(1)];
+
+            #region Mean of Edge Values
+            double redSum = 0;
+            double r = 0;
+            for(int i = 0; i < RedPixel.GetLength(0) / 4; i++)
             {
-                for(int j = 0; j < HH2.GetLength(1); j++)
+                for(int j = 0; j < RedPixel.GetLength(1) / 4; j++)
                 {
-                    HH2[i, j] = ((coeffs[i, j] * VarianceOfHH2(coeffs,NumOfTree))/4) + 0.01;
+                    redSum += RedPixel[i, j];
+                    r++;
                 }
             }
 
-            
-            for(int k = hvs.GetLength(0)/4; k < hvs.GetLength(0)/2; k++)
+            double greenSum = 0;
+            double g = 0;
+            for (int i = 0; i < GreenPixel.GetLength(0) / 4; i++)
             {
-                for(int l = hvs.GetLength(1)/4; l < hvs.GetLength(1)/2; l++)
+                for (int j = 0; j < GreenPixel.GetLength(1) / 4; j++)
                 {
-                    hvs[k, l] = HH2[k - (hvs.GetLength(0) / 4), l - (hvs.GetLength(1) / 4)];
+                    greenSum += GreenPixel[i, j];
+                    g++;
                 }
             }
 
-            for(int m = hvs.GetLength(0) / 2; m < hvs.GetLength(0); m++)
+            double blueSum = 0;
+            double b = 0;
+            for (int i = 0; i < BluePixel.GetLength(0) / 4; i++)
             {
-                for(int n = hvs.GetLength(1) / 2; n < hvs.GetLength(1); n++)
+                for (int j = 0; j < BluePixel.GetLength(1) / 4; j++)
                 {
-                    hvs[m, n] = 0.01;//HH2[m - (hvs.GetLength(0) / 2), n - (hvs.GetLength(1) / 2)];
+                    blueSum += BluePixel[i, j];
+                    b++;
                 }
             }
 
-            return hvs;
-        }
+            double meanRed = redSum / r;
+            double meanGreen = greenSum / g;
+            double meanBlue = blueSum / b;
+            #endregion
 
-        public static double VarianceOfHH2(double[,] coeffs,int NumOfTree)
-        {
-            List<double> list = new List<double>();
-            List<double> returnList = new List<double>();
-            for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            #region Red HVS
+            for (int i = 0; i < RedPixel.GetLength(0); i++)
             {
-                for(int j=coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                for(int j = 0; j < RedPixel.GetLength(1); j++)
                 {
-                    list.Add(coeffs[i, j]);
+                    RedHVS[i, j] = (Math.Sqrt(RedPixel[i, j]) + meanRed) ;//Math.Sqrt(RedPixel[i, j]) + 0.1;
                 }
             }
+            #endregion
 
-            for(int k = 0; k < NumOfTree; k++)
+            #region Green HVS
+            for(int i = 0; i < GreenPixel.GetLength(0); i++)
             {
-                returnList.Add(list[k]);
-            }
-
-            double[] listHH2 = returnList.ToArray();
-            double varianceHH2 = Tools.Variance(listHH2);
-            return varianceHH2;
-        }
-
-        public static double VarianceOfLH2(double[,] coeffs, int NumOfTree)
-        {
-            List<double> list = new List<double>();
-            List<double> returnList = new List<double>();
-            for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
-            {
-                for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+                for(int j = 0; j < GreenPixel.GetLength(1); j++)
                 {
-                    list.Add(coeffs[i, j]);
+                    GreenHVS[i, j] = (Math.Sqrt(GreenPixel[i, j]) + meanGreen) ;//Math.Sqrt(GreenPixel[i, j]) + 0.1;
                 }
             }
+            #endregion
 
-            for (int k = 0; k < NumOfTree; k++)
+            #region Blue HVS
+            for(int i = 0; i < BluePixel.GetLength(0); i++)
             {
-                returnList.Add(list[k]);
-            }
-
-            double[] listLH2 = returnList.ToArray();
-            double varianceLH2 = Tools.Variance(listLH2);
-            return varianceLH2;
-        }
-
-        double VarianceOfHH1(double[,] coeffs, int NumOfTree)
-        {
-            List<double> list = new List<double>();
-            List<double> returnList = new List<double>();
-            for (int i = coeffs.GetLength(0) / 2; i < coeffs.GetLength(0); i++)
-            {
-                for (int j = coeffs.GetLength(1) / 2; j < coeffs.GetLength(1); j++)
+                for(int j = 0; j < BluePixel.GetLength(1); j++)
                 {
-                    list.Add(coeffs[i, j]);
+                    BlueHVS[i, j] = (Math.Sqrt(BluePixel[i, j]) + meanBlue) ;//Math.Sqrt(BluePixel[i, j]) + 0.1;
                 }
             }
+            #endregion
 
-            for (int k = 0; k < NumOfTree*2; k++)
-            {
-                returnList.Add(list[k]);
-            }
-
-            double[] listHH1 = returnList.ToArray();
-            double varianceHH1 = Tools.Variance(listHH1);
-            return varianceHH1;
-        }
-        #endregion        
-
-        #region Calculate Embedded strength according to Contrast Value in LL
-        public static double EmbedStrength(double[,] coeffs, double[,] pixels, int NumOfTree)
-        {
-            double[,] embedstrength = new double[pixels.GetLength(0), pixels.GetLength(1)];
-
-            List<double> list = new List<double>();
-            List<double> returnList = new List<double>();
-            for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
-            {
-                for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
-                {
-                    list.Add(pixels[i, j]);
-                }
-            }
-
-            for (int k = 0; k < NumOfTree; k++)
-            {
-                returnList.Add(list[k]);
-            }
-
-            double[] SelectedPixelValues = returnList.ToArray();
-            double Mean = Tools.Mean(SelectedPixelValues);
-            double Mode = Tools.Mode(SelectedPixelValues);
-            double diff = Math.Abs(Mean - Mode);
-            //if (diff <= 30)
-            //{
-            //    return 0.001;
-            //}
-            //else if (diff > 30 && diff <= 60)
-            //{
-            //    return 0.01;
-            //}else if(diff > 60 && diff < 90)
-            //{
-            //    return 0.1;
-            //}
-
-            return Mean;
+            return new Tuple<double[,], double[,], double[,]>(RedHVS,GreenHVS,BlueHVS);
         }
         #endregion
+
+
+
+
+
     }
 }

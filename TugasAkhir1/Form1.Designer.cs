@@ -36,24 +36,38 @@
             this.HostImageLocationTxt = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label39 = new System.Windows.Forms.Label();
+            this.dwtTypeValue2 = new System.Windows.Forms.ComboBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.embedConstantValue2 = new System.Windows.Forms.TextBox();
+            this.subbandValue2 = new System.Windows.Forms.ComboBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.button14 = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
             this.MSEValue = new System.Windows.Forms.Label();
             this.resultLbl = new System.Windows.Forms.Label();
             this.MSElbl = new System.Windows.Forms.Label();
-            this.BERValue = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
-            this.BERlbl = new System.Windows.Forms.Label();
             this.button18 = new System.Windows.Forms.Button();
             this.PSNRValue = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.PSNRlbl = new System.Windows.Forms.Label();
-            this.button17 = new System.Windows.Forms.Button();
             this.transformedImage = new System.Windows.Forms.PictureBox();
+            this.button17 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.subbandValue = new System.Windows.Forms.ComboBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.embedConstantValue = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.HVSValue = new System.Windows.Forms.ComboBox();
+            this.dwtTypeValue = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.seedValue = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.watermarkImage = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
@@ -61,6 +75,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.StatusPanel = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
             this.TimeExecTxt = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -70,6 +85,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button11 = new System.Windows.Forms.Button();
             this.panel13 = new System.Windows.Forms.Panel();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.button24 = new System.Windows.Forms.Button();
@@ -119,22 +135,30 @@
             this.label11 = new System.Windows.Forms.Label();
             this.noiseBtn = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
-            this.extractedImage = new System.Windows.Forms.PictureBox();
+            this.extractedImageRed = new System.Windows.Forms.PictureBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.label36 = new System.Windows.Forms.Label();
+            this.BlueextractedBERtxt = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.GreenextractedBERtxt = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.extractedImageBlue = new System.Windows.Forms.PictureBox();
+            this.extractedImageGreen = new System.Windows.Forms.PictureBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.extractedBERtxt = new System.Windows.Forms.Label();
+            this.RedextractedBERtxt = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.psnrtxt = new System.Windows.Forms.RichTextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.bertxt = new System.Windows.Forms.RichTextBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.seedValue = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -150,9 +174,11 @@
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.extractedImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extractedImageRed)).BeginInit();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.extractedImageBlue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extractedImageGreen)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -234,49 +260,121 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.label39);
+            this.panel2.Controls.Add(this.dwtTypeValue2);
+            this.panel2.Controls.Add(this.label37);
+            this.panel2.Controls.Add(this.embedConstantValue2);
+            this.panel2.Controls.Add(this.subbandValue2);
+            this.panel2.Controls.Add(this.label34);
+            this.panel2.Controls.Add(this.button14);
             this.panel2.Controls.Add(this.label24);
-            this.panel2.Controls.Add(this.label23);
             this.panel2.Controls.Add(this.MSEValue);
             this.panel2.Controls.Add(this.resultLbl);
             this.panel2.Controls.Add(this.MSElbl);
-            this.panel2.Controls.Add(this.BERValue);
             this.panel2.Controls.Add(this.button12);
-            this.panel2.Controls.Add(this.BERlbl);
             this.panel2.Controls.Add(this.button18);
             this.panel2.Controls.Add(this.PSNRValue);
             this.panel2.Controls.Add(this.button10);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.PSNRlbl);
-            this.panel2.Controls.Add(this.button17);
             this.panel2.Controls.Add(this.transformedImage);
-            this.panel2.Controls.Add(this.button13);
             this.panel2.Location = new System.Drawing.Point(383, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(375, 393);
             this.panel2.TabIndex = 3;
             // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(4, 366);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(36, 13);
+            this.label39.TabIndex = 33;
+            this.label39.Text = "DWT:";
+            // 
+            // dwtTypeValue2
+            // 
+            this.dwtTypeValue2.FormattingEnabled = true;
+            this.dwtTypeValue2.Items.AddRange(new object[] {
+            "Haar",
+            "Db2",
+            "Db3"});
+            this.dwtTypeValue2.Location = new System.Drawing.Point(42, 361);
+            this.dwtTypeValue2.Name = "dwtTypeValue2";
+            this.dwtTypeValue2.Size = new System.Drawing.Size(46, 21);
+            this.dwtTypeValue2.TabIndex = 33;
+            this.dwtTypeValue2.Text = "Haar";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(88, 366);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(73, 13);
+            this.label37.TabIndex = 33;
+            this.label37.Text = "Embed Const:";
+            // 
+            // embedConstantValue2
+            // 
+            this.embedConstantValue2.BackColor = System.Drawing.SystemColors.Window;
+            this.embedConstantValue2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.embedConstantValue2.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.embedConstantValue2.Location = new System.Drawing.Point(161, 364);
+            this.embedConstantValue2.Multiline = true;
+            this.embedConstantValue2.Name = "embedConstantValue2";
+            this.embedConstantValue2.Size = new System.Drawing.Size(35, 18);
+            this.embedConstantValue2.TabIndex = 33;
+            this.embedConstantValue2.Text = "0.6";
+            // 
+            // subbandValue2
+            // 
+            this.subbandValue2.FormattingEnabled = true;
+            this.subbandValue2.Items.AddRange(new object[] {
+            "lh",
+            "hl",
+            "hh"});
+            this.subbandValue2.Location = new System.Drawing.Point(248, 361);
+            this.subbandValue2.Name = "subbandValue2";
+            this.subbandValue2.Size = new System.Drawing.Size(37, 21);
+            this.subbandValue2.TabIndex = 34;
+            this.subbandValue2.Text = "hh";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(194, 366);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(53, 13);
+            this.label34.TabIndex = 33;
+            this.label34.Text = "Subband:";
+            // 
+            // button14
+            // 
+            this.button14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.button14.FlatAppearance.BorderSize = 0;
+            this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button14.Location = new System.Drawing.Point(135, 324);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(52, 25);
+            this.button14.TabIndex = 23;
+            this.button14.TabStop = false;
+            this.button14.Text = "PSNR";
+            this.button14.UseVisualStyleBackColor = false;
+            this.button14.Click += new System.EventHandler(this.button14_Click_1);
+            // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(264, 332);
+            this.label24.Location = new System.Drawing.Point(351, 332);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(20, 13);
             this.label24.TabIndex = 21;
             this.label24.Text = "dB";
             // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(356, 332);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(15, 13);
-            this.label23.TabIndex = 20;
-            this.label23.Text = "%";
-            // 
             // MSEValue
             // 
             this.MSEValue.AutoSize = true;
-            this.MSEValue.Location = new System.Drawing.Point(142, 332);
+            this.MSEValue.Location = new System.Drawing.Point(225, 332);
             this.MSEValue.Name = "MSEValue";
             this.MSEValue.Size = new System.Drawing.Size(13, 13);
             this.MSEValue.TabIndex = 10;
@@ -294,20 +392,11 @@
             // MSElbl
             // 
             this.MSElbl.AutoSize = true;
-            this.MSElbl.Location = new System.Drawing.Point(110, 332);
+            this.MSElbl.Location = new System.Drawing.Point(193, 332);
             this.MSElbl.Name = "MSElbl";
             this.MSElbl.Size = new System.Drawing.Size(36, 13);
             this.MSElbl.TabIndex = 9;
             this.MSElbl.Text = "MSE :";
-            // 
-            // BERValue
-            // 
-            this.BERValue.AutoSize = true;
-            this.BERValue.Location = new System.Drawing.Point(325, 332);
-            this.BERValue.Name = "BERValue";
-            this.BERValue.Size = new System.Drawing.Size(13, 13);
-            this.BERValue.TabIndex = 8;
-            this.BERValue.Text = "0";
             // 
             // button12
             // 
@@ -323,15 +412,6 @@
             this.button12.Text = "Browse ";
             this.button12.UseVisualStyleBackColor = false;
             this.button12.Click += new System.EventHandler(this.button12_Click_1);
-            // 
-            // BERlbl
-            // 
-            this.BERlbl.AutoSize = true;
-            this.BERlbl.Location = new System.Drawing.Point(294, 332);
-            this.BERlbl.Name = "BERlbl";
-            this.BERlbl.Size = new System.Drawing.Size(38, 13);
-            this.BERlbl.TabIndex = 6;
-            this.BERlbl.Text = "BER : ";
             // 
             // button18
             // 
@@ -350,7 +430,7 @@
             // PSNRValue
             // 
             this.PSNRValue.AutoSize = true;
-            this.PSNRValue.Location = new System.Drawing.Point(226, 332);
+            this.PSNRValue.Location = new System.Drawing.Point(313, 332);
             this.PSNRValue.Name = "PSNRValue";
             this.PSNRValue.Size = new System.Drawing.Size(13, 13);
             this.PSNRValue.TabIndex = 7;
@@ -361,9 +441,9 @@
             this.button10.BackColor = System.Drawing.Color.WhiteSmoke;
             this.button10.FlatAppearance.BorderSize = 0;
             this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button10.Location = new System.Drawing.Point(3, 360);
+            this.button10.Location = new System.Drawing.Point(80, 324);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(65, 23);
+            this.button10.Size = new System.Drawing.Size(53, 26);
             this.button10.TabIndex = 13;
             this.button10.TabStop = false;
             this.button10.Text = "Save";
@@ -382,25 +462,11 @@
             // PSNRlbl
             // 
             this.PSNRlbl.AutoSize = true;
-            this.PSNRlbl.Location = new System.Drawing.Point(184, 332);
+            this.PSNRlbl.Location = new System.Drawing.Point(271, 332);
             this.PSNRlbl.Name = "PSNRlbl";
             this.PSNRlbl.Size = new System.Drawing.Size(46, 13);
             this.PSNRlbl.TabIndex = 5;
             this.PSNRlbl.Text = "PSNR : ";
-            // 
-            // button17
-            // 
-            this.button17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.button17.FlatAppearance.BorderSize = 0;
-            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button17.Location = new System.Drawing.Point(187, 361);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(90, 22);
-            this.button17.TabIndex = 19;
-            this.button17.TabStop = false;
-            this.button17.Text = "Extract";
-            this.button17.UseVisualStyleBackColor = false;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // transformedImage
             // 
@@ -416,12 +482,26 @@
             this.transformedImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transformedImage_MouseMove);
             this.transformedImage.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transformedImage_MouseUp);
             // 
+            // button17
+            // 
+            this.button17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.button17.FlatAppearance.BorderSize = 0;
+            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button17.Location = new System.Drawing.Point(359, 221);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(90, 22);
+            this.button17.TabIndex = 19;
+            this.button17.TabStop = false;
+            this.button17.Text = "Extract";
+            this.button17.UseVisualStyleBackColor = false;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
             // button13
             // 
             this.button13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.button13.FlatAppearance.BorderSize = 0;
             this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button13.Location = new System.Drawing.Point(80, 361);
+            this.button13.Location = new System.Drawing.Point(359, 193);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(97, 22);
             this.button13.TabIndex = 15;
@@ -451,6 +531,14 @@
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.subbandValue);
+            this.panel3.Controls.Add(this.label29);
+            this.panel3.Controls.Add(this.embedConstantValue);
+            this.panel3.Controls.Add(this.label28);
+            this.panel3.Controls.Add(this.HVSValue);
+            this.panel3.Controls.Add(this.dwtTypeValue);
+            this.panel3.Controls.Add(this.label27);
+            this.panel3.Controls.Add(this.label23);
             this.panel3.Controls.Add(this.seedValue);
             this.panel3.Controls.Add(this.label25);
             this.panel3.Controls.Add(this.watermarkImage);
@@ -462,13 +550,120 @@
             this.panel3.Size = new System.Drawing.Size(280, 286);
             this.panel3.TabIndex = 5;
             // 
+            // subbandValue
+            // 
+            this.subbandValue.FormattingEnabled = true;
+            this.subbandValue.Items.AddRange(new object[] {
+            "lh",
+            "hl",
+            "hh"});
+            this.subbandValue.Location = new System.Drawing.Point(189, 78);
+            this.subbandValue.Name = "subbandValue";
+            this.subbandValue.Size = new System.Drawing.Size(69, 21);
+            this.subbandValue.TabIndex = 32;
+            this.subbandValue.Text = "hh";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(186, 62);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(53, 13);
+            this.label29.TabIndex = 31;
+            this.label29.Text = "Subband:";
+            // 
+            // embedConstantValue
+            // 
+            this.embedConstantValue.BackColor = System.Drawing.SystemColors.Window;
+            this.embedConstantValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.embedConstantValue.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.embedConstantValue.Location = new System.Drawing.Point(189, 217);
+            this.embedConstantValue.Multiline = true;
+            this.embedConstantValue.Name = "embedConstantValue";
+            this.embedConstantValue.Size = new System.Drawing.Size(69, 18);
+            this.embedConstantValue.TabIndex = 30;
+            this.embedConstantValue.Text = "0.6";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(186, 201);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(76, 13);
+            this.label28.TabIndex = 29;
+            this.label28.Text = "Embed Const.:";
+            // 
+            // HVSValue
+            // 
+            this.HVSValue.FormattingEnabled = true;
+            this.HVSValue.Items.AddRange(new object[] {
+            "Xie Model",
+            "Edge Based"});
+            this.HVSValue.Location = new System.Drawing.Point(189, 168);
+            this.HVSValue.Name = "HVSValue";
+            this.HVSValue.Size = new System.Drawing.Size(69, 21);
+            this.HVSValue.TabIndex = 28;
+            this.HVSValue.Text = "Xie Model";
+            // 
+            // dwtTypeValue
+            // 
+            this.dwtTypeValue.FormattingEnabled = true;
+            this.dwtTypeValue.Items.AddRange(new object[] {
+            "Haar",
+            "Db2",
+            "Db3"});
+            this.dwtTypeValue.Location = new System.Drawing.Point(189, 28);
+            this.dwtTypeValue.Name = "dwtTypeValue";
+            this.dwtTypeValue.Size = new System.Drawing.Size(69, 21);
+            this.dwtTypeValue.TabIndex = 27;
+            this.dwtTypeValue.Text = "Haar";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(186, 12);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(36, 13);
+            this.label27.TabIndex = 26;
+            this.label27.Text = "DWT:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(186, 152);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(32, 13);
+            this.label23.TabIndex = 24;
+            this.label23.Text = "HVS:";
+            // 
+            // seedValue
+            // 
+            this.seedValue.BackColor = System.Drawing.SystemColors.Window;
+            this.seedValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.seedValue.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.seedValue.Location = new System.Drawing.Point(189, 123);
+            this.seedValue.Multiline = true;
+            this.seedValue.Name = "seedValue";
+            this.seedValue.Size = new System.Drawing.Size(69, 18);
+            this.seedValue.TabIndex = 23;
+            this.seedValue.Text = "10000";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(186, 108);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(28, 13);
+            this.label25.TabIndex = 22;
+            this.label25.Text = "Key:";
+            // 
             // watermarkImage
             // 
             this.watermarkImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.watermarkImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("watermarkImage.InitialImage")));
             this.watermarkImage.Location = new System.Drawing.Point(3, 17);
             this.watermarkImage.Name = "watermarkImage";
-            this.watermarkImage.Size = new System.Drawing.Size(200, 200);
+            this.watermarkImage.Size = new System.Drawing.Size(180, 180);
             this.watermarkImage.TabIndex = 0;
             this.watermarkImage.TabStop = false;
             // 
@@ -528,9 +723,9 @@
             this.button6.BackColor = System.Drawing.Color.WhiteSmoke;
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(6, 228);
+            this.button6.Location = new System.Drawing.Point(6, 260);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(53, 25);
+            this.button6.Size = new System.Drawing.Size(69, 25);
             this.button6.TabIndex = 7;
             this.button6.TabStop = false;
             this.button6.Text = "Save";
@@ -550,6 +745,18 @@
             this.StatusPanel.Name = "StatusPanel";
             this.StatusPanel.Size = new System.Drawing.Size(994, 31);
             this.StatusPanel.TabIndex = 9;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Sudo", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.ForeColor = System.Drawing.Color.DarkRed;
+            this.label26.Location = new System.Drawing.Point(458, 10);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(529, 13);
+            this.label26.TabIndex = 5;
+            this.label26.Text = "Color Image Blind Watermarking Using Discrete Wavelet Transform and Hidden Markov" +
+    " Model";
             // 
             // TimeExecTxt
             // 
@@ -638,6 +845,7 @@
             // panel4
             // 
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.button11);
             this.panel4.Controls.Add(this.panel13);
             this.panel4.Controls.Add(this.panel11);
             this.panel4.Controls.Add(this.panel10);
@@ -645,10 +853,22 @@
             this.panel4.Controls.Add(this.panel8);
             this.panel4.Controls.Add(this.panel7);
             this.panel4.Controls.Add(this.label7);
+            this.panel4.Controls.Add(this.button13);
+            this.panel4.Controls.Add(this.button17);
             this.panel4.Location = new System.Drawing.Point(383, 404);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(614, 251);
             this.panel4.TabIndex = 13;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(359, 164);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.TabIndex = 34;
+            this.button11.Text = "button11";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // panel13
             // 
@@ -1284,15 +1504,15 @@
             this.label8.TabIndex = 9;
             this.label8.Text = "Extracted Watermark Image:";
             // 
-            // extractedImage
+            // extractedImageRed
             // 
-            this.extractedImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.extractedImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("extractedImage.InitialImage")));
-            this.extractedImage.Location = new System.Drawing.Point(6, 16);
-            this.extractedImage.Name = "extractedImage";
-            this.extractedImage.Size = new System.Drawing.Size(200, 200);
-            this.extractedImage.TabIndex = 10;
-            this.extractedImage.TabStop = false;
+            this.extractedImageRed.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.extractedImageRed.InitialImage = ((System.Drawing.Image)(resources.GetObject("extractedImageRed.InitialImage")));
+            this.extractedImageRed.Location = new System.Drawing.Point(6, 36);
+            this.extractedImageRed.Name = "extractedImageRed";
+            this.extractedImageRed.Size = new System.Drawing.Size(100, 100);
+            this.extractedImageRed.TabIndex = 10;
+            this.extractedImageRed.TabStop = false;
             // 
             // panel5
             // 
@@ -1332,42 +1552,154 @@
             // panel6
             // 
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.label36);
+            this.panel6.Controls.Add(this.BlueextractedBERtxt);
+            this.panel6.Controls.Add(this.label38);
+            this.panel6.Controls.Add(this.label33);
+            this.panel6.Controls.Add(this.GreenextractedBERtxt);
+            this.panel6.Controls.Add(this.label35);
+            this.panel6.Controls.Add(this.label32);
+            this.panel6.Controls.Add(this.label31);
+            this.panel6.Controls.Add(this.label30);
+            this.panel6.Controls.Add(this.extractedImageBlue);
+            this.panel6.Controls.Add(this.extractedImageGreen);
             this.panel6.Controls.Add(this.label21);
-            this.panel6.Controls.Add(this.extractedBERtxt);
+            this.panel6.Controls.Add(this.RedextractedBERtxt);
             this.panel6.Controls.Add(this.button9);
             this.panel6.Controls.Add(this.label22);
-            this.panel6.Controls.Add(this.extractedImage);
+            this.panel6.Controls.Add(this.extractedImageRed);
             this.panel6.Controls.Add(this.label8);
             this.panel6.Controls.Add(this.button6);
             this.panel6.Location = new System.Drawing.Point(764, 3);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(233, 260);
+            this.panel6.Size = new System.Drawing.Size(233, 290);
             this.panel6.TabIndex = 15;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(208, 207);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(15, 13);
+            this.label36.TabIndex = 33;
+            this.label36.Text = "%";
+            // 
+            // BlueextractedBERtxt
+            // 
+            this.BlueextractedBERtxt.AutoSize = true;
+            this.BlueextractedBERtxt.Location = new System.Drawing.Point(181, 207);
+            this.BlueextractedBERtxt.Name = "BlueextractedBERtxt";
+            this.BlueextractedBERtxt.Size = new System.Drawing.Size(13, 13);
+            this.BlueextractedBERtxt.TabIndex = 32;
+            this.BlueextractedBERtxt.Text = "0";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(118, 207);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(71, 13);
+            this.label38.TabIndex = 31;
+            this.label38.Text = "Blue BER    : ";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(209, 181);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(15, 13);
+            this.label33.TabIndex = 30;
+            this.label33.Text = "%";
+            // 
+            // GreenextractedBERtxt
+            // 
+            this.GreenextractedBERtxt.AutoSize = true;
+            this.GreenextractedBERtxt.Location = new System.Drawing.Point(181, 181);
+            this.GreenextractedBERtxt.Name = "GreenextractedBERtxt";
+            this.GreenextractedBERtxt.Size = new System.Drawing.Size(13, 13);
+            this.GreenextractedBERtxt.TabIndex = 29;
+            this.GreenextractedBERtxt.Text = "0";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(118, 181);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(70, 13);
+            this.label35.TabIndex = 28;
+            this.label35.Text = "Green BER : ";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 139);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(37, 13);
+            this.label32.TabIndex = 27;
+            this.label32.Text = "Blue : ";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(118, 20);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(45, 13);
+            this.label31.TabIndex = 26;
+            this.label31.Text = "Green : ";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(3, 20);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(33, 13);
+            this.label30.TabIndex = 25;
+            this.label30.Text = "Red: ";
+            // 
+            // extractedImageBlue
+            // 
+            this.extractedImageBlue.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.extractedImageBlue.InitialImage = ((System.Drawing.Image)(resources.GetObject("extractedImageBlue.InitialImage")));
+            this.extractedImageBlue.Location = new System.Drawing.Point(6, 154);
+            this.extractedImageBlue.Name = "extractedImageBlue";
+            this.extractedImageBlue.Size = new System.Drawing.Size(100, 100);
+            this.extractedImageBlue.TabIndex = 24;
+            this.extractedImageBlue.TabStop = false;
+            // 
+            // extractedImageGreen
+            // 
+            this.extractedImageGreen.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.extractedImageGreen.InitialImage = ((System.Drawing.Image)(resources.GetObject("extractedImageGreen.InitialImage")));
+            this.extractedImageGreen.Location = new System.Drawing.Point(119, 36);
+            this.extractedImageGreen.Name = "extractedImageGreen";
+            this.extractedImageGreen.Size = new System.Drawing.Size(100, 100);
+            this.extractedImageGreen.TabIndex = 23;
+            this.extractedImageGreen.TabStop = false;
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(193, 234);
+            this.label21.Location = new System.Drawing.Point(208, 154);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(15, 13);
             this.label21.TabIndex = 22;
             this.label21.Text = "%";
             // 
-            // extractedBERtxt
+            // RedextractedBERtxt
             // 
-            this.extractedBERtxt.AutoSize = true;
-            this.extractedBERtxt.Location = new System.Drawing.Point(160, 234);
-            this.extractedBERtxt.Name = "extractedBERtxt";
-            this.extractedBERtxt.Size = new System.Drawing.Size(13, 13);
-            this.extractedBERtxt.TabIndex = 21;
-            this.extractedBERtxt.Text = "0";
+            this.RedextractedBERtxt.AutoSize = true;
+            this.RedextractedBERtxt.Location = new System.Drawing.Point(181, 154);
+            this.RedextractedBERtxt.Name = "RedextractedBERtxt";
+            this.RedextractedBERtxt.Size = new System.Drawing.Size(13, 13);
+            this.RedextractedBERtxt.TabIndex = 21;
+            this.RedextractedBERtxt.Text = "0";
             // 
             // button9
             // 
             this.button9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.button9.FlatAppearance.BorderSize = 0;
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button9.Location = new System.Drawing.Point(65, 228);
+            this.button9.Location = new System.Drawing.Point(121, 229);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(62, 25);
             this.button9.TabIndex = 20;
@@ -1379,24 +1711,24 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(129, 234);
+            this.label22.Location = new System.Drawing.Point(118, 154);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(38, 13);
+            this.label22.Size = new System.Drawing.Size(70, 13);
             this.label22.TabIndex = 20;
-            this.label22.Text = "BER : ";
+            this.label22.Text = "Red BER    : ";
             // 
             // psnrtxt
             // 
-            this.psnrtxt.Location = new System.Drawing.Point(764, 290);
+            this.psnrtxt.Location = new System.Drawing.Point(764, 312);
             this.psnrtxt.Name = "psnrtxt";
-            this.psnrtxt.Size = new System.Drawing.Size(111, 108);
+            this.psnrtxt.Size = new System.Drawing.Size(111, 86);
             this.psnrtxt.TabIndex = 20;
             this.psnrtxt.Text = "";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(764, 270);
+            this.label19.Location = new System.Drawing.Point(764, 296);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(71, 13);
             this.label19.TabIndex = 37;
@@ -1405,7 +1737,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(883, 270);
+            this.label20.Location = new System.Drawing.Point(883, 296);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(63, 13);
             this.label20.TabIndex = 38;
@@ -1413,44 +1745,11 @@
             // 
             // bertxt
             // 
-            this.bertxt.Location = new System.Drawing.Point(886, 290);
+            this.bertxt.Location = new System.Drawing.Point(886, 312);
             this.bertxt.Name = "bertxt";
-            this.bertxt.Size = new System.Drawing.Size(111, 108);
+            this.bertxt.Size = new System.Drawing.Size(111, 86);
             this.bertxt.TabIndex = 36;
             this.bertxt.Text = "";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(209, 19);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(28, 13);
-            this.label25.TabIndex = 22;
-            this.label25.Text = "Key:";
-            // 
-            // seedValue
-            // 
-            this.seedValue.BackColor = System.Drawing.SystemColors.Window;
-            this.seedValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.seedValue.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.seedValue.Location = new System.Drawing.Point(209, 36);
-            this.seedValue.Multiline = true;
-            this.seedValue.Name = "seedValue";
-            this.seedValue.Size = new System.Drawing.Size(66, 18);
-            this.seedValue.TabIndex = 23;
-            this.seedValue.Text = "10000";
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Sudo", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.ForeColor = System.Drawing.Color.DarkRed;
-            this.label26.Location = new System.Drawing.Point(458, 10);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(529, 13);
-            this.label26.TabIndex = 5;
-            this.label26.Text = "Color Image Blind Watermarking Using Discrete Wavelet Transform and Hidden Markov" +
-    " Model";
             // 
             // Form1
             // 
@@ -1499,11 +1798,13 @@
             this.panel8.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.extractedImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extractedImageRed)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.extractedImageBlue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extractedImageGreen)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1534,9 +1835,7 @@
         private System.Windows.Forms.Label TimeExecTxt;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label BERValue;
         private System.Windows.Forms.Label PSNRValue;
-        private System.Windows.Forms.Label BERlbl;
         private System.Windows.Forms.Label PSNRlbl;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
@@ -1556,7 +1855,7 @@
         private System.Windows.Forms.Button noiseBtn;
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.Button button22;
-        private System.Windows.Forms.PictureBox extractedImage;
+        private System.Windows.Forms.PictureBox extractedImageRed;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label10;
@@ -1608,15 +1907,41 @@
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label extractedBERtxt;
+        private System.Windows.Forms.Label RedextractedBERtxt;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label23;
         private System.Windows.Forms.RichTextBox bertxt;
         private System.Windows.Forms.TextBox seedValue;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.ComboBox dwtTypeValue;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ComboBox HVSValue;
+        private System.Windows.Forms.TextBox embedConstantValue;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.ComboBox subbandValue;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.PictureBox extractedImageBlue;
+        private System.Windows.Forms.PictureBox extractedImageGreen;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label BlueextractedBERtxt;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label GreenextractedBERtxt;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.ComboBox subbandValue2;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.TextBox embedConstantValue2;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.ComboBox dwtTypeValue2;
     }
 }
 
