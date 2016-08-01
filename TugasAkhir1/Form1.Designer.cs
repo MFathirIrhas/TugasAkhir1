@@ -582,7 +582,7 @@
             this.embedConstantValue.Name = "embedConstantValue";
             this.embedConstantValue.Size = new System.Drawing.Size(69, 18);
             this.embedConstantValue.TabIndex = 30;
-            this.embedConstantValue.Text = "0.6";
+            this.embedConstantValue.Text = "1";
             // 
             // label28
             // 

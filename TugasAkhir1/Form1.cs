@@ -1635,7 +1635,23 @@ namespace TugasAkhir1
 
             //tw1.Close();
             //double[,] ConvertEdgeToMatrix = Embed.ConvertEdgeToMatrix(new Bitmap(transformedImage.Image));
-            transformedImage.Image = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+            //transformedImage.Image = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
+            //double[,] GreenMatrix = ImageProcessing.ConvertToMatrix2(new Bitmap(hostImage.Image)).Item2;
+            //double[,] db2Coeffs = db2.WaveletCoeff(GreenMatrix, true, 2);
+            double[,] k = Daubechies2.Db2Kernel(512);
+            TextWriter tw1 = new StreamWriter("Daubechies2_Kernel.txt");
+            //tw1.WriteLine("Total Real Watermark: " );
+            int c = 1;
+            for (int i = 0; i < k.GetLength(0); i++)
+            {
+                for (int j = 0; j < k.GetLength(1); j++)
+                {
+                    tw1.Write("[" + c + "]" + k[i, j]);
+                    c++;
+                }
+                tw1.WriteLine();
+            }
+            tw1.Close();
         }
 
         private void button14_Click_1(object sender, EventArgs e)

@@ -352,7 +352,7 @@ namespace TugasAkhir1
         //}
         //#endregion
 
-        #region Detection using Baum-Welch Learning Parameter in LH ONLY using 2 Possible Watermark pattern in each 5-nodes tree
+        #region Detection using Baum-Welch Learning Parameter using Xie Perceptual Model
         public static double[] BaumWelchDetectionInLH_2(double[,] coeffs, Image watermarkedImage, int NumOfScale2, int NumOfTrees, List<int> PNSeq, string rgb,string subband, double embed_constant)
         {
             double[] Watermark = new double[NumOfTrees];
@@ -389,8 +389,8 @@ namespace TugasAkhir1
             // difference in the average log-likelihood changes only by as little as 0.0001
             var teacher = new BaumWelchLearning<NormalDistribution>(model)
             {
-                Tolerance = 0.001,
-                Iterations = 10,
+                Tolerance = 0.01,
+                Iterations = 100,//10,
 
                 FittingOptions = new NormalOptions()
                 {
@@ -432,7 +432,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region Embedding using EdgeBasedHVS
+        #region Embedding using Baum-Welch Learning Parameter using EdgeBasedHVS Model
         public static double[] BaumWelchDetectionInLH_22(double[,] coeffs, Image watermarkedImage, int NumOfScale2, int NumOfTrees, List<int> PNSeq, string rgb, string subband, double embed_constant)
         {
             double[] Watermark = new double[NumOfTrees];

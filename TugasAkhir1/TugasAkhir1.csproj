@@ -144,6 +144,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Daubechies2.cs" />
     <Compile Include="db2.cs" />
     <Compile Include="Haar.cs" />
     <Compile Include="Embed.cs" />
