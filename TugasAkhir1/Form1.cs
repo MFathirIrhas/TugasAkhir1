@@ -384,6 +384,55 @@ namespace TugasAkhir1
                     MessageBox.Show("Load Image First", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
                 }
             }
+            else if(dwtTypeValue.Text == "Db2")
+            {
+                if (hostImage.Image != null)
+                {
+                    GUIStart("Processing...!");
+
+                    //int level = Convert.ToInt32(HVSValue.Text);
+                    ///For Visualization
+                    OriginalImage = new Bitmap(hostImage.Image);
+                    transformedImage.Image = Daubechies2.TransformDWT(true, false, 2, OriginalImage).Item4;
+
+                    ///For Wavelet Coefficients Extraction
+                    Bitmap b = new Bitmap(hostImage.Image);
+                    IMatrixR = ImageProcessing.ConvertToMatrix2(b).Item1;
+                    IMatrixG = ImageProcessing.ConvertToMatrix2(b).Item2;
+                    IMatrixB = ImageProcessing.ConvertToMatrix2(b).Item3;
+                    //double[,] IMatrix = ImageProcessing.ConvertToMatrix(b);
+                    //Test
+                    //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+
+                    double[,] ArrayImage = IMatrixG; //Embedding in Green 
+                    //Wavelet_Coefficients = Haar.WaveletCoeff(ArrayImage, true, level);
+                    Red_Coeffs = Daubechies2.WaveletCoeff(IMatrixR, true, 2);
+                    Green_Coeffs = Daubechies2.WaveletCoeff(IMatrixG, true, 2);
+                    Blue_Coeffs = Daubechies2.WaveletCoeff(IMatrixB, true, 2);
+                    resultLbl.Text = "Decomposed Host Image";
+                    GUIEnd("FDWT Succeed!", 0, 0, 0);
+
+                    /// Test 
+                    //int c = 1;
+                    //TextWriter tw2 = new StreamWriter("GreenPixels.txt");
+                    //tw2.WriteLine("Total Watermark ");
+                    //for (int i = 0; i < IMatrixG.GetLength(0); i++)
+                    //{
+                    //    for (int j = 0; j < IMatrixG.GetLength(1); j++)
+                    //    {
+                    //        tw2.Write("[" + c + "]" + IMatrixG[i, j] + " - ");
+                    //        c++;
+                    //    }
+                    //    tw2.WriteLine();
+                    //}
+                    //tw2.Close();
+
+                }
+                else
+                {
+                    MessageBox.Show("Load Image First", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                }
+            }
             
         }
 
@@ -993,80 +1042,161 @@ namespace TugasAkhir1
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e/*, double[,] Embedded_Coefficients*/) //Inverse Transform
         {
-            if (transformedImage.Image == null)
+            if(dwtTypeValue.Text == "Haar")
             {
-                MessageBox.Show("There is no Transformed image yet", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                if (transformedImage.Image == null)
+                {
+                    MessageBox.Show("There is no Transformed image yet", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    GUIStart("Processing.....!");
+                    //int level = Convert.ToInt32(HVSValue.Text);
+                    //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
+                    //double[,] InverseDWT = Haar.WaveletCoeff(Embedded_Wavelet_Coefficients, false, level);
+                    double[,] RedInverseDWT = Haar.WaveletCoeff(RedEmbedded_Wavelet_Coefficients, false, 2);
+                    double[,] GreenInverseDWT = Haar.WaveletCoeff(GreenEmbedded_Wavelet_Coefficients, false, 2);
+                    double[,] BlueInverseDWT = Haar.WaveletCoeff(BlueEmbedded_Wavelet_Coefficients, false, 2);
+
+
+                    /// Round all elements in InverseDWT
+                    //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
+
+                    //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                    transformedImage.Image = ImageProcessing.ConvertToBitmap2(RedInverseDWT, GreenInverseDWT, BlueInverseDWT);
+                    double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                    double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+                    double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                    GUIEnd("IDWT Succeed!", mse, psnr, ber);
+
+                    /// Test
+                    //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
+                    /// Test
+                    //int h = 1;
+                    //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
+                    //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
+                    //for (int i = 0; i < InverseDWT.GetLength(0); i++)
+                    //{
+                    //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
+                    //    {
+                    //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
+                    //        h++;
+                    //    }
+                    //    tw1.WriteLine();
+                    //}
+                    ////foreach (double i in ExtractedWatermark)
+                    ////{
+                    ////    tw1.WriteLine(i);
+                    ////}
+                    //tw1.Close();
+
+                    ///Activate Attack Button
+                    //histeqBtn.Enabled = true;
+                    //histeqBtn.BackColor = Color.DeepSkyBlue;
+                    //meanFilterBtn.Enabled = true;
+                    //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                    //medianFilterBtn.Enabled = true;
+                    //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                    //modusFilterBtn.Enabled = true;
+                    //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                    //jpegencoderBtn.Enabled = true;
+                    //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+
+                    resultLbl.Text = "Haar Watermarked Host Image";
+                    WatermarkedImage = new Bitmap(transformedImage.Image);
+                    Transformed_Image = new Bitmap(transformedImage.Image);
+
+                    double psnrvalue = Math.Round(psnr, 2);
+                    //double bervalue = Math.Round(psnr, 2);
+                    double msevalue = Math.Round(psnr, 2);
+                    psnrtxt.Text += ">" + file_name + "\n" + "PSNR:" + psnrvalue + "\n" + "Key is saved!" + "\n" + "-----------" + "\n";
+
+                    dwtTypeValue2.Text = dwtTypeValue.Text;
+                    embedConstantValue2.Text = embedConstantValue.Text;
+                    subbandValue2.Text = subbandValue.Text;
+
+                    //test
+                    //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+                }
             }
-            else
+            else if(dwtTypeValue.Text == "Db2")
             {
-                GUIStart("Processing.....!");
-                //int level = Convert.ToInt32(HVSValue.Text);
-                //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
-                //double[,] InverseDWT = Haar.WaveletCoeff(Embedded_Wavelet_Coefficients, false, level);
-                double[,] RedInverseDWT = Haar.WaveletCoeff(RedEmbedded_Wavelet_Coefficients, false, 2);
-                double[,] GreenInverseDWT = Haar.WaveletCoeff(GreenEmbedded_Wavelet_Coefficients, false, 2);
-                double[,] BlueInverseDWT = Haar.WaveletCoeff(BlueEmbedded_Wavelet_Coefficients, false, 2);
+                if (transformedImage.Image == null)
+                {
+                    MessageBox.Show("There is no Transformed image yet", "Incomplete Procedure Detected!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    GUIStart("Processing.....!");
+                    //int level = Convert.ToInt32(HVSValue.Text);
+                    //MessageBox.Show("Embedded Wavelet Coefficients: "+Embedded_Wavelet_Coefficients[0,0],"blabal",MessageBoxButtons.OK);
+                    //double[,] InverseDWT = Haar.WaveletCoeff(Embedded_Wavelet_Coefficients, false, level);
+                    double[,] RedInverseDWT = Daubechies2.WaveletCoeff(RedEmbedded_Wavelet_Coefficients, false, 2);
+                    double[,] GreenInverseDWT = Daubechies2.WaveletCoeff(GreenEmbedded_Wavelet_Coefficients, false, 2);
+                    double[,] BlueInverseDWT = Daubechies2.WaveletCoeff(BlueEmbedded_Wavelet_Coefficients, false, 2);
 
 
-                /// Round all elements in InverseDWT
-                //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
+                    /// Round all elements in InverseDWT
+                    //double[,] RoundedInversedDWT = Statistic.RoundAll(InverseDWT);
 
-                //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
-                transformedImage.Image = ImageProcessing.ConvertToBitmap2(RedInverseDWT, GreenInverseDWT, BlueInverseDWT);
-                double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-                double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
-                double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
-                GUIEnd("IDWT Succeed!",mse,psnr,ber);
+                    //transformedImage.Image = ImageProcessing.ConvertToBitmap(InverseDWT);
+                    transformedImage.Image = ImageProcessing.ConvertToBitmap2(RedInverseDWT, GreenInverseDWT, BlueInverseDWT);
+                    double mse = Statistic.MSE(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                    double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
+                    double ber = Statistic.BER(new Bitmap(hostImage.Image), new Bitmap(transformedImage.Image));
+                    GUIEnd("IDWT Succeed!", mse, psnr, ber);
 
-                /// Test
-                //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
-                /// Test
-                //int h = 1;
-                //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
-                //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
-                //for (int i = 0; i < InverseDWT.GetLength(0); i++)
-                //{
-                //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
-                //    {
-                //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
-                //        h++;
-                //    }
-                //    tw1.WriteLine();
-                //}
-                ////foreach (double i in ExtractedWatermark)
-                ////{
-                ////    tw1.WriteLine(i);
-                ////}
-                //tw1.Close();
+                    /// Test
+                    //double[,] WC = DWT.WaveletCoeff(InverseDWT, true, 2);
+                    /// Test
+                    //int h = 1;
+                    //TextWriter tw1 = new StreamWriter("InversedDWT.txt");
+                    //tw1.WriteLine("Total Watermark: " + InverseDWT.GetLength(0));
+                    //for (int i = 0; i < InverseDWT.GetLength(0); i++)
+                    //{
+                    //    for (int j = 0; j < InverseDWT.GetLength(1); j++)
+                    //    {
+                    //        tw1.Write("[" + h + "]" + InverseDWT[i, j] + " # ");
+                    //        h++;
+                    //    }
+                    //    tw1.WriteLine();
+                    //}
+                    ////foreach (double i in ExtractedWatermark)
+                    ////{
+                    ////    tw1.WriteLine(i);
+                    ////}
+                    //tw1.Close();
 
-                ///Activate Attack Button
-                //histeqBtn.Enabled = true;
-                //histeqBtn.BackColor = Color.DeepSkyBlue;
-                //meanFilterBtn.Enabled = true;
-                //meanFilterBtn.BackColor = Color.DeepSkyBlue;
-                //medianFilterBtn.Enabled = true;
-                //medianFilterBtn.BackColor = Color.DeepSkyBlue;
-                //modusFilterBtn.Enabled = true;
-                //modusFilterBtn.BackColor = Color.DeepSkyBlue;
-                //jpegencoderBtn.Enabled = true;
-                //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
+                    ///Activate Attack Button
+                    //histeqBtn.Enabled = true;
+                    //histeqBtn.BackColor = Color.DeepSkyBlue;
+                    //meanFilterBtn.Enabled = true;
+                    //meanFilterBtn.BackColor = Color.DeepSkyBlue;
+                    //medianFilterBtn.Enabled = true;
+                    //medianFilterBtn.BackColor = Color.DeepSkyBlue;
+                    //modusFilterBtn.Enabled = true;
+                    //modusFilterBtn.BackColor = Color.DeepSkyBlue;
+                    //jpegencoderBtn.Enabled = true;
+                    //jpegencoderBtn.BackColor = Color.DeepSkyBlue;
 
-                resultLbl.Text = "Watermarked Host Image";
-                WatermarkedImage = new Bitmap(transformedImage.Image);
-                Transformed_Image = new Bitmap(transformedImage.Image);
+                    resultLbl.Text = " Daubechies 2 Watermarked Host Image";
+                    WatermarkedImage = new Bitmap(transformedImage.Image);
+                    Transformed_Image = new Bitmap(transformedImage.Image);
 
-                double psnrvalue = Math.Round(psnr, 2);
-                //double bervalue = Math.Round(psnr, 2);
-                double msevalue = Math.Round(psnr, 2);
-                psnrtxt.Text += ">" + file_name + "\n" + "PSNR:"+psnrvalue+"\n"+ "Key is saved!"+"\n"+"-----------"+"\n";
+                    double psnrvalue = Math.Round(psnr, 2);
+                    //double bervalue = Math.Round(psnr, 2);
+                    double msevalue = Math.Round(psnr, 2);
+                    psnrtxt.Text += ">" + file_name + "\n" + "PSNR:" + psnrvalue + "\n" + "Key is saved!" + "\n" + "-----------" + "\n";
 
-                dwtTypeValue2.Text = dwtTypeValue.Text;
-                embedConstantValue2.Text = embedConstantValue.Text;
-                subbandValue2.Text = subbandValue.Text;
-                
-                //test
-                //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+                    dwtTypeValue2.Text = dwtTypeValue.Text;
+                    embedConstantValue2.Text = embedConstantValue.Text;
+                    subbandValue2.Text = subbandValue.Text;
+
+                    //test
+                    //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
+                }
             }
+            
 
         }
 
@@ -1638,20 +1768,42 @@ namespace TugasAkhir1
             //transformedImage.Image = ImageProcessing.LaplaceEdge(new Bitmap(transformedImage.Image));
             //double[,] GreenMatrix = ImageProcessing.ConvertToMatrix2(new Bitmap(hostImage.Image)).Item2;
             //double[,] db2Coeffs = db2.WaveletCoeff(GreenMatrix, true, 2);
-            double[,] k = Daubechies2.Db2Kernel(512);
-            TextWriter tw1 = new StreamWriter("Daubechies2_Kernel.txt");
-            //tw1.WriteLine("Total Real Watermark: " );
-            int c = 1;
-            for (int i = 0; i < k.GetLength(0); i++)
-            {
-                for (int j = 0; j < k.GetLength(1); j++)
-                {
-                    tw1.Write("[" + c + "]" + k[i, j]);
-                    c++;
-                }
-                tw1.WriteLine();
-            }
-            tw1.Close();
+            //double[,] k = Daubechies2.InverseDb2Kernel(512);
+            //TextWriter tw1 = new StreamWriter("Daubechies2_Kernel2.txt");
+            ////tw1.WriteLine("Total Real Watermark: " );
+            //int c = 1;
+            //for (int i = 0; i < k.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < k.GetLength(1); j++)
+            //    {
+            //        tw1.Write("[" + c + "]" + k[i, j]);
+            //        c++;
+            //    }
+            //    tw1.WriteLine();
+            //}
+            //tw1.Close();
+
+            double[,] pixels = ImageProcessing.ConvertToMatrix2(new Bitmap(hostImage.Image)).Item1;
+            double[,] coeffs = Daubechies2.WaveletCoeff(pixels, true, 2);
+
+            transformedImage.Image = Daubechies2.TransformDWT(true, false, 2, new Bitmap(hostImage.Image)).Item4;
+            double[,] inversePixels = Daubechies2.WaveletCoeff(coeffs, false, 2);
+            transformedImage.Image = ImageProcessing.ConvertToBitmap2(inversePixels, inversePixels, inversePixels);
+
+
+            //TextWriter tw1 = new StreamWriter("Daubechies2_Coeffs.txt");
+            ////tw1.WriteLine("Total Real Watermark: " );
+            //int c = 1;
+            //for (int i = 0; i < coeffs.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < coeffs.GetLength(1); j++)
+            //    {
+            //        tw1.Write("[" + c + "]" + coeffs[i, j]);
+            //        c++;
+            //    }
+            //    tw1.WriteLine();
+            //}
+            //tw1.Close();
         }
 
         private void button14_Click_1(object sender, EventArgs e)
