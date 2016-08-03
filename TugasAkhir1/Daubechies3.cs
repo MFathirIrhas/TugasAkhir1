@@ -10,45 +10,55 @@ using System.Windows.Forms;
 
 namespace TugasAkhir1
 {
-    class db2
+    class Daubechies3
     {
         //For Low Pass Filter
-        private const double s0 = -0.1294095226;
-        private const double s1 =  0.2241438680;
-        private const double s2 =  0.8365163037;
-        private const double s3 =  0.4829629131;
+        private const double s0 =  0.0352262919;
+        private const double s1 = -0.0854412739;
+        private const double s2 = -0.1350110200;
+        private const double s3 =  0.4598775021;
+        private const double s4 =  0.8068915093;
+        private const double s5 =  0.3326705530;
+
 
         //For High Pass Filter
-        private const double w0 = -0.4829629131; 
-        private const double w1 =  0.8365163037;
-        private const double w2 = -0.2241438680;
-        private const double w3 = -0.1294095226;
+        private const double w0 = -0.3326705530;
+        private const double w1 =  0.8068915093;
+        private const double w2 = -0.4598775021;
+        private const double w3 = -0.1350110200;
+        private const double w4 =  0.0854412739;
+        private const double w5 =  0.0352262919;
+
 
         public static void Forward1D(double[] data)
         {
-            int i, j;
-            int n = data.Length >> 1;
-            int half = n >> 1;
-
-            double[] tmp = new double[n];
-
-            i = 0;
-            for (j = 0; j < n - 3; j = j + 2)
+            double[] temp = new double[data.Length];
+            int h = data.Length >> 1;
+            for (int i = 0; i < h; i++)
             {
-                tmp[i] = data[j] * s0 + data[j + 1] * s1 + data[j + 2] * s2 + data[j + 3] * s3;
-                tmp[i + half] = data[j] * w0 + data[j + 1] * w1 + data[j + 2] * w2 + data[j + 3] * w3;
-                i++;
+                int k = (i << 1);
+                if (k == data.Length - 4)
+                {
+                    temp[i] = data[k] * s0 + data[k + 1] * s1 + data[k + 2] * s2 + data[k + 3] * s3 + data[0] * s4 + data[1] * s5;
+                    temp[i + h] = data[k] * w0 + data[k + 1] * w1 + data[k + 2] * w2 + data[k + 3] * w3 + data[0] * w4 + data[1] * w5;
+                }
+                else if(k == data.Length - 2)
+                {
+                    temp[i] = data[k] * s0 + data[k + 1] * s1 + data[0] * s2 + data[1] * s3 + data[2] * s4 + data[3] * s5;
+                    temp[i + h] = data[k] * w0 + data[k + 1] * w1 + data[0] * w2 + data[1] * w3 + data[2] * w4 + data[3] * w5;
+                }
+                else
+                {
+                    temp[i] = data[k] * s0 + data[k + 1] * s1 + data[k + 2] * s2 + data[k + 3] * s3 + data[k + 4] * s4 + data[k + 5] * s5;
+                    temp[i + h] = data[k] * w0 + data[k + 1] * w1 + data[k + 2] * w2 + data[k + 3] * w3 + data[k + 4] * w4 + data[k + 5] * w5;
+                }
             }
 
-            tmp[i] = data[n - 2] * s0 + data[n - 1] * s1 + data[0] * s2 + data[1] * s3;
-            tmp[i + half] = data[n - 2] * s0 + data[n - 1] * s1 + data[0] * s2 + data[1] * s3;
-
-            for (i = 0; i < n; i++)
-            {
-                data[i] = tmp[i];
-            }
+            for (int i = 0; i < data.Length; i++)
+                data[i] = temp[i];
         }
 
+        #region Forward2D
         public static void Forward2D(double[,] data, int level)
         {
             int rows = data.GetLength(0);
@@ -89,67 +99,39 @@ namespace TugasAkhir1
                 }
             }
         }
+        #endregion
 
         public static void Inverse1D(double[] data)
         {
-            int i, j;
-            int n = data.Length >> 1;
-            int half = n >> 1;
-            int halfPls1 = half + 1;
+            double[] temp = new double[data.Length];
 
-            double[] tmp = new double[n];
+            int h = data.Length >> 1;
+            for (int i = 0; i < h; i++)
+            {
+                int k = (i << 1);
+                if (k < 2)
+                {
+                    temp[k] = data[0] * s0 + data[0 + h] * w0 + data[h - 2] * s4 + data[(h - 2) + h] * w4 + data[h-1] * s2 + data[(h-1) + h] * w2;// w0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                    temp[k + 1] = data[0] * s1 + data[0 + h] * w1 + data[h - 2] * s5 + data[(h - 2) + h] * w5 + data[h - 1] * s3 + data[(h - 1) + h] * w3;// s0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                }
+                else if(k >= 2 && k < 4)
+                {
+                    temp[k] = data[0] * s2 + data[0 + h] * w2 + data[1] * s0 + data[1 + h] * w0 + data[h - 1] * s4 + data[(h - 1) + h] * w4;// w0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                    temp[k + 1] = data[0] * s3 + data[0 + h] * w3 + data[1] * s1 + data[1 + h] * w1 + data[h - 1] * s5 + data[(h - 1) + h] * w5;// s0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                }
+                else
+                {
+                    temp[k] = data[i - 2] * s4 + data[(i - 2) + h] * w4 + data[i - 1] * s2 + data[(i - 1) + h] * w2 + data[i] * s0 + data[i + h] * w0;// w0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                    temp[k + 1] = data[i - 2] * s5 + data[(i - 2) + h] * w5 + data[i - 1] * s3 + data[(i - 1) + h] * w3 + data[i] * s1 + data[i + h] * w1;// s0; //Changed After Matrix Transformation Changed to 1/sqrt(2)
+                }
 
-            //      last smooth val  last coef.  first smooth  first coef
-            tmp[0] = data[half - 1] * s0 + data[n - 1] * s1 + data[0] * s2 + data[half] * s3;
-            tmp[1] = data[half - 1] * w0 + data[n - 1] * w1 + data[0] * w2 + data[half] * w3;
-            j = 2;
-            for (i = 0; i < half - 1; i++)
-            {
-                //     smooth val     coef. val       smooth val     coef. val
-                tmp[j++] = data[i] * s0 + data[i + half] * s1 + data[i + 1] * s2 + data[i + halfPls1] * s3;
-                tmp[j++] = data[i] * w0 + data[i + half] * w1 + data[i + 1] * w2 + data[i + halfPls1] * w3;
             }
-            for (i = 0; i < n; i++)
-            {
-                data[i] = tmp[i];
-            }
+
+            for (int i = 0; i < data.Length; i++)
+                data[i] = temp[i];
         }
 
-        #region buggy Inverse2d
-        //public void Inverse2D(double[,] data, int level)
-        //{
-        //    int rows = data.GetLength(0);
-        //    int cols = data.GetLength(1);
 
-        //    double[] col = new double[rows];
-        //    double[] row = new double[cols];
-
-        //    for (int l = 0; l < level; l++)
-        //    {
-        //        for (int j = 0; j < cols; j++)
-        //        {
-        //            for (int i = 0; i < row.Length; i++)
-        //                col[i] = data[i, j];
-
-        //            Inverse1D(col);
-
-        //            for (int i = 0; i < col.Length; i++)
-        //                data[i, j] = col[i];
-        //        }
-
-        //        for (int i = 0; i < rows; i++)
-        //        {
-        //            for (int j = 0; j < row.Length; j++)
-        //                row[j] = data[i, j];
-
-        //            Inverse1D(row);
-
-        //            for (int j = 0; j < row.Length; j++)
-        //                data[i, j] = row[j];
-        //        }
-        //    }
-        //}
-        #endregion
 
         public static void Inverse2D(double[,] data, int iterations)
         {
@@ -331,7 +313,7 @@ namespace TugasAkhir1
 
             return p;
         }
-    
+
         //END
     }
 }

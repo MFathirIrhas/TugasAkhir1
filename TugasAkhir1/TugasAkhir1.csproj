@@ -145,7 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Daubechies2.cs" />
-    <Compile Include="db2.cs" />
+    <Compile Include="Daubechies3.cs" />
     <Compile Include="Haar.cs" />
     <Compile Include="Embed.cs" />
     <Compile Include="Extract.cs" />
