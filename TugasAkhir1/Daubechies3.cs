@@ -29,7 +29,19 @@ namespace TugasAkhir1
         private const double w4 =  0.0854412739;
         private const double w5 =  0.0352262919;
 
-
+        /* Matrix Transformation for 
+         * Forward Transformation Daubechies 3
+         * 
+         * s0 s1 s2 s3 s4 s5 0  0
+         * w0 w1 w2 w3 w4 w5 0  0
+         * 0  0  s0 s1 s2 s3 s4 s5 
+         * 0  0  w0 w1 w2 w3 w4 w5
+         * s4 s5 0  0  s0 s1 s2 s3
+         * w4 w5 0  0  w0 w1 w2 w3
+         * s2 s3 s4 s5 0  0  s0 s1
+         * s2 s3 s4 w5 0  0  w0 w1
+         * 
+         */ 
         public static void Forward1D(double[] data)
         {
             double[] temp = new double[data.Length];
@@ -101,6 +113,18 @@ namespace TugasAkhir1
         }
         #endregion
 
+        /* Matrix Transformation for 
+         * Daubechies 3 Inverse Transform
+         * 
+         * s0 w0 0  0  s4 w4 s2 w2  
+         * s1 w1 0  0  s5 w5 s3 w3 
+         * s2 w2 s0 w0 0  0  s4 w4
+         * s3 w3 s1 w1 0  0  s5 w5
+         * s4 w4 s2 w2 s0 w0 0  0 
+         * s5 w5 s3 w3 s1 w1 0  0 
+         * 0  0  s4 s4 s2 w2 s0 w0
+         * 0  0  s5 w5 s3 w3 s1 w1 
+         */
         public static void Inverse1D(double[] data)
         {
             double[] temp = new double[data.Length];
