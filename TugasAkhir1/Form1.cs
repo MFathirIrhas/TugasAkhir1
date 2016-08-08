@@ -111,10 +111,13 @@ namespace TugasAkhir1
             InitializeComponent();
             this.hostImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.transformedImage.SizeMode = PictureBoxSizeMode.Zoom;
+            this.panel12.AutoScroll = true;
+            this.panel13.AutoScroll = true;
             this.watermarkImage.SizeMode = PictureBoxSizeMode.Zoom;
             this.extractedImageRed.SizeMode = PictureBoxSizeMode.Zoom;
             this.extractedImageGreen.SizeMode = PictureBoxSizeMode.Zoom;
             this.extractedImageBlue.SizeMode = PictureBoxSizeMode.Zoom;
+            
 
             //GUI Initialize
             HostImageLocationTxt.Text = "Browse Image to be inserted watermark";
@@ -125,8 +128,8 @@ namespace TugasAkhir1
             //WatermarkedImageTxt.ForeColor = Color.LightGray;
 
             ///Draw On Image
-            drawing = new Bitmap(transformedImage.Width, transformedImage.Height, transformedImage.CreateGraphics());
-            Graphics.FromImage(drawing).Clear(Color.Transparent);
+            //drawing = new Bitmap(transformedImage.Width, transformedImage.Height, transformedImage.CreateGraphics());
+            //Graphics.FromImage(drawing).Clear(Color.Transparent);
 
         }
 
@@ -236,7 +239,8 @@ namespace TugasAkhir1
             if (transformedImage.Image != null)
             {
                 //Bitmap bmp = new Bitmap(transformedImage.Image);
-                Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
+                ///Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
+                Bitmap bmp = drawing;
 
                 //Bitmap first = new Bitmap(transformedImage.Image);
                 //Bitmap second = drawing;
@@ -305,8 +309,8 @@ namespace TugasAkhir1
                 transformedImage.Image = new Bitmap(ofd.FileName);
                 WatermarkedImage = new Bitmap(transformedImage.Image);
                 Transformed_Image = new Bitmap(transformedImage.Image);
+                drawing = new Bitmap(transformedImage.Image);
 
-                
 
                 //Enable button
                 //histeqBtn.Enabled = true;
@@ -1536,6 +1540,8 @@ namespace TugasAkhir1
                     embedConstantValue2.Text = embedConstantValue.Text;
                     subbandValue2.Text = subbandValue.Text;
 
+
+                    drawing = new Bitmap(transformedImage.Image);
                     //test
                     //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
                 }
@@ -1613,6 +1619,8 @@ namespace TugasAkhir1
                     embedConstantValue2.Text = embedConstantValue.Text;
                     subbandValue2.Text = subbandValue.Text;
 
+
+                    drawing = new Bitmap(transformedImage.Image);
                     //test
                     //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
                 }
@@ -1684,6 +1692,8 @@ namespace TugasAkhir1
                 embedConstantValue2.Text = embedConstantValue.Text;
                 subbandValue2.Text = subbandValue.Text;
 
+
+                drawing = new Bitmap(transformedImage.Image);
                 //test
                 //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
             }
@@ -2010,7 +2020,7 @@ namespace TugasAkhir1
 
                     panel.DrawLine(pen, pX, pY, e.X, e.Y);
 
-                    transformedImage.CreateGraphics().DrawImageUnscaled(drawing, new Point(0, 0));                    
+                    transformedImage.CreateGraphics().DrawImageUnscaled(drawing, new Point(0, 0));
                 }
                 else if(redCheck.Checked == true) /// red pen
                 {
@@ -2075,7 +2085,10 @@ namespace TugasAkhir1
 
         private void transformedImage_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImageUnscaled(drawing, new Point(0, 0));  
+            if(scratchCheck.Checked == true)
+            {
+                e.Graphics.DrawImageUnscaled(drawing, new Point(0, 0));
+            }
         }
 
         private void redCheck_CheckedChanged(object sender, EventArgs e)
@@ -2151,7 +2164,7 @@ namespace TugasAkhir1
 
         private void button38_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 256, 256);
+            transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 100, 100, 150, 150);
         }
 
         private void button39_Click(object sender, EventArgs e)
@@ -2210,25 +2223,80 @@ namespace TugasAkhir1
         {
             if (watermarkImage.Image != null)
             {
+                #region Red BER
                 Bitmap b = ImageProcessing.ConvertToBinary(new Bitmap(watermarkImage.Image));
                 List<int> VectorImage = Scramble.ConvertToVectorMatrix(b); //Include integer values between 255 or 0
                 List<int> BinaryVectorImage = Scramble.ConvertToBinaryVectorMatrix(VectorImage); //Include integer values between 1 or 0
                 List<int> RealWatermark2 = BinaryVectorImage;
                 int counter = 0;
-                for (int i = 0; i < GreenExtractedWatermark.Length; i++)
+                for (int i = 0; i < RedExtractedWatermark.Length; i++)
                 {
-                    if (GreenExtractedWatermark[i] == RealWatermark2[i])
+                    if (RedExtractedWatermark[i] == RealWatermark2[i])
                     {
                         counter++;
                     }
                 }
-                double akurasi = ((double)counter / (double)GreenExtractedWatermark.Length) * 100;
+                double akurasi = ((double)counter / (double)RedExtractedWatermark.Length) * 100;
                 double BER = 100 - akurasi;
                 double ber = Math.Round(BER, 2);
                 //double ber = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImage.Image));
-                GreenextractedBERtxt.Text = ber.ToString();
-                bertxt.Text += "> "+ber.ToString()+ " %"+"\n";
-            }else
+                RedextractedBERtxt.Text = ber.ToString();
+                //bertxt.Text += "> " + ber.ToString() + " %" + "\n";
+                #endregion
+
+                #region Green BER
+                Bitmap b2 = ImageProcessing.ConvertToBinary(new Bitmap(watermarkImage.Image));
+                List<int> VectorImage2 = Scramble.ConvertToVectorMatrix(b2); //Include integer values between 255 or 0
+                List<int> BinaryVectorImage2 = Scramble.ConvertToBinaryVectorMatrix(VectorImage2); //Include integer values between 1 or 0
+                List<int> RealWatermark22 = BinaryVectorImage2;
+                int counter2 = 0;
+                for (int i = 0; i < GreenExtractedWatermark.Length; i++)
+                {
+                    if (GreenExtractedWatermark[i] == RealWatermark22[i])
+                    {
+                        counter2++;
+                    }
+                }
+                double akurasi2 = ((double)counter2 / (double)GreenExtractedWatermark.Length) * 100;
+                double BER2 = 100 - akurasi2;
+                double ber2 = Math.Round(BER2, 2);
+                //double ber = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImage.Image));
+                GreenextractedBERtxt.Text = ber2.ToString();
+                //bertxt.Text += "> " + ber.ToString() + " %" + "\n";
+                #endregion
+
+                #region Blue BER
+                Bitmap b3 = ImageProcessing.ConvertToBinary(new Bitmap(watermarkImage.Image));
+                List<int> VectorImage3 = Scramble.ConvertToVectorMatrix(b3); //Include integer values between 255 or 0
+                List<int> BinaryVectorImage3 = Scramble.ConvertToBinaryVectorMatrix(VectorImage3); //Include integer values between 1 or 0
+                List<int> RealWatermark23 = BinaryVectorImage3;
+                int counter3 = 0;
+                for (int i = 0; i < BlueExtractedWatermark.Length; i++)
+                {
+                    if (BlueExtractedWatermark[i] == RealWatermark23[i])
+                    {
+                        counter3++;
+                    }
+                }
+                double akurasi3 = ((double)counter3 / (double)BlueExtractedWatermark.Length) * 100;
+                double BER3 = 100 - akurasi3;
+                double ber3 = Math.Round(BER3, 3);
+                //double ber = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImage.Image));
+                BlueextractedBERtxt.Text = ber3.ToString();
+                //bertxt.Text += "> " + ber.ToString() + " %" + "\n";
+                #endregion
+
+                List<double> berlist = new List<double>();
+                berlist.Add(ber);
+                berlist.Add(ber2);
+                berlist.Add(ber3);
+                double minBer = berlist.Min();
+                bertxt.Text += "> " + minBer.ToString() + " %" + "\n";
+                bertxt.Text += "----------" + "\n";
+
+
+            }
+            else
             {
                 MessageBox.Show("Input Original Watermark Image to Calculate BER");
             }
@@ -2303,6 +2371,31 @@ namespace TugasAkhir1
             double psnr = Statistic.PSNR(new Bitmap(transformedImage.Image), mse);
             MSEValue.Text = Math.Round(mse, 2).ToString();
             PSNRValue.Text = Math.Round(psnr, 2).ToString();
+        }
+
+        private void button13_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            int value = Convert.ToInt32(brightnessValue.Text);
+            transformedImage.Image = ImageAttack.SetBrightness(WatermarkedImage, value);
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            int value = Convert.ToInt32(contrastValue.Text);
+            transformedImage.Image = ImageAttack.SetContrast(WatermarkedImage, value);
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            int redvalue = Convert.ToInt32(redgammaValue.Text);
+            int greenvalue = Convert.ToInt32(greengammavalue.Text);
+            int bluevalue = Convert.ToInt32(bluegammavalue.Text);
+            transformedImage.Image = ImageAttack.SetGamma(WatermarkedImage,redvalue,greenvalue,bluevalue);
         }
 
 

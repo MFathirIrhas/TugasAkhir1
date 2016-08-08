@@ -1,4 +1,6 @@
-﻿using System;
+﻿extern alias aforgemath;
+extern alias af;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +12,12 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Utilities.Random;
 using Utilities.Media.Image.ExtensionMethods;
+using AForge;
 using AForge.Imaging.Filters;
 using AForge.Imaging.ColorReduction;
+using AForge.Math.Random;
+ 
+
 
 
 
@@ -368,7 +374,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region Noise       
+        #region Gaussian Noise       
         public static Bitmap GaussianNoise(Image img, int intense)
         {
             Bitmap finalBmp = img as Bitmap;
@@ -601,6 +607,124 @@ namespace TugasAkhir1
             // apply the filter
             Bitmap newImage = filter.Apply(bmp);
             return newImage;
+        }
+        #endregion
+
+        #region Brightness
+        public static Bitmap SetBrightness(Bitmap bmp,int brightness)
+        {
+            Bitmap temp = (Bitmap)bmp;
+            Bitmap bmap = (Bitmap)temp.Clone();
+            if (brightness < -255) brightness = -255;
+            if (brightness > 255) brightness = 255;
+            Color c;
+            for (int i = 0; i < bmap.Width; i++)
+            {
+                for (int j = 0; j < bmap.Height; j++)
+                {
+                    c = bmap.GetPixel(i, j);
+                    int cR = c.R + brightness;
+                    int cG = c.G + brightness;
+                    int cB = c.B + brightness;
+
+                    if (cR < 0) cR = 1;
+                    if (cR > 255) cR = 255;
+
+                    if (cG < 0) cG = 1;
+                    if (cG > 255) cG = 255;
+
+                    if (cB < 0) cB = 1;
+                    if (cB > 255) cB = 255;
+
+                    bmap.SetPixel(i, j,
+                    Color.FromArgb((byte)cR, (byte)cG, (byte)cB));
+                }
+            }
+            //_currentBitmap = (Bitmap)bmap.Clone();
+            return bmap;
+
+            
+        }
+        #endregion
+
+        #region Contrast
+        public static Bitmap SetContrast(Bitmap bmp,double contrast)
+        {
+            Bitmap temp = (Bitmap)bmp;
+            Bitmap bmap = (Bitmap)temp.Clone();
+            if (contrast < -100) contrast = -100;
+            if (contrast > 100) contrast = 100;
+            contrast = (100.0 + contrast) / 100.0;
+            contrast *= contrast;
+            Color c;
+            for (int i = 0; i < bmap.Width; i++)
+            {
+                for (int j = 0; j < bmap.Height; j++)
+                {
+                    c = bmap.GetPixel(i, j);
+                    double pR = c.R / 255.0;
+                    pR -= 0.5;
+                    pR *= contrast;
+                    pR += 0.5;
+                    pR *= 255;
+                    if (pR < 0) pR = 0;
+                    if (pR > 255) pR = 255;
+
+                    double pG = c.G / 255.0;
+                    pG -= 0.5;
+                    pG *= contrast;
+                    pG += 0.5;
+                    pG *= 255;
+                    if (pG < 0) pG = 0;
+                    if (pG > 255) pG = 255;
+
+                    double pB = c.B / 255.0;
+                    pB -= 0.5;
+                    pB *= contrast;
+                    pB += 0.5;
+                    pB *= 255;
+                    if (pB < 0) pB = 0;
+                    if (pB > 255) pB = 255;
+
+                    bmap.SetPixel(i, j,
+        Color.FromArgb((byte)pR, (byte)pG, (byte)pB));
+                }
+            }
+            //_currentBitmap = (Bitmap)bmap.Clone();
+            return bmap;
+        }
+        #endregion
+
+        #region GammaValue
+        public static Bitmap SetGamma(Bitmap bmp,double red, double green, double blue)
+        {
+            Bitmap temp = (Bitmap)bmp;
+            Bitmap bmap = (Bitmap)temp.Clone();
+            Color c;
+            byte[] redGamma = CreateGammaArray(red);
+            byte[] greenGamma = CreateGammaArray(green);
+            byte[] blueGamma = CreateGammaArray(blue);
+            for (int i = 0; i < bmap.Width; i++)
+            {
+                for (int j = 0; j < bmap.Height; j++)
+                {
+                    c = bmap.GetPixel(i, j);
+                    bmap.SetPixel(i, j, Color.FromArgb(redGamma[c.R],
+                       greenGamma[c.G], blueGamma[c.B]));
+                }
+            }
+            //_currentBitmap = (Bitmap)bmap.Clone();
+            return bmap;
+        }
+
+        private static byte[] CreateGammaArray(double color)
+        {
+            byte[] gammaArray = new byte[256];
+            for (int i = 0; i < 256; ++i)
+            {
+                gammaArray[i] = (byte)Math.Min(255,(int)((255.0 * Math.Pow(i / 255.0, 1.0 / color)) + 0.5));
+            }
+            return gammaArray;
         }
         #endregion
 
