@@ -175,6 +175,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -194,10 +195,16 @@
     <Folder Include="Saved_Image\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="3232wi.bmp" />
     <Content Include="License-LGPL.txt" />
     <Content Include="Note.txt" />
     <Content Include="Question.txt" />
     <Content Include="README.txt" />
+    <None Include="Resources\news.bmp" />
+    <None Include="Resources\AssassinKillerOutfits.bmp" />
+    <None Include="Resources\baboon24bit.bmp" />
+    <None Include="Resources\lena.png" />
+    <None Include="Resources\3232wi.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

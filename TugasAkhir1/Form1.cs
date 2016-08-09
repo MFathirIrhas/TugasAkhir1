@@ -12,6 +12,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using TugasAkhir1.Properties;
 #region
 using MathNet.Numerics.Random;
 using MathNet.Numerics.Distributions;
@@ -124,6 +125,7 @@ namespace TugasAkhir1
             HostImageLocationTxt.ForeColor = Color.LightGray;
             WatermarkImageLocationTxt.Text = "Browse Watermark Image";
             WatermarkImageLocationTxt.ForeColor = Color.LightGray;
+
             //WatermarkedImageTxt.Text = "Browse Watermarked Image to be Attacked";
             //WatermarkedImageTxt.ForeColor = Color.LightGray;
 
@@ -133,6 +135,11 @@ namespace TugasAkhir1
 
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Image img = new Bitmap(Resources._3232wi);
+            watermarkImage.Image = img;
+        }
 
         public void GUIStart(string status)
         {
@@ -309,6 +316,8 @@ namespace TugasAkhir1
                 transformedImage.Image = new Bitmap(ofd.FileName);
                 WatermarkedImage = new Bitmap(transformedImage.Image);
                 Transformed_Image = new Bitmap(transformedImage.Image);
+
+
                 drawing = new Bitmap(transformedImage.Image);
 
 
@@ -2397,6 +2406,8 @@ namespace TugasAkhir1
             int bluevalue = Convert.ToInt32(bluegammavalue.Text);
             transformedImage.Image = ImageAttack.SetGamma(WatermarkedImage,redvalue,greenvalue,bluevalue);
         }
+
+        
 
 
 

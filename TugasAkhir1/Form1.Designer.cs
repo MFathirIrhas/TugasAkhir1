@@ -1774,7 +1774,7 @@
             this.brightnessValue.Name = "brightnessValue";
             this.brightnessValue.Size = new System.Drawing.Size(72, 21);
             this.brightnessValue.TabIndex = 33;
-            this.brightnessValue.Text = "10";
+            this.brightnessValue.Text = "20";
             // 
             // contrastValue
             // 
@@ -1783,7 +1783,7 @@
             this.contrastValue.Name = "contrastValue";
             this.contrastValue.Size = new System.Drawing.Size(72, 21);
             this.contrastValue.TabIndex = 40;
-            this.contrastValue.Text = "10";
+            this.contrastValue.Text = "20";
             // 
             // button15
             // 
@@ -1806,7 +1806,7 @@
             this.redgammaValue.Name = "redgammaValue";
             this.redgammaValue.Size = new System.Drawing.Size(27, 21);
             this.redgammaValue.TabIndex = 42;
-            this.redgammaValue.Text = "10";
+            this.redgammaValue.Text = "20";
             // 
             // button16
             // 
@@ -1829,7 +1829,7 @@
             this.greengammavalue.Name = "greengammavalue";
             this.greengammavalue.Size = new System.Drawing.Size(34, 21);
             this.greengammavalue.TabIndex = 44;
-            this.greengammavalue.Text = "10";
+            this.greengammavalue.Text = "20";
             // 
             // bluegammavalue
             // 
@@ -1838,7 +1838,7 @@
             this.bluegammavalue.Name = "bluegammavalue";
             this.bluegammavalue.Size = new System.Drawing.Size(23, 21);
             this.bluegammavalue.TabIndex = 45;
-            this.bluegammavalue.Text = "10";
+            this.bluegammavalue.Text = "20";
             // 
             // Form1
             // 
@@ -1861,6 +1861,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tugas Akhir 1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).EndInit();
