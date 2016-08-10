@@ -195,7 +195,6 @@
     <Folder Include="Saved_Image\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="3232wi.bmp" />
     <Content Include="License-LGPL.txt" />
     <Content Include="Note.txt" />
     <Content Include="Question.txt" />

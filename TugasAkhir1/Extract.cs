@@ -1570,6 +1570,24 @@ namespace TugasAkhir1
         }
         #endregion
 
+
+        #region Accumulative Result of Final Wateramrk
+        public static double[] FinalResult(double[] red, double[] green, double[] blue)
+        {
+            double[] result = new double[red.Length];
+            List<double> elemen = new List<double>();
+            for (int i = 0; i < red.Length; i++)
+            {
+                elemen.Add(red[i]);
+                elemen.Add(green[i]);
+                elemen.Add(blue[i]);
+                result[i] = Statistic.Mode2(elemen);
+                elemen.Clear();
+            }
+
+            return result;
+        }
+        #endregion
         //End
     }
 }

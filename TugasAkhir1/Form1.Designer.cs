@@ -85,6 +85,15 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.bluegammavalue = new System.Windows.Forms.TextBox();
+            this.greengammavalue = new System.Windows.Forms.TextBox();
+            this.redgammaValue = new System.Windows.Forms.TextBox();
+            this.button16 = new System.Windows.Forms.Button();
+            this.contrastValue = new System.Windows.Forms.TextBox();
+            this.button15 = new System.Windows.Forms.Button();
+            this.brightnessValue = new System.Windows.Forms.TextBox();
+            this.button19 = new System.Windows.Forms.Button();
             this.panel13 = new System.Windows.Forms.Panel();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.button24 = new System.Windows.Forms.Button();
@@ -158,15 +167,10 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.bertxt = new System.Windows.Forms.RichTextBox();
-            this.button19 = new System.Windows.Forms.Button();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.brightnessValue = new System.Windows.Forms.TextBox();
-            this.contrastValue = new System.Windows.Forms.TextBox();
-            this.button15 = new System.Windows.Forms.Button();
-            this.redgammaValue = new System.Windows.Forms.TextBox();
-            this.button16 = new System.Windows.Forms.Button();
-            this.greengammavalue = new System.Windows.Forms.TextBox();
-            this.bluegammavalue = new System.Windows.Forms.TextBox();
+            this.FinalResult = new System.Windows.Forms.PictureBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.finalBerValue = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -176,6 +180,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.watermarkImage)).BeginInit();
             this.StatusPanel.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel14.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -188,7 +193,7 @@
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extractedImageBlue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.extractedImageGreen)).BeginInit();
-            this.panel14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FinalResult)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -356,7 +361,7 @@
             this.embedConstantValue2.Name = "embedConstantValue2";
             this.embedConstantValue2.Size = new System.Drawing.Size(35, 18);
             this.embedConstantValue2.TabIndex = 33;
-            this.embedConstantValue2.Text = "0.6";
+            this.embedConstantValue2.Text = "1";
             // 
             // subbandValue2
             // 
@@ -651,9 +656,9 @@
             // 
             this.watermarkImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.watermarkImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("watermarkImage.InitialImage")));
-            this.watermarkImage.Location = new System.Drawing.Point(3, 17);
+            this.watermarkImage.Location = new System.Drawing.Point(51, 30);
             this.watermarkImage.Name = "watermarkImage";
-            this.watermarkImage.Size = new System.Drawing.Size(180, 180);
+            this.watermarkImage.Size = new System.Drawing.Size(90, 90);
             this.watermarkImage.TabIndex = 0;
             this.watermarkImage.TabStop = false;
             // 
@@ -858,6 +863,109 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(614, 251);
             this.panel4.TabIndex = 13;
+            // 
+            // panel14
+            // 
+            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel14.Controls.Add(this.bluegammavalue);
+            this.panel14.Controls.Add(this.greengammavalue);
+            this.panel14.Controls.Add(this.redgammaValue);
+            this.panel14.Controls.Add(this.button16);
+            this.panel14.Controls.Add(this.contrastValue);
+            this.panel14.Controls.Add(this.button15);
+            this.panel14.Controls.Add(this.brightnessValue);
+            this.panel14.Controls.Add(this.button19);
+            this.panel14.Location = new System.Drawing.Point(355, 155);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(149, 91);
+            this.panel14.TabIndex = 34;
+            // 
+            // bluegammavalue
+            // 
+            this.bluegammavalue.Location = new System.Drawing.Point(121, 63);
+            this.bluegammavalue.Multiline = true;
+            this.bluegammavalue.Name = "bluegammavalue";
+            this.bluegammavalue.Size = new System.Drawing.Size(23, 21);
+            this.bluegammavalue.TabIndex = 45;
+            this.bluegammavalue.Text = "20";
+            // 
+            // greengammavalue
+            // 
+            this.greengammavalue.Location = new System.Drawing.Point(97, 63);
+            this.greengammavalue.Multiline = true;
+            this.greengammavalue.Name = "greengammavalue";
+            this.greengammavalue.Size = new System.Drawing.Size(34, 21);
+            this.greengammavalue.TabIndex = 44;
+            this.greengammavalue.Text = "20";
+            // 
+            // redgammaValue
+            // 
+            this.redgammaValue.Location = new System.Drawing.Point(73, 63);
+            this.redgammaValue.Multiline = true;
+            this.redgammaValue.Name = "redgammaValue";
+            this.redgammaValue.Size = new System.Drawing.Size(27, 21);
+            this.redgammaValue.TabIndex = 42;
+            this.redgammaValue.Text = "20";
+            // 
+            // button16
+            // 
+            this.button16.BackColor = System.Drawing.Color.Gold;
+            this.button16.FlatAppearance.BorderSize = 0;
+            this.button16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button16.Location = new System.Drawing.Point(3, 63);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(73, 21);
+            this.button16.TabIndex = 43;
+            this.button16.TabStop = false;
+            this.button16.Text = "Gamma";
+            this.button16.UseVisualStyleBackColor = false;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
+            // contrastValue
+            // 
+            this.contrastValue.Location = new System.Drawing.Point(72, 34);
+            this.contrastValue.Multiline = true;
+            this.contrastValue.Name = "contrastValue";
+            this.contrastValue.Size = new System.Drawing.Size(72, 21);
+            this.contrastValue.TabIndex = 40;
+            this.contrastValue.Text = "20";
+            // 
+            // button15
+            // 
+            this.button15.BackColor = System.Drawing.Color.Gold;
+            this.button15.FlatAppearance.BorderSize = 0;
+            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button15.Location = new System.Drawing.Point(3, 34);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(73, 21);
+            this.button15.TabIndex = 41;
+            this.button15.TabStop = false;
+            this.button15.Text = "Contrast";
+            this.button15.UseVisualStyleBackColor = false;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // brightnessValue
+            // 
+            this.brightnessValue.Location = new System.Drawing.Point(72, 3);
+            this.brightnessValue.Multiline = true;
+            this.brightnessValue.Name = "brightnessValue";
+            this.brightnessValue.Size = new System.Drawing.Size(72, 21);
+            this.brightnessValue.TabIndex = 33;
+            this.brightnessValue.Text = "20";
+            // 
+            // button19
+            // 
+            this.button19.BackColor = System.Drawing.Color.Gold;
+            this.button19.FlatAppearance.BorderSize = 0;
+            this.button19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button19.Location = new System.Drawing.Point(3, 3);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(73, 21);
+            this.button19.TabIndex = 39;
+            this.button19.TabStop = false;
+            this.button19.Text = "Brightness";
+            this.button19.UseVisualStyleBackColor = false;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
             // 
             // panel13
             // 
@@ -1737,108 +1845,41 @@
             this.bertxt.TabIndex = 36;
             this.bertxt.Text = "";
             // 
-            // button19
+            // FinalResult
             // 
-            this.button19.BackColor = System.Drawing.Color.Gold;
-            this.button19.FlatAppearance.BorderSize = 0;
-            this.button19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button19.Location = new System.Drawing.Point(3, 3);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(73, 21);
-            this.button19.TabIndex = 39;
-            this.button19.TabStop = false;
-            this.button19.Text = "Brightness";
-            this.button19.UseVisualStyleBackColor = false;
-            this.button19.Click += new System.EventHandler(this.button19_Click);
+            this.FinalResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.FinalResult.Location = new System.Drawing.Point(1003, 3);
+            this.FinalResult.Name = "FinalResult";
+            this.FinalResult.Size = new System.Drawing.Size(90, 90);
+            this.FinalResult.TabIndex = 39;
+            this.FinalResult.TabStop = false;
             // 
-            // panel14
+            // label40
             // 
-            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel14.Controls.Add(this.bluegammavalue);
-            this.panel14.Controls.Add(this.greengammavalue);
-            this.panel14.Controls.Add(this.redgammaValue);
-            this.panel14.Controls.Add(this.button16);
-            this.panel14.Controls.Add(this.contrastValue);
-            this.panel14.Controls.Add(this.button15);
-            this.panel14.Controls.Add(this.brightnessValue);
-            this.panel14.Controls.Add(this.button19);
-            this.panel14.Location = new System.Drawing.Point(355, 155);
-            this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(149, 91);
-            this.panel14.TabIndex = 34;
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(1003, 96);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(32, 13);
+            this.label40.TabIndex = 40;
+            this.label40.Text = "BER:";
             // 
-            // brightnessValue
+            // finalBerValue
             // 
-            this.brightnessValue.Location = new System.Drawing.Point(72, 3);
-            this.brightnessValue.Multiline = true;
-            this.brightnessValue.Name = "brightnessValue";
-            this.brightnessValue.Size = new System.Drawing.Size(72, 21);
-            this.brightnessValue.TabIndex = 33;
-            this.brightnessValue.Text = "20";
+            this.finalBerValue.AutoSize = true;
+            this.finalBerValue.Location = new System.Drawing.Point(1041, 96);
+            this.finalBerValue.Name = "finalBerValue";
+            this.finalBerValue.Size = new System.Drawing.Size(13, 13);
+            this.finalBerValue.TabIndex = 34;
+            this.finalBerValue.Text = "0";
             // 
-            // contrastValue
+            // label42
             // 
-            this.contrastValue.Location = new System.Drawing.Point(72, 34);
-            this.contrastValue.Multiline = true;
-            this.contrastValue.Name = "contrastValue";
-            this.contrastValue.Size = new System.Drawing.Size(72, 21);
-            this.contrastValue.TabIndex = 40;
-            this.contrastValue.Text = "20";
-            // 
-            // button15
-            // 
-            this.button15.BackColor = System.Drawing.Color.Gold;
-            this.button15.FlatAppearance.BorderSize = 0;
-            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button15.Location = new System.Drawing.Point(3, 34);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(73, 21);
-            this.button15.TabIndex = 41;
-            this.button15.TabStop = false;
-            this.button15.Text = "Contrast";
-            this.button15.UseVisualStyleBackColor = false;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
-            // 
-            // redgammaValue
-            // 
-            this.redgammaValue.Location = new System.Drawing.Point(73, 63);
-            this.redgammaValue.Multiline = true;
-            this.redgammaValue.Name = "redgammaValue";
-            this.redgammaValue.Size = new System.Drawing.Size(27, 21);
-            this.redgammaValue.TabIndex = 42;
-            this.redgammaValue.Text = "20";
-            // 
-            // button16
-            // 
-            this.button16.BackColor = System.Drawing.Color.Gold;
-            this.button16.FlatAppearance.BorderSize = 0;
-            this.button16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button16.Location = new System.Drawing.Point(3, 63);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(73, 21);
-            this.button16.TabIndex = 43;
-            this.button16.TabStop = false;
-            this.button16.Text = "Gamma";
-            this.button16.UseVisualStyleBackColor = false;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
-            // 
-            // greengammavalue
-            // 
-            this.greengammavalue.Location = new System.Drawing.Point(97, 63);
-            this.greengammavalue.Multiline = true;
-            this.greengammavalue.Name = "greengammavalue";
-            this.greengammavalue.Size = new System.Drawing.Size(34, 21);
-            this.greengammavalue.TabIndex = 44;
-            this.greengammavalue.Text = "20";
-            // 
-            // bluegammavalue
-            // 
-            this.bluegammavalue.Location = new System.Drawing.Point(121, 63);
-            this.bluegammavalue.Multiline = true;
-            this.bluegammavalue.Name = "bluegammavalue";
-            this.bluegammavalue.Size = new System.Drawing.Size(23, 21);
-            this.bluegammavalue.TabIndex = 45;
-            this.bluegammavalue.Text = "20";
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(1060, 96);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(15, 13);
+            this.label42.TabIndex = 34;
+            this.label42.Text = "%";
             // 
             // Form1
             // 
@@ -1846,7 +1887,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(1001, 693);
+            this.ClientSize = new System.Drawing.Size(1151, 693);
+            this.Controls.Add(this.label42);
+            this.Controls.Add(this.finalBerValue);
+            this.Controls.Add(this.label40);
+            this.Controls.Add(this.FinalResult);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.bertxt);
@@ -1876,6 +1921,8 @@
             this.StatusPanel.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.panel14.ResumeLayout(false);
+            this.panel14.PerformLayout();
             this.panel13.ResumeLayout(false);
             this.panel13.PerformLayout();
             this.panel11.ResumeLayout(false);
@@ -1896,8 +1943,7 @@
             this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extractedImageBlue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.extractedImageGreen)).EndInit();
-            this.panel14.ResumeLayout(false);
-            this.panel14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FinalResult)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2043,6 +2089,10 @@
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.TextBox bluegammavalue;
         private System.Windows.Forms.TextBox greengammavalue;
+        private System.Windows.Forms.PictureBox FinalResult;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label finalBerValue;
+        private System.Windows.Forms.Label label42;
     }
 }
 
