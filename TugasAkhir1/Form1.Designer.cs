@@ -1048,7 +1048,7 @@
             this.jpegCompressionValue.Name = "jpegCompressionValue";
             this.jpegCompressionValue.Size = new System.Drawing.Size(63, 23);
             this.jpegCompressionValue.TabIndex = 23;
-            this.jpegCompressionValue.Text = "85";
+            this.jpegCompressionValue.Text = "80";
             // 
             // label17
             // 
@@ -1875,7 +1875,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(1060, 96);
+            this.label42.Location = new System.Drawing.Point(1078, 96);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(15, 13);
             this.label42.TabIndex = 34;

@@ -1836,7 +1836,7 @@ namespace TugasAkhir1
             if(transformedImage.Image != null)
             {
                 int value = Convert.ToInt32(jpegCompressionValue.Text);
-                transformedImage.Image = ImageAttack.JpegCompress(WatermarkedImage, value, "CompressedImage20.jpg");
+                transformedImage.Image = ImageAttack.JpegCompress(WatermarkedImage, value, "CompressedImage.jpg");
                 MessageBox.Show("Image Successfully Compressed!", "Success", MessageBoxButtons.OK);
                 resultLbl.Text = "Image Compressed";
             }
@@ -2433,6 +2433,8 @@ namespace TugasAkhir1
         }
 
         
+
+
 
 
 
