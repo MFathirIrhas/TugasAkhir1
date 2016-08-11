@@ -1131,6 +1131,14 @@ namespace TugasAkhir1
                     extractedImageBlue.Image = bluebmp;
                     #endregion
 
+                    #region Get Final Result
+                    double[] finalresult = Extract.FinalResult(RedExtractedWatermark, GreenExtractedWatermark, BlueExtractedWatermark);
+                    Bitmap finalbmp = ImageProcessing.ConvertListToWatermark2(finalresult, height, width);
+                    ConservativeSmoothing filter4 = new ConservativeSmoothing();
+                    filter4.ApplyInPlace(finalbmp);
+                    FinalResult.Image = finalbmp;
+                    #endregion
+
                     if (watermarkImage.Image != null)
                     {
                         #region Red BER Calculation
@@ -1145,7 +1153,7 @@ namespace TugasAkhir1
                         }
                         double akurasi = ((double)counter / (double)RedExtractedWatermark.Length) * 100;
                         double BER = 100 - akurasi;
-                        bertxt.Text += "> " + Math.Round(BER, 2) + " %" + "\n";
+                        //bertxt.Text += "> " + Math.Round(BER, 2) + " %" + "\n";
                         //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
                         RedextractedBERtxt.Text = Math.Round(BER, 2).ToString();
                         //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
@@ -1163,7 +1171,7 @@ namespace TugasAkhir1
                         }
                         double akurasi2 = ((double)counter2 / (double)GreenExtractedWatermark.Length) * 100;
                         double BER2 = 100 - akurasi2;
-                        bertxt.Text += "> " + Math.Round(BER2, 2) + " %" + "\n";
+                        //bertxt.Text += "> " + Math.Round(BER2, 2) + " %" + "\n";
                         //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
                         GreenextractedBERtxt.Text = Math.Round(BER2, 2).ToString();
                         //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
@@ -1181,12 +1189,29 @@ namespace TugasAkhir1
                         }
                         double akurasi3 = ((double)counter3 / (double)BlueExtractedWatermark.Length) * 100;
                         double BER3 = 100 - akurasi3;
-                        bertxt.Text += "> " + Math.Round(BER3, 2) + " %" + "\n";
+                        //bertxt.Text += "> " + Math.Round(BER3, 2) + " %" + "\n";
                         //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
                         BlueextractedBERtxt.Text = Math.Round(BER3, 2).ToString();
                         //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
                         #endregion
 
+                        #region Final BER Calculation
+                        /// Test
+                        int counter4 = 0;
+                        for (int i = 0; i < finalresult.Length; i++)
+                        {
+                            if (finalresult[i] == Real_Watermark[i])
+                            {
+                                counter4++;
+                            }
+                        }
+                        double akurasi4 = ((double)counter4 / (double)finalresult.Length) * 100;
+                        double BER4 = 100 - akurasi4;
+                        bertxt.Text += "> " + Math.Round(BER4, 2) + " %" + "\n";
+                        //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
+                        finalBerValue.Text = Math.Round(BER4, 2).ToString();
+                        //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
+                        #endregion
                     }
 
                     GUIEnd("Watermark Extracted!", 0, 0, 0);
@@ -1315,6 +1340,14 @@ namespace TugasAkhir1
                     extractedImageBlue.Image = bluebmp;
                     #endregion
 
+                    #region Get Final Result
+                    double[] finalresult = Extract.FinalResult(RedExtractedWatermark, GreenExtractedWatermark, BlueExtractedWatermark);
+                    Bitmap finalbmp = ImageProcessing.ConvertListToWatermark2(finalresult, height, width);
+                    ConservativeSmoothing filter4 = new ConservativeSmoothing();
+                    filter4.ApplyInPlace(finalbmp);
+                    FinalResult.Image = finalbmp;
+                    #endregion
+
                     if (watermarkImage.Image != null)
                     {
                         #region Red BER Calculation
@@ -1329,7 +1362,7 @@ namespace TugasAkhir1
                         }
                         double akurasi = ((double)counter / (double)RedExtractedWatermark.Length) * 100;
                         double BER = 100 - akurasi;
-                        bertxt.Text += "> " + Math.Round(BER, 2) + " %" + "\n";
+                        //bertxt.Text += "> " + Math.Round(BER, 2) + " %" + "\n";
                         //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
                         RedextractedBERtxt.Text = Math.Round(BER, 2).ToString();
                         //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
@@ -1347,7 +1380,7 @@ namespace TugasAkhir1
                         }
                         double akurasi2 = ((double)counter2 / (double)GreenExtractedWatermark.Length) * 100;
                         double BER2 = 100 - akurasi2;
-                        bertxt.Text += "> " + Math.Round(BER2, 2) + " %" + "\n";
+                        //bertxt.Text += "> " + Math.Round(BER2, 2) + " %" + "\n";
                         //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
                         GreenextractedBERtxt.Text = Math.Round(BER2, 2).ToString();
                         //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
@@ -1365,12 +1398,30 @@ namespace TugasAkhir1
                         }
                         double akurasi3 = ((double)counter3 / (double)BlueExtractedWatermark.Length) * 100;
                         double BER3 = 100 - akurasi3;
-                        bertxt.Text += "> " + Math.Round(BER3, 2) + " %" + "\n";
+                        //bertxt.Text += "> " + Math.Round(BER3, 2) + " %" + "\n";
                         //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
                         BlueextractedBERtxt.Text = Math.Round(BER3, 2).ToString();
                         //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
                         #endregion
 
+
+                        #region Final BER Calculation
+                        /// Test
+                        int counter4 = 0;
+                        for (int i = 0; i < finalresult.Length; i++)
+                        {
+                            if (finalresult[i] == Real_Watermark[i])
+                            {
+                                counter4++;
+                            }
+                        }
+                        double akurasi4 = ((double)counter4 / (double)finalresult.Length) * 100;
+                        double BER4 = 100 - akurasi4;
+                        bertxt.Text += "> " + Math.Round(BER4, 2) + " %" + "\n";
+                        //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
+                        finalBerValue.Text = Math.Round(BER4, 2).ToString();
+                        //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
+                        #endregion
                     }
 
                     GUIEnd("Watermark Extracted!", 0, 0, 0);

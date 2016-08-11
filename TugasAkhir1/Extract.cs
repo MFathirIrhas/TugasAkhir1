@@ -389,7 +389,7 @@ namespace TugasAkhir1
             // difference in the average log-likelihood changes only by as little as 0.0001
             var teacher = new BaumWelchLearning<NormalDistribution>(model)
             {
-                Tolerance = 0.01,
+                Tolerance = 0.0001,
                 Iterations = 100,//10,
 
                 FittingOptions = new NormalOptions()
