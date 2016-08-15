@@ -86,9 +86,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel14 = new System.Windows.Forms.Panel();
-            this.bluegammavalue = new System.Windows.Forms.TextBox();
-            this.greengammavalue = new System.Windows.Forms.TextBox();
-            this.redgammaValue = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.gammaValue = new System.Windows.Forms.TextBox();
             this.button16 = new System.Windows.Forms.Button();
             this.contrastValue = new System.Windows.Forms.TextBox();
             this.button15 = new System.Windows.Forms.Button();
@@ -171,6 +170,12 @@
             this.label40 = new System.Windows.Forms.Label();
             this.finalBerValue = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
+            this.button20 = new System.Windows.Forms.Button();
+            this.button32 = new System.Windows.Forms.Button();
+            this.awgnValue = new System.Windows.Forms.TextBox();
+            this.button33 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hostImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -867,9 +872,8 @@
             // panel14
             // 
             this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel14.Controls.Add(this.bluegammavalue);
-            this.panel14.Controls.Add(this.greengammavalue);
-            this.panel14.Controls.Add(this.redgammaValue);
+            this.panel14.Controls.Add(this.label41);
+            this.panel14.Controls.Add(this.gammaValue);
             this.panel14.Controls.Add(this.button16);
             this.panel14.Controls.Add(this.contrastValue);
             this.panel14.Controls.Add(this.button15);
@@ -880,32 +884,23 @@
             this.panel14.Size = new System.Drawing.Size(149, 91);
             this.panel14.TabIndex = 34;
             // 
-            // bluegammavalue
+            // label41
             // 
-            this.bluegammavalue.Location = new System.Drawing.Point(121, 63);
-            this.bluegammavalue.Multiline = true;
-            this.bluegammavalue.Name = "bluegammavalue";
-            this.bluegammavalue.Size = new System.Drawing.Size(23, 21);
-            this.bluegammavalue.TabIndex = 45;
-            this.bluegammavalue.Text = "20";
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(113, 67);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(35, 13);
+            this.label41.TabIndex = 44;
+            this.label41.Text = "*0.2-5";
             // 
-            // greengammavalue
+            // gammaValue
             // 
-            this.greengammavalue.Location = new System.Drawing.Point(97, 63);
-            this.greengammavalue.Multiline = true;
-            this.greengammavalue.Name = "greengammavalue";
-            this.greengammavalue.Size = new System.Drawing.Size(34, 21);
-            this.greengammavalue.TabIndex = 44;
-            this.greengammavalue.Text = "20";
-            // 
-            // redgammaValue
-            // 
-            this.redgammaValue.Location = new System.Drawing.Point(73, 63);
-            this.redgammaValue.Multiline = true;
-            this.redgammaValue.Name = "redgammaValue";
-            this.redgammaValue.Size = new System.Drawing.Size(27, 21);
-            this.redgammaValue.TabIndex = 42;
-            this.redgammaValue.Text = "20";
+            this.gammaValue.Location = new System.Drawing.Point(73, 63);
+            this.gammaValue.Multiline = true;
+            this.gammaValue.Name = "gammaValue";
+            this.gammaValue.Size = new System.Drawing.Size(37, 21);
+            this.gammaValue.TabIndex = 42;
+            this.gammaValue.Text = "0.2";
             // 
             // button16
             // 
@@ -1401,7 +1396,7 @@
             this.medianCutValue.Name = "medianCutValue";
             this.medianCutValue.Size = new System.Drawing.Size(65, 23);
             this.medianCutValue.TabIndex = 23;
-            this.medianCutValue.Text = "10";
+            this.medianCutValue.Text = "100";
             // 
             // button22
             // 
@@ -1427,9 +1422,9 @@
             this.panel8.Controls.Add(this.meanFilterBtn);
             this.panel8.Controls.Add(this.medianFilterBtn);
             this.panel8.Controls.Add(this.modusFilterBtn);
-            this.panel8.Location = new System.Drawing.Point(3, 126);
+            this.panel8.Location = new System.Drawing.Point(3, 134);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(174, 120);
+            this.panel8.Size = new System.Drawing.Size(174, 112);
             this.panel8.TabIndex = 14;
             // 
             // comboBox3
@@ -1439,7 +1434,7 @@
             "3x3",
             "5x5",
             "7x7"});
-            this.comboBox3.Location = new System.Drawing.Point(91, 91);
+            this.comboBox3.Location = new System.Drawing.Point(91, 76);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(71, 21);
             this.comboBox3.TabIndex = 26;
@@ -1452,7 +1447,7 @@
             "3x3",
             "5x5",
             "7x7"});
-            this.comboBox2.Location = new System.Drawing.Point(91, 55);
+            this.comboBox2.Location = new System.Drawing.Point(91, 48);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(71, 21);
             this.comboBox2.TabIndex = 25;
@@ -1466,7 +1461,7 @@
             "3x3",
             "5x5",
             "7x7"});
-            this.comboBox1.Location = new System.Drawing.Point(91, 18);
+            this.comboBox1.Location = new System.Drawing.Point(91, 21);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(71, 21);
             this.comboBox1.TabIndex = 24;
@@ -1487,7 +1482,7 @@
             this.meanFilterBtn.BackColor = System.Drawing.Color.Gold;
             this.meanFilterBtn.FlatAppearance.BorderSize = 0;
             this.meanFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.meanFilterBtn.Location = new System.Drawing.Point(3, 18);
+            this.meanFilterBtn.Location = new System.Drawing.Point(3, 21);
             this.meanFilterBtn.Name = "meanFilterBtn";
             this.meanFilterBtn.Size = new System.Drawing.Size(91, 21);
             this.meanFilterBtn.TabIndex = 14;
@@ -1500,7 +1495,7 @@
             this.medianFilterBtn.BackColor = System.Drawing.Color.Gold;
             this.medianFilterBtn.FlatAppearance.BorderSize = 0;
             this.medianFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.medianFilterBtn.Location = new System.Drawing.Point(3, 55);
+            this.medianFilterBtn.Location = new System.Drawing.Point(3, 48);
             this.medianFilterBtn.Name = "medianFilterBtn";
             this.medianFilterBtn.Size = new System.Drawing.Size(91, 21);
             this.medianFilterBtn.TabIndex = 15;
@@ -1513,7 +1508,7 @@
             this.modusFilterBtn.BackColor = System.Drawing.Color.Gold;
             this.modusFilterBtn.FlatAppearance.BorderSize = 0;
             this.modusFilterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.modusFilterBtn.Location = new System.Drawing.Point(3, 91);
+            this.modusFilterBtn.Location = new System.Drawing.Point(3, 76);
             this.modusFilterBtn.Name = "modusFilterBtn";
             this.modusFilterBtn.Size = new System.Drawing.Size(91, 21);
             this.modusFilterBtn.TabIndex = 16;
@@ -1524,6 +1519,8 @@
             // panel7
             // 
             this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.awgnValue);
+            this.panel7.Controls.Add(this.button33);
             this.panel7.Controls.Add(this.saltPepperValue);
             this.panel7.Controls.Add(this.gaussianNoiseValue);
             this.panel7.Controls.Add(this.button21);
@@ -1531,17 +1528,17 @@
             this.panel7.Controls.Add(this.noiseBtn);
             this.panel7.Location = new System.Drawing.Point(3, 22);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(174, 98);
+            this.panel7.Size = new System.Drawing.Size(174, 108);
             this.panel7.TabIndex = 13;
             // 
             // saltPepperValue
             // 
-            this.saltPepperValue.Location = new System.Drawing.Point(90, 59);
+            this.saltPepperValue.Location = new System.Drawing.Point(91, 49);
             this.saltPepperValue.Multiline = true;
             this.saltPepperValue.Name = "saltPepperValue";
             this.saltPepperValue.Size = new System.Drawing.Size(71, 23);
             this.saltPepperValue.TabIndex = 22;
-            this.saltPepperValue.Text = "10";
+            this.saltPepperValue.Text = "20";
             // 
             // gaussianNoiseValue
             // 
@@ -1550,14 +1547,14 @@
             this.gaussianNoiseValue.Name = "gaussianNoiseValue";
             this.gaussianNoiseValue.Size = new System.Drawing.Size(71, 23);
             this.gaussianNoiseValue.TabIndex = 21;
-            this.gaussianNoiseValue.Text = "10";
+            this.gaussianNoiseValue.Text = "20";
             // 
             // button21
             // 
             this.button21.BackColor = System.Drawing.Color.Gold;
             this.button21.FlatAppearance.BorderSize = 0;
             this.button21.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button21.Location = new System.Drawing.Point(2, 59);
+            this.button21.Location = new System.Drawing.Point(3, 49);
             this.button21.Name = "button21";
             this.button21.Size = new System.Drawing.Size(90, 23);
             this.button21.TabIndex = 21;
@@ -1881,6 +1878,69 @@
             this.label42.TabIndex = 34;
             this.label42.Text = "%";
             // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(1006, 158);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.TabIndex = 41;
+            this.button13.Text = "Reuse";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click_2);
+            // 
+            // button17
+            // 
+            this.button17.Location = new System.Drawing.Point(1006, 233);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(75, 23);
+            this.button17.TabIndex = 42;
+            this.button17.Text = "Clear";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click_1);
+            // 
+            // button20
+            // 
+            this.button20.Location = new System.Drawing.Point(1003, 382);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(75, 23);
+            this.button20.TabIndex = 43;
+            this.button20.Text = "Gamma";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
+            // button32
+            // 
+            this.button32.Location = new System.Drawing.Point(1003, 468);
+            this.button32.Name = "button32";
+            this.button32.Size = new System.Drawing.Size(75, 23);
+            this.button32.TabIndex = 45;
+            this.button32.Text = "Rotate";
+            this.button32.UseVisualStyleBackColor = true;
+            this.button32.Click += new System.EventHandler(this.button37_Click);
+            // 
+            // awgnValue
+            // 
+            this.awgnValue.Location = new System.Drawing.Point(91, 78);
+            this.awgnValue.Multiline = true;
+            this.awgnValue.Name = "awgnValue";
+            this.awgnValue.Size = new System.Drawing.Size(71, 23);
+            this.awgnValue.TabIndex = 24;
+            this.awgnValue.Text = "10";
+            // 
+            // button33
+            // 
+            this.button33.BackColor = System.Drawing.Color.Gold;
+            this.button33.FlatAppearance.BorderSize = 0;
+            this.button33.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button33.Location = new System.Drawing.Point(3, 78);
+            this.button33.Name = "button33";
+            this.button33.Size = new System.Drawing.Size(90, 23);
+            this.button33.TabIndex = 23;
+            this.button33.TabStop = false;
+            this.button33.Text = "AWGN";
+            this.button33.UseVisualStyleBackColor = false;
+            this.button33.Click += new System.EventHandler(this.button31_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1888,6 +1948,10 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1151, 693);
+            this.Controls.Add(this.button32);
+            this.Controls.Add(this.button20);
+            this.Controls.Add(this.button17);
+            this.Controls.Add(this.button13);
             this.Controls.Add(this.label42);
             this.Controls.Add(this.finalBerValue);
             this.Controls.Add(this.label40);
@@ -2085,14 +2149,19 @@
         private System.Windows.Forms.TextBox brightnessValue;
         private System.Windows.Forms.TextBox contrastValue;
         private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.TextBox redgammaValue;
+        private System.Windows.Forms.TextBox gammaValue;
         private System.Windows.Forms.Button button16;
-        private System.Windows.Forms.TextBox bluegammavalue;
-        private System.Windows.Forms.TextBox greengammavalue;
         private System.Windows.Forms.PictureBox FinalResult;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.Label finalBerValue;
         private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Button button32;
+        private System.Windows.Forms.TextBox awgnValue;
+        private System.Windows.Forms.Button button33;
     }
 }
 

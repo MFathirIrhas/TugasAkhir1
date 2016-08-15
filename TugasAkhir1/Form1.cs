@@ -92,8 +92,12 @@ namespace TugasAkhir1
         double[,] Mapped_Watermark;
         List<int> Real_Watermark;
         double[,] EMBEDDED_WATERMARK_For_Extraction;
-        
-        
+
+        // Get the Final Result of Accumulation of 3 extracted watermark in each color band.
+        public double[] FResult;
+
+        Bitmap reuse;
+
         Stopwatch time = new Stopwatch();
 
         #region DRAW ON WATERMARKED IMAGE
@@ -320,6 +324,7 @@ namespace TugasAkhir1
 
                 drawing = new Bitmap(transformedImage.Image);
 
+                reuse = new Bitmap(ofd.FileName);
 
                 //Enable button
                 //histeqBtn.Enabled = true;
@@ -930,6 +935,8 @@ namespace TugasAkhir1
                     FinalResult.Image = finalbmp;
                     #endregion
 
+                    FResult = finalresult;
+
                     if (watermarkImage.Image != null && Real_Watermark!=null)
                     {
                         #region Red BER Calculation
@@ -1139,7 +1146,9 @@ namespace TugasAkhir1
                     FinalResult.Image = finalbmp;
                     #endregion
 
-                    if (watermarkImage.Image != null)
+                    FResult = finalresult;
+
+                    if (watermarkImage.Image != null && Real_Watermark != null)
                     {
                         #region Red BER Calculation
                         /// Test
@@ -1348,7 +1357,9 @@ namespace TugasAkhir1
                     FinalResult.Image = finalbmp;
                     #endregion
 
-                    if (watermarkImage.Image != null)
+                    FResult = finalresult;
+
+                    if (watermarkImage.Image != null && Real_Watermark != null)
                     {
                         #region Red BER Calculation
                         /// Test
@@ -2244,7 +2255,10 @@ namespace TugasAkhir1
 
         private void button37_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.RotateBilinear(WatermarkedImage, 30);
+            //transformedImage.Image = ImageAttack.RotateBilinear(WatermarkedImage, 30);
+            transformedImage.Image = ImageAttack.AWGNNoise(WatermarkedImage, 10);
+            //double d = ImageAttack.AWGN();
+            //MessageBox.Show("AWGN Value: " + d, "Result", MessageBoxButtons.OK);
         }
 
         private void button38_Click(object sender, EventArgs e)
@@ -2365,19 +2379,37 @@ namespace TugasAkhir1
                 }
                 double akurasi3 = ((double)counter3 / (double)BlueExtractedWatermark.Length) * 100;
                 double BER3 = 100 - akurasi3;
-                double ber3 = Math.Round(BER3, 3);
+                double ber3 = Math.Round(BER3, 2);
                 //double ber = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImage.Image));
                 BlueextractedBERtxt.Text = ber3.ToString();
                 //bertxt.Text += "> " + ber.ToString() + " %" + "\n";
                 #endregion
 
-                List<double> berlist = new List<double>();
-                berlist.Add(ber);
-                berlist.Add(ber2);
-                berlist.Add(ber3);
-                double minBer = berlist.Min();
-                bertxt.Text += "> " + minBer.ToString() + " %" + "\n";
-                bertxt.Text += "----------" + "\n";
+                #region Final BER Calculation
+                /// Test
+                int counter4 = 0;
+                for (int i = 0; i < FResult.Length; i++)
+                {
+                    if (FResult[i] == RealWatermark2[i])
+                    {
+                        counter4++;
+                    }
+                }
+                double akurasi4 = ((double)counter4 / (double)FResult.Length) * 100;
+                double BER4 = 100 - akurasi4;
+                bertxt.Text += "> " + Math.Round(BER4, 2) + " %" + "\n";
+                //double BER = Statistic.BER(new Bitmap(watermarkImage.Image), new Bitmap(extractedImageGreen.Image));
+                finalBerValue.Text = Math.Round(BER4, 2).ToString();
+                //MessageBox.Show("Akurasi: " + BER, "Succeed!", MessageBoxButtons.OK);
+                #endregion
+
+                //List<double> berlist = new List<double>();
+                //berlist.Add(ber);
+                //berlist.Add(ber2);
+                //berlist.Add(ber3);
+                //double minBer = berlist.Min();
+                //bertxt.Text += "> " + minBer.ToString() + " %" + "\n";
+                //bertxt.Text += "----------" + "\n";
 
 
             }
@@ -2477,13 +2509,32 @@ namespace TugasAkhir1
 
         private void button16_Click(object sender, EventArgs e)
         {
-            int redvalue = Convert.ToInt32(redgammaValue.Text);
-            int greenvalue = Convert.ToInt32(greengammavalue.Text);
-            int bluevalue = Convert.ToInt32(bluegammavalue.Text);
-            transformedImage.Image = ImageAttack.SetGamma(WatermarkedImage,redvalue,greenvalue,bluevalue);
+            float gammavalue = Convert.ToSingle(gammaValue.Text);//Convert.ToInt32(gammaValue.Text);
+            transformedImage.Image = ImageAttack.AdjustGamma(WatermarkedImage, gammavalue);//ImageAttack.SetGamma(WatermarkedImage,redvalue,greenvalue,bluevalue);
         }
 
-        
+        private void button13_Click_2(object sender, EventArgs e)
+        {
+            transformedImage.Image = reuse;
+        }
+
+        private void button17_Click_1(object sender, EventArgs e)
+        {
+            bertxt.Text = null;
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.AdjustGamma(WatermarkedImage,0.2f);
+        }
+
+        private void button31_Click_1(object sender, EventArgs e)
+        {
+            int value = Convert.ToInt32(awgnValue.Text);
+            transformedImage.Image = ImageAttack.AWGNNoise(WatermarkedImage, value);
+        }
+
+
 
 
 

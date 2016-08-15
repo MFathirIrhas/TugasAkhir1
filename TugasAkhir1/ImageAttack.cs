@@ -16,10 +16,9 @@ using AForge;
 using AForge.Imaging.Filters;
 using AForge.Imaging.ColorReduction;
 using AForge.Math.Random;
- 
-
-
-
+using Utilities;
+using Utilities.Media.Image;
+using Accord.Statistics.Distributions.Univariate;
 
 
 
@@ -435,7 +434,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region Gaussian Noise       
+        #region Noise       
         public static Bitmap GaussianNoise(Image img, int intense)
         {
             Bitmap finalBmp = img as Bitmap;
@@ -482,6 +481,130 @@ namespace TugasAkhir1
             SaltAndPepperNoise filter = new SaltAndPepperNoise(intensity);
             filter.ApplyInPlace(bmp);
             return bmp;
+        }
+        #endregion
+
+        #region Noise 2
+        public static Bitmap AddNoise(Bitmap OriginalImage, int Amount)
+        {
+            Bitmap NewBitmap = new Bitmap(OriginalImage.Width, OriginalImage.Height);
+            BitmapData NewData = NewBitmap.LockImage();//Image.LockImage(NewBitmap);
+            BitmapData OldData = OriginalImage.LockImage();//Image.LockImage(OriginalImage);
+            int NewPixelSize = NewData.GetPixelSize();//Image.GetPixelSize(NewData);
+            int OldPixelSize = OldData.GetPixelSize();//Image.GetPixelSize(OldData);
+            Utilities.Random.Random TempRandom = new Utilities.Random.Random();
+            for (int x = 0; x < NewBitmap.Width; ++x)
+            {
+                for (int y = 0; y < NewBitmap.Height; ++y)
+                {
+                    Color CurrentPixel = OldData.GetPixel(x, y, OldPixelSize);//Image.GetPixel(OldData, x, y, OldPixelSize);
+                    int R = CurrentPixel.R + TempRandom.Next(-Amount, Amount + 1);
+                    int G = CurrentPixel.G + TempRandom.Next(-Amount, Amount + 1);
+                    int B = CurrentPixel.B + TempRandom.Next(-Amount, Amount + 1);
+                    R = R > 255 ? 255 : R;
+                    R = R < 0 ? 0 : R;
+                    G = G > 255 ? 255 : G;
+                    G = G < 0 ? 0 : G;
+                    B = B > 255 ? 255 : B;
+                    B = B < 0 ? 0 : B;
+                    Color TempValue = Color.FromArgb(R, G, B);
+                    NewData.SetPixel(x, y, TempValue, NewPixelSize);//Image.SetPixel(NewData, x, y, TempValue, NewPixelSize);
+                }
+            }
+            NewBitmap.UnlockImage(NewData);//Image.UnlockImage(NewBitmap, NewData);
+            OriginalImage.UnlockImage(OldData);//Image.UnlockImage(OriginalImage, OldData);
+            return NewBitmap;
+        }
+
+        public static Bitmap AddNoise2(Bitmap OriginalImage, int Amount)
+        {
+            Bitmap NewBitmap = new Bitmap(OriginalImage.Width, OriginalImage.Height);
+            BitmapData NewData = NewBitmap.LockImage();//Image.LockImage(NewBitmap);
+            BitmapData OldData = OriginalImage.LockImage();//Image.LockImage(OriginalImage);
+            int NewPixelSize = NewData.GetPixelSize();//Image.GetPixelSize(NewData);
+            int OldPixelSize = OldData.GetPixelSize();//Image.GetPixelSize(OldData);
+            Utilities.Random.Random TempRandom = new Utilities.Random.Random();
+            for (int x = 0; x < NewBitmap.Width; ++x)
+            {
+                for (int y = 0; y < NewBitmap.Height; ++y)
+                {
+                    Color CurrentPixel = OldData.GetPixel(x, y, OldPixelSize);//Image.GetPixel(OldData, x, y, OldPixelSize);
+                    int noise = (int)AWGN() * 255;
+                    int R = CurrentPixel.R + noise;//(int)Statistic.GaussianRandom(0, 1);//(int)Statistic.NextGaussian(0f, 1f, -Amount, Amount + 1);//TempRandom.Next(-Amount, Amount + 1);
+                    int G = CurrentPixel.G + noise;//(int)Statistic.GaussianRandom(0, 1);//(int)Statistic.NextGaussian(0f, 1f, -Amount, Amount + 1);//TempRandom.Next(-Amount, Amount + 1);
+                    int B = CurrentPixel.B + noise;//(int)Statistic.GaussianRandom(0, 1);//(int)Statistic.NextGaussian(0f, 1f, -Amount, Amount + 1);//TempRandom.Next(-Amount, Amount + 1);
+                    R = R > 255 ? 255 : R;
+                    R = R < 0 ? 0 : R;
+                    G = G > 255 ? 255 : G;
+                    G = G < 0 ? 0 : G;
+                    B = B > 255 ? 255 : B;
+                    B = B < 0 ? 0 : B;
+                    Color TempValue = Color.FromArgb(R, G, B);
+                    NewData.SetPixel(x, y, TempValue, NewPixelSize);//Image.SetPixel(NewData, x, y, TempValue, NewPixelSize);
+                }
+            }
+            NewBitmap.UnlockImage(NewData);//Image.UnlockImage(NewBitmap, NewData);
+            OriginalImage.UnlockImage(OldData);//Image.UnlockImage(OriginalImage, OldData);
+            return NewBitmap;
+        }
+
+        public static double AWGN()
+        {
+            const double PI = 3.1415926536;
+           
+            double temp1 = 0;
+            double temp2 = 0;
+            double result;
+            int p;
+
+            System.Random r = new System.Random();
+            p = 1;
+
+            while (p > 0)
+            {
+                temp2 = (r.Next(0, 255) / (double)255);
+
+                if (temp2 == 0)
+                {
+                    p = 1;
+                }
+                else
+                {
+                    p = -1;
+                }
+            }
+
+            temp1 = Math.Cos((2.0 * (double)PI) * r.Next(0, 255) / ((double)255));
+            result = Math.Sqrt(-2.0 * Math.Log(temp2)) * temp1;
+            return result;
+        }
+
+        public static Bitmap AWGNNoise(Bitmap bmp, int intensity)
+        {
+            Bitmap img = new Bitmap(bmp.Width, bmp.Height);
+            var normal = new NormalDistribution(mean: 0, stdDev: 1);
+            double[] noise = normal.Generate(img.Width*img.Height);
+            int l = 0;
+            for (int i = 0; i < bmp.Height; i++)
+            {
+                for(int j = 0; j < bmp.Width; j++)
+                {
+                    Color c = bmp.GetPixel(j, i);
+                    int c1 = c.R + ((int)Math.Ceiling(noise[l]) * intensity);//(int)noise + intensity;//(int)Math.Sqrt(noise() * 255) + intensity;
+                    int c2 = c.G + ((int)Math.Ceiling(noise[l]) * intensity);//(int)Math.Sqrt(noise() * 255) + intensity;
+                    int c3 = c.B + ((int)Math.Ceiling(noise[l]) * intensity);//(int)Math.Sqrt(noise() * 255) + intensity;
+                    c1 = c1 > 255 ? 255 : c1;
+                    c1 = c1 < 0 ? 0 : c1;
+                    c2 = c2 > 255 ? 255 : c2;
+                    c2 = c2 < 0 ? 0 : c2;
+                    c3 = c3 > 255 ? 255 : c3;
+                    c3 = c3 < 0 ? 0 : c3;
+                    Color newC = Color.FromArgb(c1, c2, c3);
+                    img.SetPixel(j, i, newC);
+                    l++;
+                }
+            }
+            return img;
         }
         #endregion
 
@@ -658,6 +781,15 @@ namespace TugasAkhir1
             Bitmap newImage = filter.Apply(bmp);
             return newImage;
         }
+
+        public static Bitmap RotateBicubic(Bitmap bmp, int degree)
+        {
+            // create filter - rotate for 30 degrees keeping original image size
+            RotateBicubic filter = new RotateBicubic(degree, true);
+            // apply the filter
+            Bitmap newImage = filter.Apply(bmp);
+            return bmp;
+        }
         #endregion
 
         #region Crop Image
@@ -756,7 +888,7 @@ namespace TugasAkhir1
         }
         #endregion
 
-        #region GammaValue
+        #region Gamma
         public static Bitmap SetGamma(Bitmap bmp,double red, double green, double blue)
         {
             Bitmap temp = (Bitmap)bmp;
@@ -789,5 +921,59 @@ namespace TugasAkhir1
         }
         #endregion
 
+        #region Gamma2
+        public static Bitmap AdjustGamma(Bitmap OriginalImage, float Value)
+        {
+            Bitmap NewBitmap = new Bitmap(OriginalImage.Width, OriginalImage.Height);
+            BitmapData NewData = NewBitmap.LockImage();//Image.LockImage(NewBitmap);
+            BitmapData OldData = OriginalImage.LockImage();//Image.LockImage(OriginalImage);
+            int NewPixelSize = NewData.GetPixelSize();//Image.GetPixelSize(NewData);
+            int OldPixelSize = OldData.GetPixelSize();//Image.GetPixelSize(OldData);
+
+            int[] RedRamp = new int[256];
+            int[] GreenRamp = new int[256];
+            int[] BlueRamp = new int[256];
+            for (int x = 0; x < 256; ++x)
+            {
+                RedRamp[x] = Clamp((int)((255.0 * System.Math.Pow(x / 255.0, 1.0 / Value)) + 0.5), 255, 0);
+                GreenRamp[x] = Clamp((int)((255.0 * System.Math.Pow(x / 255.0, 1.0 / Value)) + 0.5), 255, 0);
+                BlueRamp[x] = Clamp((int)((255.0 * System.Math.Pow(x / 255.0, 1.0 / Value)) + 0.5), 255, 0);
+            }
+
+            for (int x = 0; x < NewBitmap.Width; ++x)
+            {
+                for (int y = 0; y < NewBitmap.Height; ++y)
+                {
+                    Color Pixel = OldData.GetPixel(x, y, OldPixelSize);//Image.GetPixel(OldData, x, y, OldPixelSize);
+                    int Red = RedRamp[Pixel.R];
+                    int Green = GreenRamp[Pixel.G];
+                    int Blue = BlueRamp[Pixel.B];
+                    NewData.SetPixel(x, y, Color.FromArgb(Red, Green, Blue), NewPixelSize);//Image.SetPixel(NewData, x, y, Color.FromArgb(Red, Green, Blue), NewPixelSize);
+                }
+            }
+
+            NewBitmap.UnlockImage(NewData);//Image.UnlockImage(NewBitmap, NewData);
+            OriginalImage.UnlockImage(OldData);//Image.UnlockImage(OriginalImage, OldData);
+            return NewBitmap;
+        }
+
+        private static int Clamp(int Value, int Max, int Min)
+        {
+            Value = Value > Max? Max : Value;
+            Value = Value<Min? Min : Value;
+            return Value;
+        }
+        #endregion
+
+        #region Adaptive Smoothing
+        public static Bitmap AdaptiveSmoothing(Bitmap bmp)
+        {
+            // create filter
+            AdaptiveSmoothing filter = new AdaptiveSmoothing();
+            // apply the filter
+            filter.ApplyInPlace(bmp);
+            return bmp;
+        }
+        #endregion
     }
 }
