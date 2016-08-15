@@ -80,7 +80,7 @@ namespace TugasAkhir1
          *      g2 = { 1, 1, 0, 1, 1, 0, 0, 1 }
          *      g3 = { 1, 0, 0, 1, 0, 1, 0, 1 }
          **/
-        public static List<int> ConvolutionCode(List<int> m)
+        public static List<int> ConvolutionEncoding(List<int> m)
         {
             List<int> mc = new List<int>(); //Output list
             int elm = 0;

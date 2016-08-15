@@ -451,8 +451,8 @@ namespace TugasAkhir1
             double NumOfRootm1 = (double)rootpmf1 * (double)(((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3); //Number of parent node whose m = 1
             double NumOfRootm2 = (double)rootpmf2 * (double)(((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3); //Number of parent node whose m = 2
 
-            double[] Scale2 = DWT.Scale2To1DCoeff(hiddenstates);
-            double[,] Scale1 = DWT.Scale1To1DCoeff(hiddenstates);
+            double[] Scale2 = Haar.Scale2To1DCoeff(hiddenstates);
+            double[,] Scale1 = Haar.Scale1To1DCoeff(hiddenstates);
             double[,] Scale = new double[Scale2.Length, 5];
 
             for (int i = 0; i < Scale2.Length; i++)
@@ -790,7 +790,7 @@ namespace TugasAkhir1
             int size = ((coeffs.GetLength(0) * coeffs.GetLength(1)) / 16) * 3;
             double[,] hiddenstates = GetHiddenStateValue(coeffs);
             double[] transitionProb = new double[size];
-            double[,] trees = DWT.ListOfCoeffs(hiddenstates);
+            double[,] trees = Haar.ListOfCoeffs(hiddenstates);
 
             int n1m1 = 0;
             int n2m1 = 0;
@@ -886,9 +886,9 @@ namespace TugasAkhir1
         public static double[] Means(double[,] coeffs, int m)
         {
             double[] mean = new double[5]; //5 node each tree
-            double[,] treesOfcoeffs = DWT.ListOfCoeffs(coeffs);
+            double[,] treesOfcoeffs = Haar.ListOfCoeffs(coeffs);
             double[,] hiddenstates = GetHiddenStateValue(coeffs);
-            double[,] treesOfHiddenStates = DWT.ListOfCoeffs(hiddenstates);
+            double[,] treesOfHiddenStates = Haar.ListOfCoeffs(hiddenstates);
 
             //P(m)
             double[] rootpmf = ParentStateProbability(hiddenstates); 
@@ -1009,9 +1009,9 @@ namespace TugasAkhir1
         public static double[] Variances(double[,] coeffs , int m)
         {
             double[] variances = new double[5]; //5 node each tree
-            double[,] treesOfcoeffs = DWT.ListOfCoeffs(coeffs);
+            double[,] treesOfcoeffs = Haar.ListOfCoeffs(coeffs);
             double[,] hiddenstates = GetHiddenStateValue(coeffs);
-            double[,] treesOfHiddenStates = DWT.ListOfCoeffs(hiddenstates);
+            double[,] treesOfHiddenStates = Haar.ListOfCoeffs(hiddenstates);
 
             //P(m)
             double[] rootpmf = ParentStateProbability(hiddenstates);
@@ -1218,7 +1218,7 @@ namespace TugasAkhir1
         #region USING BAUM-WELCH LEARNING METHOD
         public static double[][] ConvertToNestedArray(double[,] coeffs)
         {
-            double[,] treesOfCoeffs = DWT.ListOfCoeffs(coeffs);
+            double[,] treesOfCoeffs = Haar.ListOfCoeffs(coeffs);
             double[][] Data = new double[treesOfCoeffs.GetLength(0)][];
 
             for(int i = 0; i < treesOfCoeffs.GetLength(0); i++)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -220,5 +221,50 @@ namespace TugasAkhir1
         }
 
 
+        #region Gaussian Random Variable
+        public static float NextGaussian()
+        {
+            Random r = new Random();
+            float v1, v2, s;
+            do
+            {
+                v1 = 2.0f * (float)r.Next(0, 1) - 1.0f;
+                v2 = 2.0f * (float)r.Next(0, 1) - 1.0f;
+                s = v1 * v1 + v2 * v2;
+            } while (s >= 1.0f || s == 0f);
+
+            s = (float)Math.Sqrt((-2.0f * Math.Log(s)) / s);
+
+            return v1 * s;
+        }
+
+        public static float NextGaussian(float mean, float standard_deviation)
+        {
+            return mean + NextGaussian() * standard_deviation;
+        }
+
+        public static float NextGaussian(float mean, float standard_deviation, float min, float max)
+        {
+            float x;
+            do
+            {
+                x = NextGaussian(mean, standard_deviation);
+            } while (x < min || x > max);
+
+            return x;
+        }
+        #endregion
+
+
+
+        public static double GaussianRandom(double mean, double std)
+        {
+            Random rand = new Random(); //reuse this if you are generating many
+            double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
+            double u2 = rand.NextDouble();
+            double randStdNormal = (int)(Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2)); //random normal(0,1)
+            double randNormal = mean + std * randStdNormal; //random normal(mean,stdDev^2)
+            return randNormal;
+        }
     }
 }

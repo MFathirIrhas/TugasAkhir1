@@ -222,34 +222,76 @@ namespace TugasAkhir1
         }
 
         //For Color Image
-        public static Bitmap ConvertToBitmap2(double[,] IMatrixR, double[,] ICoeffs, double[,] IMatrixB)
+        public static Bitmap ConvertToBitmap2(double[,] RedICoeffs, double[,] GreenICoeffs, double[,] BlueICoeffs)
         {
-            Bitmap bmp = new Bitmap(ICoeffs.GetLength(1), ICoeffs.GetLength(0));
-            for (int i = 0; i < ICoeffs.GetLength(0); i++)
+            Bitmap bmp = new Bitmap(RedICoeffs.GetLength(1), RedICoeffs.GetLength(0));
+            double[,] Red = SetMinMaxPixels(RedICoeffs);
+            double[,] Green = SetMinMaxPixels(GreenICoeffs);
+            double[,] Blue = SetMinMaxPixels(BlueICoeffs);
+            for (int i = 0; i < RedICoeffs.GetLength(0); i++)
             {
-                for (int j = 0; j < ICoeffs.GetLength(1); j++)
+                for (int j = 0; j < RedICoeffs.GetLength(1); j++)
                 {
-                    if (ICoeffs[i, j] < 0)
-                    {
-                        Color c = Color.FromArgb((int)IMatrixR[i, j], 0, (int)IMatrixB[i, j]);
-                        bmp.SetPixel(j, i, c);
-                    }
-                    else if (ICoeffs[i, j] > 255)
-                    {
-                        Color c = Color.FromArgb((int)IMatrixR[i, j], 255, (int)IMatrixB[i, j]);
-                        bmp.SetPixel(j, i, c);
-                    }
-                    else
-                    {
-                        Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
-                        bmp.SetPixel(j, i, c);
-                    }
+                    //if (RedICoeffs[i, j] < 0)
+                    //{
+                    //    Color c = Color.FromArgb(0, (int)GreenICoeffs[i, j], (int)BlueICoeffs[i, j]);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
+                    //else if (GreenICoeffs[i, j] < 0)
+                    //{
+                    //    Color c = Color.FromArgb((int)RedICoeffs[i,j], 0, (int)BlueICoeffs[i, j]);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
+                    //else if (BlueICoeffs[i, j] < 0)
+                    //{
+                    //    Color c = Color.FromArgb((int)RedICoeffs[i, j], (int)GreenICoeffs[i, j], 0);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
+                    //else if (RedICoeffs[i, j] > 255)
+                    //{
+                    //    Color c = Color.FromArgb(255, (int)GreenICoeffs[i, j], (int)BlueICoeffs[i, j]);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
+                    //else if(GreenICoeffs[i,j] > 255)
+                    //{
+                    //    Color c = Color.FromArgb((int)RedICoeffs[i, j], 255, (int)BlueICoeffs[i, j]);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
+                    //else if(BlueICoeffs[i,j] > 255)
+                    //{
+                    //    Color c = Color.FromArgb((int)RedICoeffs[i, j], (int)BlueICoeffs[i, j], 0);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
+                    //else
+                    //{
+                    //    Color c = Color.FromArgb((int)RedICoeffs[i, j], (int)BlueICoeffs[i, j], (int)GreenICoeffs[i, j]);
+                    //    bmp.SetPixel(j, i, c);
+                    //}
 
-                    //Color c = Color.FromArgb((int)IMatrixR[i, j], (int)ICoeffs[i, j], (int)IMatrixB[i, j]);
-                    //bmp.SetPixel(j, i, c);
+                    Color c = Color.FromArgb((int)Red[i, j], (int)Green[i, j], (int)Blue[i, j]);
+                    bmp.SetPixel(j, i, c);
                 }
             }
             return bmp;
+        }
+
+        public static double[,] SetMinMaxPixels(double[,] pixels)
+        {
+            double[,] setminmax = pixels;//new double[pixels.GetLength(0),pixels.GetLength(1)];
+            for(int i = 0; i < pixels.GetLength(0); i++)
+            {
+                for(int j = 0; j < pixels.GetLength(1); j++)
+                {
+                    if (pixels[i, j] < 0)
+                    {
+                        setminmax[i, j] = 0;
+                    }else if(pixels[i, j] > 255)
+                    {
+                        setminmax[i, j] = 255;
+                    }
+                }
+            }
+            return setminmax;
         }
 
         //Procedure for Human Visual System
@@ -287,7 +329,8 @@ namespace TugasAkhir1
             return HVSValues;
         }
 
-        
+
+        #region edge detection
         public static Bitmap LaplaceEdge(Bitmap DecomposedImage)
         {
             Bitmap GrayDecomposedImage = ConvertToGray(DecomposedImage);
@@ -381,6 +424,8 @@ namespace TugasAkhir1
 
             return resultBitmap;
         }
+        #endregion
+
 
         #region Convert To 8 bit 
         public static System.Drawing.Bitmap CopyToBpp(System.Drawing.Bitmap b, int bpp)

@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,8 +49,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Accord.Math, Version=3.0.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Accord.Math.3.0.2\lib\net45\Accord.Math.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Fathir\Downloads\Compressed\TugasAkhir1-d461d056b4292b88115c4298d19e599b9ef83231\TugasAkhir1-d461d056b4292b88115c4298d19e599b9ef83231\packages\Accord.Math.3.0.2\lib\net45\Accord.Math.dll</HintPath>
     </Reference>
     <Reference Include="Accord.Statistics, Version=3.0.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
       <HintPath>..\packages\Accord.Statistics.3.0.2\lib\net45\Accord.Statistics.dll</HintPath>
@@ -58,6 +59,7 @@
     <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
       <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
       <Private>True</Private>
+      <Aliases>af</Aliases>
     </Reference>
     <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
       <HintPath>..\packages\AForge.Imaging.2.2.5\lib\AForge.Imaging.dll</HintPath>
@@ -66,6 +68,7 @@
     <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
       <HintPath>..\packages\AForge.Math.2.2.5\lib\AForge.Math.dll</HintPath>
       <Private>True</Private>
+      <Aliases>aforgemath</Aliases>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.3.11.0\lib\net40\MathNet.Numerics.dll</HintPath>
@@ -135,7 +138,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utilities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0f7489d08ad0bf67, processorArchitecture=MSIL">
+    <Reference Include="Utilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=27d5780f9da597f1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\Fathir\Downloads\Compressed\Utilities\DLLs\Utilities.dll</HintPath>
     </Reference>
@@ -145,7 +148,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DWT.cs" />
+    <Compile Include="Daubechies2.cs" />
+    <Compile Include="Daubechies3.cs" />
+    <Compile Include="Haar.cs" />
     <Compile Include="Embed.cs" />
     <Compile Include="Extract.cs" />
     <Compile Include="Form1.cs">
@@ -172,6 +177,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -195,6 +201,11 @@
     <Content Include="Note.txt" />
     <Content Include="Question.txt" />
     <Content Include="README.txt" />
+    <None Include="Resources\news.bmp" />
+    <None Include="Resources\AssassinKillerOutfits.bmp" />
+    <None Include="Resources\baboon24bit.bmp" />
+    <None Include="Resources\lena.png" />
+    <None Include="Resources\3232wi.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
