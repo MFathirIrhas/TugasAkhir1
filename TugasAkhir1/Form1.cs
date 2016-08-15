@@ -2263,7 +2263,7 @@ namespace TugasAkhir1
 
         private void button38_Click(object sender, EventArgs e)
         {
-            transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 100, 100, 150, 150);
+            transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0 , 400, 500);
         }
 
         private void button39_Click(object sender, EventArgs e)
@@ -2532,6 +2532,67 @@ namespace TugasAkhir1
         {
             int value = Convert.ToInt32(awgnValue.Text);
             transformedImage.Image = ImageAttack.AWGNNoise(WatermarkedImage, value);
+        }
+
+        private void button31_Click_2(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.HistogramEquilization(WatermarkedImage);
+        }
+
+        private void button34_Click_1(object sender, EventArgs e)
+        {
+            transformedImage.Image = ImageAttack.HistogramEquilization(WatermarkedImage);
+        }
+
+        private void button36_Click_1(object sender, EventArgs e)
+        {
+            //WatermarkedImage.RotateFlip(RotateFlipType.Rotate180FlipY);
+            transformedImage.Image = ImageAttack.Erosion(WatermarkedImage);//, 10f, Color.Black);
+        }
+
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button37_Click_1(object sender, EventArgs e)
+        {
+            if((string)comboBox5.SelectedItem == "90 %")
+            {
+                transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 450, 450);              
+            }
+            else if((string)comboBox5.SelectedItem == "80 %")
+            {
+                transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 400, 400);
+            }
+            else if((string)comboBox5.SelectedItem == "70 %")
+            {
+                transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 360, 360);
+            }
+            else if((string)comboBox5.SelectedItem== "60 %")
+            {
+                transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 300, 300);
+            }
+            else
+            {
+                transformedImage.Image = ImageAttack.Crop(WatermarkedImage, 0, 0, 256, 256);
+            }
+        }
+
+        private void button38_Click_1(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void button39_Click_1(object sender, EventArgs e)
+        {
+            hostImage.Image = null;
+            transformedImage.Image = null;
+            watermarkImage.Image = null;
+            psnrtxt.Text = null;
+            bertxt.Text = null;
+            Application.Restart();
+
         }
 
 
