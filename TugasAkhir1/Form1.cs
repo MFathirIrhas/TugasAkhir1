@@ -2927,6 +2927,44 @@ namespace TugasAkhir1
         private void button13_Click_2(object sender, EventArgs e)
         {
             transformedImage.Image = reuse;
+            //double[,] coeffs = Red_Coeffs;
+            ///// Test
+            //int c = 1;
+            //TextWriter tw2 = new StreamWriter("HL_Coefficients.txt");
+            ////tw2.WriteLine("Total Watermark ");
+            //for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            //{
+            //    for (int j = 0; j < coeffs.GetLength(1) / 4; j++)
+            //    {
+            //        tw2.Write(coeffs[i, j] + " | ");
+            //    }
+            //    tw2.WriteLine();
+            //}
+            //tw2.Close();
+
+            //TextWriter tw3 = new StreamWriter("LH_Coefficients.txt");
+            ////tw2.WriteLine("Total Watermark ");
+            //for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
+            //{
+            //    for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+            //    {
+            //        tw3.Write(coeffs[i, j] + " | ");
+            //    }
+            //    tw3.WriteLine();
+            //}
+            //tw3.Close();
+
+            //TextWriter tw4 = new StreamWriter("HH_Coefficients.txt");
+            ////tw2.WriteLine("Total Watermark ");
+            //for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
+            //{
+            //    for (int j = coeffs.GetLength(1) / 4; j < coeffs.GetLength(1) / 2; j++)
+            //    {
+            //        tw4.Write(coeffs[i, j] + " | ");
+            //    }
+            //    tw4.WriteLine();
+            //}
+            //tw4.Close();
         }
 
         private void button17_Click_1(object sender, EventArgs e)
