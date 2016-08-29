@@ -249,9 +249,9 @@ namespace TugasAkhir1
         {
             if (transformedImage.Image != null)
             {
-                //Bitmap bmp = new Bitmap(transformedImage.Image);
+                Bitmap bmp = new Bitmap(transformedImage.Image);
                 ///Bitmap bmp = Create24bpp(transformedImage.Image); ////Resave image using 24 bit format.
-                Bitmap bmp = drawing;
+                //Bitmap bmp = drawing;
 
                 //Bitmap first = new Bitmap(transformedImage.Image);
                 //Bitmap second = drawing;
@@ -1060,6 +1060,7 @@ namespace TugasAkhir1
 
 
                     drawing = new Bitmap(transformedImage.Image);
+                    reuse = new Bitmap(transformedImage.Image);
                     //test
                     //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
                 }
@@ -1139,6 +1140,7 @@ namespace TugasAkhir1
 
 
                     drawing = new Bitmap(transformedImage.Image);
+                    reuse = new Bitmap(transformedImage.Image);
                     //test
                     //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
                 }
@@ -1212,6 +1214,7 @@ namespace TugasAkhir1
 
 
                 drawing = new Bitmap(transformedImage.Image);
+                reuse = new Bitmap(transformedImage.Image);
                 //test
                 //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
             }
@@ -2047,6 +2050,7 @@ namespace TugasAkhir1
 
 
                     drawing = new Bitmap(transformedImage.Image);
+                    reuse = new Bitmap(transformedImage.Image);
                     //test
                     //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
                 }
@@ -2126,6 +2130,7 @@ namespace TugasAkhir1
 
 
                     drawing = new Bitmap(transformedImage.Image);
+                    reuse = new Bitmap(transformedImage.Image);
                     //test
                     //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
                 }
@@ -2199,6 +2204,7 @@ namespace TugasAkhir1
 
 
                 drawing = new Bitmap(transformedImage.Image);
+                reuse = new Bitmap(transformedImage.Image);
                 //test
                 //MessageBox.Show("Red: " + IMatrixR[0, 0].ToString() + ", Green: " + IMatrixG[0, 0].ToString() + ", Blue: " + IMatrixB[0, 0].ToString(), "Values of RGB");
             }
@@ -2930,7 +2936,7 @@ namespace TugasAkhir1
             //double[,] coeffs = Red_Coeffs;
             ///// Test
             //int c = 1;
-            //TextWriter tw2 = new StreamWriter("HL_Coefficients.txt");
+            //TextWriter tw2 = new StreamWriter("HL_CoefficientsDB2.txt");
             ////tw2.WriteLine("Total Watermark ");
             //for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
             //{
@@ -2942,7 +2948,7 @@ namespace TugasAkhir1
             //}
             //tw2.Close();
 
-            //TextWriter tw3 = new StreamWriter("LH_Coefficients.txt");
+            //TextWriter tw3 = new StreamWriter("LH_CoefficientsDB2.txt");
             ////tw2.WriteLine("Total Watermark ");
             //for (int i = 0; i < coeffs.GetLength(0) / 4; i++)
             //{
@@ -2954,7 +2960,7 @@ namespace TugasAkhir1
             //}
             //tw3.Close();
 
-            //TextWriter tw4 = new StreamWriter("HH_Coefficients.txt");
+            //TextWriter tw4 = new StreamWriter("HH_CoefficientsDB2.txt");
             ////tw2.WriteLine("Total Watermark ");
             //for (int i = coeffs.GetLength(0) / 4; i < coeffs.GetLength(0) / 2; i++)
             //{

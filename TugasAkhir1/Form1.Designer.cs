@@ -769,7 +769,7 @@
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Sudo", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label26.ForeColor = System.Drawing.Color.DarkRed;
-            this.label26.Location = new System.Drawing.Point(540, 9);
+            this.label26.Location = new System.Drawing.Point(513, 9);
             this.label26.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(475, 13);
