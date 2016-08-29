@@ -255,3 +255,4 @@ According to pixel green value analysis:
 	- If texture is busy(high variance):
 		-> embed strength must be high to get good extraction result.
 
+---> ALL DONE!!!

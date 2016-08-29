@@ -15,3 +15,6 @@ Question 3:
 ---------
 Question 4:
 	Do we use HMM Model for each tree of wavelet coefficients of for whole image?
+	
+---> ALL DONE!!!
+
